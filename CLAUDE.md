@@ -203,14 +203,20 @@ Run `/swarm-helper` — it will use whatever MCP tools are available. If a tool 
 
 ## Building dist
 
-The `dist/` folder contains a distributable zip of the `.claude/` folder only. It excludes `settings.local.json` (user-specific permissions).
+The `dist/` folder contains a distributable zip with a versioned wrapper folder containing `.claude/`. It excludes `settings.local.json` (user-specific permissions).
 
 ```bash
-rm -f dist/swarm-helper-v2.0.2.zip
-zip -r dist/swarm-helper-v2.0.2.zip .claude/ -x ".claude/settings.local.json"
+VERSION="v2.0.2"
+rm -rf /tmp/swarm-helper-${VERSION} dist/swarm-helper-${VERSION}.zip
+mkdir -p /tmp/swarm-helper-${VERSION}
+cp -r .claude /tmp/swarm-helper-${VERSION}/
+rm -f /tmp/swarm-helper-${VERSION}/.claude/settings.local.json
+cd /tmp && zip -r - swarm-helper-${VERSION}/ > /dev/null && cd -
+(cd /tmp && zip -r - swarm-helper-${VERSION}/) > dist/swarm-helper-${VERSION}.zip
+rm -rf /tmp/swarm-helper-${VERSION}
 ```
 
-The zip contains ONLY `.claude/` contents (commands, capabilities, verticals, CHANGELOG). No root-level files (CLAUDE.md, .gitignore, data/, etc.) are included — those are repo-only.
+When unzipped, recipients get: `swarm-helper-v2.0.2/.claude/` — they copy `.claude/` into their project root.
 
 `dist/` is gitignored — rebuild locally before sharing.
 
