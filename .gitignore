@@ -1,0 +1,13 @@
+.cursor/rules/do-not-edit-these-rules-from-mcp-gateway/
+.windsurf/rules/do-not-edit-these-rules-from-mcp-gateway/
+
+# Case-specific data (may contain PII)
+data/*.log
+data/*.har
+data/solution/
+
+# Large proprietary data files
+knowledge_articles_product_docs_2026-06-09.csv
+
+# OS
+.DS_Store
