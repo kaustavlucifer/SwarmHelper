@@ -17,9 +17,11 @@ Single-command troubleshooting framework for Industry Cloud support cases. Engin
     │   ├── slack.md         ← Internal knowledge search
     │   ├── confluence.md    ← Documentation search
     │   ├── columbo.md       ← Gack/exception investigation
-    │   └── debug-log-analysis.md  ← Debug log parsing rules
+    │   ├── monitoring.md    ← Incident & pod health check
+    │   ├── debug-log-analysis.md  ← Debug log parsing rules
+    │   └── har-analysis.md  ← HAR file parsing (+ PII redaction)
     │
-    └── verticals/           ← Domain-specific knowledge (auto-routed)
+    └── verticals/           ← Domain-specific knowledge (auto-routed, 20 verticals)
         ├── omnistudio/      ← OmniScript, IP, DataRaptor, FlexCard, DocGen, VBT
         ├── health-cloud/    ← Care plans, assessments, payer-side (UM, benefit verify), FHIR
         ├── insurance/       ← Policy admin, quoting, rating, enrollment, billing, commissions
@@ -27,11 +29,19 @@ Single-command troubleshooting framework for Industry Cloud support cases. Engin
         ├── fsc/             ← Financial accounts, action plans, referrals
         ├── comms-cloud/     ← EPC, CPQ, order management, MSM
         ├── revenue-cloud/   ← Billing, BRE, configurator, CLM, approvals
+        ├── revenue-lifecycle-mgmt/ ← Asset lifecycle, quote-to-order, transactions, usage selling
         ├── cpq/             ← Salesforce CPQ (SBQQ), QCP, QLE
         ├── tpm/             ← Trade Promotion Management, Consumer Goods
         ├── life-sciences/   ← Clinical, patient services, drug programs
         ├── eu-cloud/        ← Energy & Utilities, CAM, DC APIs
-        └── media/           ← Ad Sales, media business app
+        ├── media/           ← Ad Sales, media business app
+        ├── manufacturing/   ← Sales agreements, forecasting, warranty, fleet
+        ├── automotive/      ← Vehicle lifecycle, dealer, auto finance, VIN
+        ├── public-sector/   ← Permits, licensing, inspections, complaints (PSS)
+        ├── loyalty/         ← Points, tiers, rewards, vouchers, member programs
+        ├── education/       ← EDA, admissions, student success, academic operations
+        ├── nonprofit/       ← NPSP, fundraising, donations, grants, gift entry
+        └── net-zero/        ← Carbon accounting, emissions, ESG, sustainability
 ```
 
 ---
@@ -57,6 +67,7 @@ The command determines which vertical applies, which MCP sources to query, and p
 - `FinancialAccount`, action plans → FSC
 - EPC, order decomposition, MSM → Comms Cloud
 - BRE, billing, Decision Tables → Revenue Cloud
+- Asset lifecycle, RLM, sales transactions, transaction rollback, CPI uplift, usage selling, contract cotermination → Revenue Lifecycle Management
 - `SBQQ__`, QCP, QLE → CPQ
 - `cgcloud`, KPI batch → TPM
 - And so on.
@@ -120,6 +131,8 @@ SwarmHelper/
         │   ├── configurator-patterns.md ← Product Configurator, CML rules
         │   ├── dro-patterns.md          ← Revenue recognition, ASC 606/IFRS 15
         │   └── product-to-order-patterns.md ← Product catalog, pricing config
+        ├── revenue-lifecycle-mgmt/
+        │   └── SKILL.md                 ← Revenue Lifecycle Management (asset lifecycle, quote-to-order, usage selling)
         ├── cpq/
         │   ├── SKILL.md                 ← Salesforce CPQ (SBQQ)
         │   ├── known-patterns.md        ← Known issue patterns

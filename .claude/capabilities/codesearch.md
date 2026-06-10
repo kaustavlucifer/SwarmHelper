@@ -222,6 +222,27 @@ mcp__plugin_git-soma_vmcp-git-soma__get_file_contents   — read file from git.s
 
 ---
 
+## Tool 3: Alternative CodeSearch (Fallback)
+
+If `mcp__plugin_deep-research_codesearch__*` tools are unavailable, use:
+
+```
+Tool: mcp__plugin_codesearch_codesearch__search
+query: "content:<keyword> lang:java"
+max_matches: 10
+```
+
+This tool searches the same core monorepo but through a different plugin. Already in permissions.
+
+### Wiki Summaries (code context)
+```
+Tool: mcp__plugin_deep-research_codesearch__search_wiki_summaries
+query: "OmniStudio DataRaptor"
+max_results: 5
+```
+
+---
+
 ## Not Accessible / Returns Empty
 
 | Source | Status |

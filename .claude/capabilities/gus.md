@@ -84,9 +84,40 @@ ORDER BY CreatedDate ASC
 
 ---
 
+## Additional Queries
+
+### By Scrum Team
+```soql
+SELECT Id, Name, Subject__c, Status__c, Priority__c, Fix_Version__c
+FROM ADM_Work__c
+WHERE Scrum_Team__r.Name = 'CME - OmniStudio Starlord'
+  AND Status__c NOT IN ('Fixed', 'Closed', 'Never Fix')
+ORDER BY Priority__c ASC
+LIMIT 20
+```
+
+### Known Issue articles
+```soql
+SELECT Id, Name, Subject__c, Status__c, Known_Issue_URL__c
+FROM ADM_Work__c
+WHERE Known_Issue_URL__c != null
+  AND Product_Tag__r.Name = 'Industries Interaction platform'
+ORDER BY LastModifiedDate DESC
+LIMIT 10
+```
+
+### GUS Chatter (engineering discussion on a work item)
+```
+Tool: mcp__plugin_gus_gus_server__query_gus_chatter
+parent_id: "<GUS_WORK_ITEM_ID>"
+```
+
+---
+
 ## Tips
 
 - Search by exception type + class name first (more specific)
 - `Subject__c LIKE '%term%'` is case-insensitive in GUS
 - Always include `LIMIT`
 - If no exact match, broaden to just the exception type
+- Use `query_gus_chatter` for engineering context on open bugs

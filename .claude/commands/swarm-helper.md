@@ -11,6 +11,53 @@ All operations are READ-ONLY.
 
 ---
 
+## Phase 0: MCP Tool Availability Check
+
+**Run FIRST on every invocation.** Probe each tool in parallel, report a status table, then continue.
+
+### Probes (run all simultaneously):
+
+| # | Tool | Probe Call | Pass |
+|---|---|---|---|
+| 1 | OrgCS | `mcp__orgcs__getUserInfo` | Returns user info |
+| 2 | Splunk | `mcp__plugin_monitoring_vmcp-monitoring__query_splunk` with `query: "search index=na44 | head 1"`, `splunk_api_base_url: "https://splunk-api.log-analytics.monitoring.aws-esvc1-useast2.aws.sfdc.cl"` | No 401 |
+| 3 | GUS | `mcp__plugin_gus_gus_server__get_object_description` with `object: "ADM_Work__c"` | Returns schema |
+| 4 | Columbo | `mcp__plugin_columbo_columbo__get_auth_status` | Status = authenticated |
+| 5 | Slack | `mcp__plugin_slack_slack__slack_search_channels` with `query: "support"` | Returns channels |
+| 6 | CodeSearch | `mcp__mcp-adaptor__list_directory` with `repository: "github.com/sf-industries/via_platform"`, `directory_path: "classes"` | Returns file listing |
+| 7 | Confluence | `mcp__plugin_search_search__search` with `query: "OmniStudio"`, `max_results: 1` | Returns result |
+
+### Auto-Recovery:
+- If Columbo returns `expired` → call `mcp__plugin_columbo_columbo__refresh_auth` and re-check
+- If Splunk returns 401 → note fix path but do not block
+
+### Output Format:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│ MCP Tool Status                                         │
+├───────────────┬────────┬────────────────────────────────┤
+│ OrgCS         │ ✅/❌  │ Fix: Add to ~/.claude.json     │
+│ Splunk        │ ✅/❌  │ Fix: /mcp-auth                 │
+│ GUS           │ ✅/❌  │ Fix: /gus                      │
+│ Columbo       │ ✅/❌  │ Fix: auto-refresh / re-login   │
+│ Slack         │ ✅/❌  │ Fix: AI Suite → MCP → Slack    │
+│ CodeSearch    │ ✅/❌  │ Fix: Check mcp-adaptor         │
+│ Confluence    │ ✅/❌  │ Fix: Check search plugin       │
+├───────────────┴────────┴────────────────────────────────┤
+│ N/7 tools available. [Proceeding / Degraded mode].      │
+│ ⚠️  [Tool] unavailable — [capability] will be skipped. │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Rules:
+- Always continue investigation with available tools (never halt for missing tools)
+- If OrgCS is down, ask for org ID + pod manually
+- If Splunk is down, rely more heavily on GUS/Columbo/CodeSearch
+- If all tools are down, provide guidance based on vertical knowledge files only
+
+---
+
 ## Phase 1: Gather Context
 
 ### If case number provided:
@@ -82,16 +129,41 @@ Classify the problem and load the matching vertical skill file for domain-specif
 | Media Cloud, Ad Sales, `MediaAdSales`, ad inventory | Media | `.claude/verticals/media/SKILL.md` |
 | Industries Insurance, `vlocity_ins` (carrier-side), `InsurancePolicy`, `InsurancePolicyCoverage`, `InsPolicyService`, `InsQuoteService`, `InsClaimService`, `InsProductService`, `InsEnrollmentService`, policy admin, quoting, rating, enrollment, billing, commissions | Insurance | `.claude/verticals/insurance/SKILL.md` |
 | Document Generation, DocGen, template rendering, tokenDataMap, merge fields, PDF generation, `Workspace Not found`, Docx generation | DocGen | `.claude/verticals/docgen/SKILL.md` |
+| Revenue Lifecycle Management, Asset Lifecycle, quote-to-order capture, sales transactions, usage selling, `RLM`, asset amendments/renewals/cancellations | Revenue Lifecycle Mgmt | `.claude/verticals/revenue-lifecycle-mgmt/SKILL.md` |
+| Manufacturing Cloud, warranty, plant management, sales agreements, account forecasting, fleet, sample management, dealer search | Manufacturing | `.claude/verticals/manufacturing/SKILL.md` |
+| Automotive Cloud, vehicle, VIN, dealer management, auto finance, warranty (automotive), parts & accessories | Automotive | `.claude/verticals/automotive/SKILL.md` |
+| Public Sector, PSS, government, permits, licensing, inspections, complaints, `vlocity_ps`, constituent services | Public Sector | `.claude/verticals/public-sector/SKILL.md` |
+| Loyalty Management, loyalty programs, rewards, points, tiers, vouchers, partner loyalty | Loyalty | `.claude/verticals/loyalty/SKILL.md` |
+| Education Cloud, EDA, student success, admissions, academic terms, courses, `hed__`, `sfedo__` | Education | `.claude/verticals/education/SKILL.md` |
+| Nonprofit Cloud, NPSP, fundraising, donations, grants, gift entry, `npsp__`, `npe01__` | Nonprofit | `.claude/verticals/nonprofit/SKILL.md` |
+| Net Zero Cloud, sustainability, carbon footprint, emissions, ESG, `NetZero`, `Sustainability` | Net Zero | `.claude/verticals/net-zero/SKILL.md` |
 
 **Multiple verticals** can apply — e.g., a Comms Cloud issue using DataRaptor triggers both OmniStudio and Comms Cloud verticals.
 
-**Not yet covered as dedicated verticals** (investigate using general capabilities only):
-- Public Sector / Government Cloud
-- Loyalty Management
-- Automotive Cloud
-- Manufacturing Cloud
-- Net Zero Cloud
-- Education Cloud
+### ProductTopic-Based Routing (PRIMARY when available)
+
+When `CaseReportingTaxonomy__r.ProductTopic__r.Name` is available from OrgCS, use it as the primary routing signal:
+
+| ProductTopic | Vertical |
+|---|---|
+| `Industry-OmniStudio` / `Revenue Cloud (Core)-OmniStudio` | OmniStudio |
+| `Industry-Health Cloud` / `Industry-Health & Insurance` | Health Cloud |
+| `Industry-Financial Services` | FSC |
+| `Industry-Communication Cloud` / `Industry-CPQ / Order Management / Digital Commerce` | Comms Cloud |
+| `Revenue Cloud (Core)-*` (Billing, BRE, Configurator, Approvals, CLM, DRO, Transaction Mgmt) | Revenue Cloud |
+| `Revenue-Salesforce CPQ` / `Revenue-CPQ Developer Support` | CPQ |
+| `Industry-Retail and Consumer Goods` | TPM |
+| `Industry-Life Sciences` | Life Sciences |
+| `Industry-Energy & Utilities Cloud` | E&U Cloud |
+| `Industry-Media Cloud` | Media |
+| `Revenue Lifecycle Management-*` | Revenue Lifecycle Mgmt |
+| `Industry-Manufacturing Cloud` | Manufacturing |
+| `Industry-Automotive Cloud` | Automotive |
+| `Industry-Public Sector Solutions` | Public Sector |
+| `Industry-Loyalty Management` | Loyalty |
+| `Industry-Education Cloud` / `Industry-Education Data Architecture (EDA)` | Education |
+| `Industry-Nonprofit Cloud` / `Industry-Nonprofit Success Pack (NPSP)` | Nonprofit |
+| `Industry-Net Zero Cloud` | Net Zero |
 
 If no clear signal, check the OmniStudio vertical first (most common).
 
