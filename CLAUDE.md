@@ -206,8 +206,8 @@ Run `/swarm-helper` — it will use whatever MCP tools are available. If a tool 
 The `dist/` folder contains a distributable zip of the `.claude/` folder only. It excludes `settings.local.json` (user-specific permissions).
 
 ```bash
-rm -f dist/swarm-helper-v2.0.1.zip
-zip -r dist/swarm-helper-v2.0.1.zip .claude/ -x ".claude/settings.local.json"
+rm -f dist/swarm-helper-v2.0.2.zip
+zip -r dist/swarm-helper-v2.0.2.zip .claude/ -x ".claude/settings.local.json"
 ```
 
 The zip contains ONLY `.claude/` contents (commands, capabilities, verticals, CHANGELOG). No root-level files (CLAUDE.md, .gitignore, data/, etc.) are included — those are repo-only.

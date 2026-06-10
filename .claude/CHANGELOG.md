@@ -1,5 +1,14 @@
 # SwarmHelper Changelog
 
+## v2.0.2 — 2026-06-10
+
+### Changed
+- **Phase 0 rewritten:** Clean per-tool status list (✓/⚠️) derived from system context — zero probe calls, instant startup
+- Missing tools now show actionable `/mcp` hint instead of generic "pending" label
+- Fixed false-pending bug: deferred tools are available, not pending
+
+---
+
 ## v2.0.1 — 2026-06-10
 
 ### Changed

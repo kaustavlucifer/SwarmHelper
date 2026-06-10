@@ -10,6 +10,9 @@ data/solution/
 knowledge_articles_product_docs_2026-06-09.csv
 data/extracted/
 
+# Training data (sample cases, KA exports, routing scripts)
+sampletrainingdata/
+
 # Distribution
 dist/
 
