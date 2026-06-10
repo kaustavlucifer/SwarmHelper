@@ -1,5 +1,7 @@
 # SwarmHelper Changelog
 
+These skills are developed and maintained by Kaustav Chowdhury.
+
 ## v2.0.2 — 2026-06-10
 
 ### Changed
