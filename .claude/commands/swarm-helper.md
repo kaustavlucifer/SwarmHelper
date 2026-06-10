@@ -26,6 +26,8 @@ All operations are READ-ONLY.
 | 5 | Slack | `mcp__plugin_slack_slack__slack_search_channels` with `query: "support"` | Returns channels |
 | 6 | CodeSearch | `mcp__mcp-adaptor__list_directory` with `repository: "github.com/sf-industries/via_platform"`, `directory_path: "classes"` | Returns file listing |
 | 7 | Confluence | `mcp__plugin_search_search__search` with `query: "OmniStudio"`, `max_results: 1` | Returns result |
+| 8 | SF CLI | `Bash(sf org list 2>/dev/null | head -3)` | Returns org list or "no orgs" (not error) |
+| 9 | Monitoring | `mcp__plugin_monitoring_vmcp-monitoring__check_pod_health` with `pod: "na44"` | Returns health data |
 
 ### Auto-Recovery:
 - If Columbo returns `expired` → call `mcp__plugin_columbo_columbo__refresh_auth` and re-check
@@ -44,8 +46,10 @@ All operations are READ-ONLY.
 │ Slack         │ ✅/❌  │ Fix: AI Suite → MCP → Slack    │
 │ CodeSearch    │ ✅/❌  │ Fix: Check mcp-adaptor         │
 │ Confluence    │ ✅/❌  │ Fix: Check search plugin       │
+│ SF CLI        │ ✅/❌  │ Fix: sf org login web          │
+│ Monitoring    │ ✅/❌  │ Fix: /mcp-auth                 │
 ├───────────────┴────────┴────────────────────────────────┤
-│ N/7 tools available. [Proceeding / Degraded mode].      │
+│ N/9 tools available. [Proceeding / Degraded mode].      │
 │ ⚠️  [Tool] unavailable — [capability] will be skipped. │
 └─────────────────────────────────────────────────────────┘
 ```
@@ -79,6 +83,30 @@ Run full case resolution from `.claude/capabilities/orgcs.md` — Steps 1-5 in p
 1. Parse per `.claude/capabilities/har-analysis.md` (PII redaction is MANDATORY)
 2. Filter entries by status code (4xx/5xx)
 3. Extract error payloads from response bodies (with PII redacted)
+
+### If metadata files provided (Apex, Flow, OmniScript export):
+1. Check `data/` directory for `.cls`, `.flow-meta.xml`, `.json` (DataPack), `.object-meta.xml`
+2. Parse per `.claude/capabilities/metadata-analysis.md`
+3. Analyze for anti-patterns, governor limit risks, FLS issues
+
+### Case Trend Analysis (orgcs-case-insights):
+
+When case number is provided AND OrgCS is available, also check for **case trends** — is this a recurring issue for this customer/product area?
+
+Use the `/orgcs-case-insights:analyze-cases` skill to understand:
+- Is this the first time this error was reported, or is it a pattern?
+- Are there similar cases from other customers on the same product/topic?
+- What was the resolution on previous similar cases?
+
+Query pattern for trend check:
+```soql
+SELECT Id, CaseNumber, Subject, Status, Resolution_Summary__c, CreatedDate
+FROM Case
+WHERE CaseReportingTaxonomy__r.ProductTopic__r.Name = '<PRODUCT_TOPIC>'
+  AND Subject LIKE '%<ERROR_KEYWORD>%'
+  AND CreatedDate = LAST_N_DAYS:90
+ORDER BY CreatedDate DESC LIMIT 10
+```
 
 ---
 
@@ -201,6 +229,8 @@ Run ALL applicable sources simultaneously using the capability files:
 | CodeSearch | `.claude/capabilities/codesearch.md` | Always (for classes in call stack) |
 | Gacks | `.claude/capabilities/columbo.md` | If Java stack trace or gack ID |
 | Slack | `.claude/capabilities/slack.md` | Always |
+| Metadata | `.claude/capabilities/metadata-analysis.md` | If engineer provides component exports in `data/` |
+| Case Trends | OrgCS (trend query above) | Always (check if recurring issue) |
 
 ---
 
