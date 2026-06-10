@@ -1,4 +1,15 @@
-## A. Story Analysis & Context Gathering
+## DEPRECATED SECTIONS NOTICE
+
+> Sections A-F and G-K in this file contain **developer story decomposition methodology** (not troubleshooting patterns). These were misplaced here by a previous author. They will be removed in a future cleanup. 
+>
+> **For troubleshooting, skip directly to:**
+> - **Section Z** (line ~778): Known Issue Patterns from Production Data (665 cases analyzed)
+> - **Section after Z**: Permission Troubleshooting Checklist
+> - **Section M**: XOM Codebase Reference (class/object mapping)
+
+---
+
+## A. Story Analysis & Context Gathering (DEPRECATED — dev methodology, not troubleshooting)
 
 When a user provides an Order Management user story, follow this systematic approach:
 

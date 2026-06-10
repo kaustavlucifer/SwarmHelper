@@ -1,65 +1,21 @@
-## What DRO Expert Can Help With
+## A. Triage & Classification
 
-1. **Revenue Recognition Calculation Issues**
-   - Incorrect revenue amounts calculated
-   - Missing revenue schedules
-   - Revenue not flowing to accounting systems
-
-2. **Revenue Schedule Generation Problems**
-   - Schedules not generating automatically
-   - Incorrect schedule dates or periods
-   - Schedule line item discrepancies
-
-3. **Revenue Allocation Issues**
-   - Multi-element arrangement allocation errors
-   - Performance obligation allocation problems
-   - Standalone selling price (SSP) calculation issues
-
-4. **Deferred Revenue Management**
-   - Deferred revenue not calculating correctly
-   - Revenue recognition timing issues
-   - Unearned revenue balance discrepancies
-
-5. **ASC 606 / IFRS 15 Compliance**
-   - Configuration for compliance standards
-   - Contract modification handling
-   - Variable consideration issues
-
-6. **Revenue Waterfall and Logic Errors**
-   - Revenue distribution across products/services
-   - Proration logic problems
-   - Revenue reallocation on amendments
-
-7. **Integration Issues**
-   - DRO integration with Orders/Contracts
-   - Connection to ERP/Accounting systems
-   - Data sync problems with billing
-
-8. **Multi-Currency Revenue Recognition**
-   - Currency conversion timing
-   - Exchange rate application
-   - Multi-currency reporting issues
-
-9. **Revenue Restatement**
-   - Historical data corrections
-   - Restatement processes and impacts
-   - Audit trail maintenance
-
-10. **Performance Obligation Configuration**
-    - Performance obligation identification
-    - Duration and timing settings
-    - Obligation fulfillment tracking
+| Symptom | Pattern |
+|---|---|
+| Revenue arrangement not creating / stuck "Pending" | Pattern 1 |
+| Revenue schedules have wrong dates | Pattern 2 |
+| Multi-element allocation incorrect | Pattern 3 |
+| Deferred revenue balance wrong | Pattern 4 |
+| ASC 606 / IFRS 15 compliance config issues | Pattern 5 |
+| Revenue waterfall/distribution errors | Pattern 6 |
+| DRO integration with Orders/Billing failing | Pattern 7 |
+| Multi-currency revenue errors | Pattern 8 |
+| Restatement needed / historical corrections | Pattern 9 |
+| Performance obligation not tracking | Pattern 10 |
 
 ---
 
-## Prerequisites & Tool Access
-
-This skill uses the following tools:
-- **OrgCS** — query case history and revenue arrangement data
-- **GUS** — look up known DRO bugs and investigations
-- **Slack** — search #support-rev-rlm-global-swarm-help, #rlm-office-hours for workarounds
-- **CodeSearch** — trace revenue recognition engine class paths
-- **Splunk** — pull runtime logs for revenue calculation errors
+## B. Known Issue Patterns
 
 ### Pattern 1: Revenue Recognition Not Calculating
 
@@ -1643,62 +1599,9 @@ In Salesforce:
 
 ---
 
-## Troubleshooting Workflow
+## C. Key Objects & Diagnostic Queries
 
-When addressing DRO issues, follow this systematic approach:
-
-### 1. Information Gathering
-- Collect case details: Case number, org ID, error messages
-- Identify affected records: Order ID, Contract ID, Product IDs
-- Determine scope: Single record or pattern?
-- Gather timeline: When did issue start? Any recent changes?
-- Check logs: Debug logs, integration logs, job logs
-
-### 2. Data Validation
-- Query key objects: Order, OrderItem, RevenueArrangement, PerformanceObligation, RevenueSchedule
-- Check parent-child relationships intact
-- Verify required fields populated
-- Validate data types and formats
-- Look for null values or data corruption
-
-### 3. Configuration Review
-- Revenue Recognition Rules on Products
-- Revenue Cloud Settings
-- Automation (Flows, Process Builders, Apex)
-- Permission Sets and Profiles
-- Integration configurations
-
-### 4. Root Cause Analysis
-- Match symptoms to known patterns
-- Identify what changed recently
-- Check for customizations interfering
-- Review recent deployments/releases
-- Examine related cases and known issues
-
-### 5. Solution Implementation
-- Apply resolution steps from pattern library
-- Test in sandbox first if possible
-- Document all changes made
-- Implement workarounds if permanent fix delayed
-- Communicate timeline to stakeholders
-
-### 6. Verification
-- Verify issue resolved with test data
-- Check production data if applicable
-- Monitor for recurrence
-- Update case with resolution
-- Document lessons learned
-
-### 7. Prevention
-- Identify why issue occurred
-- Implement controls to prevent recurrence
-- Update documentation
-- Train users if knowledge gap identified
-- Consider product enhancement request if system limitation
-
----
-
-## Key Salesforce Objects for DRO
+### DRO Object Model
 
 ### RevenueArrangement
 - Purpose: Top-level container for revenue recognition
@@ -1789,106 +1692,13 @@ LIMIT 10
 
 ---
 
-## Resources and Documentation
+## D. Escalation
 
-### Salesforce Documentation
-- Revenue Cloud Implementation Guide
-- ASC 606 Revenue Recognition Help
-- Performance Obligation Management Guide
-- Revenue Schedule Configuration Guide
+- Slack: `#support-rev-dev-amer`, `#support-rev-rlm-global-swarm-help`, `#rlm-office-hours`
+- GUS product tag: `Revenue Cloud`
 
-### External Resources
-- FASB ASC 606 Standard
-- IFRS 15 Standard
-- Revenue Recognition Implementation Guides
-- Industry-specific guidance (Software, Telecom, Manufacturing)
-
-### Internal Knowledge Base
-- Revenue Cloud KB Articles
-- DRO Troubleshooting Guides
-- Known Issues and Workarounds
-- Training Materials and Videos
-
----
-
-## When to Escalate
-
-Escalate to Product Team or Specialists when:
-- Confirmed product bug
-- System limitation preventing compliance
-- Data corruption or integrity issues
-- Performance problems with revenue jobs
-- Complex accounting scenarios beyond standard configuration
-- Security or permissions issues
-- Integration failures with external systems
-- Request for unsupported functionality
-
-Escalation Process:
-1. Gather complete details and documentation
-2. Attempt all standard troubleshooting steps
-3. Document what was tried and results
-4. Identify specific product gap or bug
-5. Create detailed escalation case
-6. Include reproduction steps and test data
-7. Specify business impact and urgency
-8. Follow up regularly on escalation status
-
----
-
-## Compliance Reminders
-
-### ASC 606 Five-Step Model
-1. Identify contract(s) with customer
-2. Identify performance obligations
-3. Determine transaction price
-4. Allocate transaction price to performance obligations
-5. Recognize revenue when/as obligations satisfied
-
-### Key Principles
-- Recognize revenue to depict transfer of goods/services
-- Amount reflects consideration expected to be received
-- Revenue recognition follows control transfer (not risk/rewards)
-- Estimates and judgments must be reasonable and supportable
-- Disclosures must provide sufficient detail for users
-
-### Common Pitfalls
-- Failing to identify all performance obligations
-- Incorrect standalone selling prices
-- Wrong satisfaction method (point in time vs over time)
-- Not constraining variable consideration appropriately
-- Improper handling of contract modifications
-- Inadequate documentation of judgments
-
----
-
-## Success Metrics
-
-Track these KPIs for DRO health:
-- Revenue arrangement creation rate (% of orders)
-- Revenue schedule generation success rate
-- Average time from order activation to revenue recognition
-- Deferred revenue balance accuracy
-- Revenue restatements (count and materiality)
-- Revenue recognition job success rate
-- Cases related to DRO (trending down)
-- Time to resolve DRO issues
-- User satisfaction with DRO functionality
-- External audit findings (zero deficiencies target)
-
----
-
-## Next Steps
-
-After resolving the immediate issue:
-1. Document solution in case notes
-2. Update internal knowledge base if new pattern
-3. Communicate resolution to customer
-4. Schedule follow-up to verify continued functionality
-5. Review if policy/process changes needed
-6. Consider training needs identified
-7. Track for pattern analysis
-8. Provide feedback to product team if enhancement needed
-
----
-
-*This Meta Skill is continuously updated based on case patterns and new DRO functionality. Last updated: 2026-05-27*
+Escalate when:
+- Confirmed product bug in revenue calculation engine
+- Data corruption in revenue arrangements
+- Performance problems with revenue recognition batch jobs
+- Complex multi-currency/multi-element allocation beyond standard config
