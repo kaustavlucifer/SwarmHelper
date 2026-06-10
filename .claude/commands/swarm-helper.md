@@ -15,52 +15,59 @@ All operations are READ-ONLY.
 
 ## Phase 0: MCP Tool Availability Check
 
-**Run FIRST on every invocation.** Probe each tool in parallel, report a status table, then continue.
+**Run FIRST on every invocation.** Do NOT make individual probe calls to each tool. Instead, read the MCP connection status directly from the `<system-reminder>` blocks in your context — they already list which servers are connected, which are still connecting, and which tools are available/deferred.
 
-### Probes (run all simultaneously):
+### How to determine status (ZERO API calls required):
 
-| # | Tool | Probe Call | Pass |
-|---|---|---|---|
-| 1 | OrgCS | `mcp__orgcs__getUserInfo` | Returns user info |
-| 2 | Splunk | `mcp__plugin_monitoring_vmcp-monitoring__query_splunk` with `query: "search index=na44 | head 1"`, `splunk_api_base_url: "https://splunk-api.log-analytics.monitoring.aws-esvc1-useast2.aws.sfdc.cl"` | No 401 |
-| 3 | GUS | `mcp__plugin_gus_gus_server__get_object_description` with `object: "ADM_Work__c"` | Returns schema |
-| 4 | Columbo | `mcp__plugin_columbo_columbo__get_auth_status` | Status = authenticated |
-| 5 | Slack | `mcp__plugin_slack_slack__slack_search_channels` with `query: "support"` | Returns channels |
-| 6 | CodeSearch | `mcp__mcp-adaptor__list_directory` with `repository: "github.com/sf-industries/via_platform"`, `directory_path: "classes"` | Returns file listing |
-| 7 | Confluence | `mcp__plugin_search_search__search` with `query: "OmniStudio"`, `max_results: 1` | Returns result |
-| 8 | SF CLI | `Bash(sf org list 2>/dev/null | head -3)` | Returns org list or "no orgs" (not error) |
-| 9 | Monitoring | `mcp__plugin_monitoring_vmcp-monitoring__check_pod_health` with `pod: "na44"` | Returns health data |
+Map these MCP server names to capabilities:
 
-### Auto-Recovery:
-- If Columbo returns `expired` → call `mcp__plugin_columbo_columbo__refresh_auth` and re-check
-- If Splunk returns 401 → note fix path but do not block
+| Capability | Server / Tool Prefix | Connected When |
+|---|---|---|
+| OrgCS | `mcp__orgcs__*` | Tools listed (not in "still connecting") |
+| Splunk | `mcp__plugin_monitoring_vmcp-monitoring__query_splunk` | `plugin:monitoring:vmcp-monitoring` not in "still connecting" |
+| GUS | `mcp__plugin_gus_gus_server__*` | `plugin:gus:gus_server` not in "still connecting" |
+| Columbo | `mcp__plugin_columbo_columbo__*` | Tools listed in available/deferred list |
+| Slack | `mcp__plugin_slack_slack__*` | Tools listed in available/deferred list |
+| CodeSearch | `mcp__mcp-adaptor__*` | `mcp-adaptor` not in "still connecting" |
+| Confluence | `mcp__plugin_search_search__*` | Tools listed in available/deferred list |
+| SF CLI | N/A (local binary) | Assume available |
+| Monitoring | `mcp__plugin_monitoring_vmcp-monitoring__*` | `plugin:monitoring:vmcp-monitoring` not in "still connecting" |
+
+### Status determination rules:
+- Server listed under "still connecting" → mark as pending (may become available during investigation)
+- Tools appear in deferred or loaded list → mark as available
+- Server neither connecting nor has tools visible → mark as unavailable
 
 ### Output Format:
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│ MCP Tool Status                                         │
-├───────────────┬────────┬────────────────────────────────┤
-│ OrgCS         │ ✅/❌  │ Fix: Add to ~/.claude.json     │
-│ Splunk        │ ✅/❌  │ Fix: /mcp-auth                 │
-│ GUS           │ ✅/❌  │ Fix: /gus                      │
-│ Columbo       │ ✅/❌  │ Fix: auto-refresh / re-login   │
-│ Slack         │ ✅/❌  │ Fix: AI Suite → MCP → Slack    │
-│ CodeSearch    │ ✅/❌  │ Fix: Check mcp-adaptor         │
-│ Confluence    │ ✅/❌  │ Fix: Check search plugin       │
-│ SF CLI        │ ✅/❌  │ Fix: sf org login web          │
-│ Monitoring    │ ✅/❌  │ Fix: /mcp-auth                 │
-├───────────────┴────────┴────────────────────────────────┤
-│ N/9 tools available. [Proceeding / Degraded mode].      │
-│ ⚠️  [Tool] unavailable — [capability] will be skipped. │
-└─────────────────────────────────────────────────────────┘
+MCP Tool Status (from system context — no probes needed)
+─────────────────────────────────────────────────────────
+  OrgCS         [available/pending/unavailable]
+  Splunk        [available/pending/unavailable]
+  GUS           [available/pending/unavailable]
+  Columbo       [available/pending/unavailable]
+  Slack         [available/pending/unavailable]
+  CodeSearch    [available/pending/unavailable]
+  Confluence    [available/pending/unavailable]
+  SF CLI        [available/pending/unavailable]
+  Monitoring    [available/pending/unavailable]
+─────────────────────────────────────────────────────────
+  N/9 ready. Proceeding with available tools.
+  Pending tools will be used when needed (lazy load).
 ```
+
+### Lazy auth checks (only when actually needed during investigation):
+- Columbo: Call `get_auth_status` only when Phase 4 needs gack investigation. If expired, call `refresh_auth`.
+- Splunk: Only discover auth issues when the first real query returns 401.
+- Do NOT pre-emptively probe tools "just to check" — it wastes calls and triggers permission prompts.
 
 ### Rules:
 - Always continue investigation with available tools (never halt for missing tools)
-- If OrgCS is down, ask for org ID + pod manually
-- If Splunk is down, rely more heavily on GUS/Columbo/CodeSearch
-- If all tools are down, provide guidance based on vertical knowledge files only
+- If OrgCS is unavailable, ask for org ID + pod manually
+- If Splunk is unavailable, rely more heavily on GUS/Columbo/CodeSearch
+- If all tools are unavailable, provide guidance based on vertical knowledge files only
+- Pending tools: proceed — they will become available by the time you need them in Phase 4
 
 ---
 
