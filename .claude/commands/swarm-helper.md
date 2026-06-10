@@ -13,61 +13,30 @@ All operations are READ-ONLY.
 
 ---
 
-## Phase 0: MCP Tool Availability Check
+## Phase 0: MCP Tool Availability
 
-**Run FIRST on every invocation.** Do NOT make individual probe calls to each tool. Instead, read the MCP connection status directly from the `<system-reminder>` blocks in your context — they already list which servers are connected, which are still connecting, and which tools are available/deferred.
+**Do NOT make probe calls or output a full status table.** Determine availability by checking which tool prefixes appear in the `<system-reminder>` deferred tools list. Deferred = available (schema loads instantly on first use via `ToolSearch`).
 
-### How to determine status (ZERO API calls required):
+Check these prefixes in the deferred list:
 
-Map these MCP server names to capabilities:
+| Capability | Present if prefix exists |
+|---|---|
+| OrgCS | `mcp__orgcs__` |
+| Splunk | `mcp__plugin_monitoring_vmcp-monitoring__query_splunk` |
+| GUS | `mcp__plugin_gus_gus_server__` |
+| Columbo | `mcp__plugin_columbo_columbo__` |
+| Slack | `mcp__plugin_slack_slack__` |
+| CodeSearch | `mcp__mcp-adaptor__` OR `mcp__plugin_codesearch_codesearch__` |
+| Confluence | `mcp__plugin_search_search__` OR `mcp__plugin_deep-research_search__doc_search` |
+| Monitoring | `mcp__plugin_monitoring_vmcp-monitoring__` |
+| SF CLI | Always assume available |
 
-| Capability | Server / Tool Prefix | Connected When |
-|---|---|---|
-| OrgCS | `mcp__orgcs__*` | Tools listed (not in "still connecting") |
-| Splunk | `mcp__plugin_monitoring_vmcp-monitoring__query_splunk` | `plugin:monitoring:vmcp-monitoring` not in "still connecting" |
-| GUS | `mcp__plugin_gus_gus_server__*` | `plugin:gus:gus_server` not in "still connecting" |
-| Columbo | `mcp__plugin_columbo_columbo__*` | Tools listed in available/deferred list |
-| Slack | `mcp__plugin_slack_slack__*` | Tools listed in available/deferred list |
-| CodeSearch | `mcp__mcp-adaptor__*` | `mcp-adaptor` not in "still connecting" |
-| Confluence | `mcp__plugin_search_search__*` | Tools listed in available/deferred list |
-| SF CLI | N/A (local binary) | Assume available |
-| Monitoring | `mcp__plugin_monitoring_vmcp-monitoring__*` | `plugin:monitoring:vmcp-monitoring` not in "still connecting" |
+### Output (one line only):
 
-### Status determination rules:
-- Server listed under "still connecting" → mark as pending (may become available during investigation)
-- Tools appear in deferred or loaded list → mark as available
-- Server neither connecting nor has tools visible → mark as unavailable
+- **All connected:** `✓ All 9 MCP tools connected. Ready to investigate.`
+- **Some missing:** `✓ 7/9 MCP tools connected. ⚠️ {Columbo, Slack} not detected — run /mcp to check connection.`
 
-### Output Format:
-
-```
-MCP Tool Status (from system context — no probes needed)
-─────────────────────────────────────────────────────────
-  OrgCS         [available/pending/unavailable]
-  Splunk        [available/pending/unavailable]
-  GUS           [available/pending/unavailable]
-  Columbo       [available/pending/unavailable]
-  Slack         [available/pending/unavailable]
-  CodeSearch    [available/pending/unavailable]
-  Confluence    [available/pending/unavailable]
-  SF CLI        [available/pending/unavailable]
-  Monitoring    [available/pending/unavailable]
-─────────────────────────────────────────────────────────
-  N/9 ready. Proceeding with available tools.
-  Pending tools will be used when needed (lazy load).
-```
-
-### Lazy auth checks (only when actually needed during investigation):
-- Columbo: Call `get_auth_status` only when Phase 4 needs gack investigation. If expired, call `refresh_auth`.
-- Splunk: Only discover auth issues when the first real query returns 401.
-- Do NOT pre-emptively probe tools "just to check" — it wastes calls and triggers permission prompts.
-
-### Rules:
-- Always continue investigation with available tools (never halt for missing tools)
-- If OrgCS is unavailable, ask for org ID + pod manually
-- If Splunk is unavailable, rely more heavily on GUS/Columbo/CodeSearch
-- If all tools are unavailable, provide guidance based on vertical knowledge files only
-- Pending tools: proceed — they will become available by the time you need them in Phase 4
+Then proceed directly to Phase 1. If a tool fails mid-investigation (401, timeout), note it inline and continue with others. Never halt.
 
 ---
 
