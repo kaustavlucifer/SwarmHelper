@@ -133,8 +133,6 @@ ORDER BY CreatedDate DESC LIMIT 20
 
 ---
 
----
-
 ## Splunk logRecordTypes
 
 | Type | Use |

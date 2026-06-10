@@ -142,8 +142,6 @@ WHERE npsp__Opportunity__c = '<OPPORTUNITY_ID>'
 
 ---
 
----
-
 ## Splunk logRecordTypes
 
 | Type | Use |

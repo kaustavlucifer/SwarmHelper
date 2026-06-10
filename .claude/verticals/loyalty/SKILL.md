@@ -131,8 +131,6 @@ ORDER BY ExpirationDate ASC
 
 ---
 
----
-
 ## Splunk logRecordTypes
 
 | Type | Use |

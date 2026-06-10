@@ -124,8 +124,6 @@ ORDER BY TargetDate ASC
 
 ---
 
----
-
 ## Splunk logRecordTypes
 
 | Type | Use |

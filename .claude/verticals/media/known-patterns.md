@@ -554,7 +554,7 @@ Ad_Space__c (Website Home Page - Top Banner)
 | W-13497563 | Check Inventory IP Errors | P2 | Pending GAM Team | Yes (PATTERN #8) |
 | W-13798762 | Units Split Not Populated | P2 | Doc Updated | Yes (PATTERN #9) |
 | W-13484755 | Daily Calendar Off By One Day | P2 | Fix in Review | Yes (PATTERN #10) |
-| [TBD] | CalculationProcedure Query Error | P1 | Not Yet Filed | No - Code fix required (PATTERN #3) |
+| [Pending] | CalculationProcedure Query Error | P1 | Not Yet Filed | No - Code fix required (PATTERN #3) |
 
 ### Release Notes Watch
 

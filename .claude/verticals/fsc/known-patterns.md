@@ -1061,8 +1061,6 @@ Customers may provide error IDs in different formats:
 
 ---
 
----
-
 ## K. Referral Patterns
 
 ### Pattern K1: Referral Not Visible on Record Page

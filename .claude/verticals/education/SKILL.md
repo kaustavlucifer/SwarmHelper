@@ -148,8 +148,6 @@ WHERE Id = '<PROGRAM_PLAN_ID>'
 
 ---
 
----
-
 ## Splunk logRecordTypes
 
 | Type | Use |

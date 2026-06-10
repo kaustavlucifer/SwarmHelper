@@ -140,8 +140,6 @@ ORDER BY CreatedDate DESC
 
 ---
 
----
-
 ## Splunk logRecordTypes
 
 | Type | Use |

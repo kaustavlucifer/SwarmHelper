@@ -833,7 +833,7 @@ permission set license, because Mulesoft Integration's user license doesn't supp
 **Known Limitations:**
 The following E&U objects are **NOT** exposed for Integration User (as of May 2026):
 - BillingAccount ❌
-- (Others TBD - document as discovered)
+
 
 The following ARE exposed:
 - Account ✅
