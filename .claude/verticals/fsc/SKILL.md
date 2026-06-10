@@ -72,11 +72,149 @@ gitcore.soma.salesforce.com/core-2206/core-262-public:
 
 ---
 
+## Data Model Relationships
+
+```
+Account (Person Account / Business Account / Household)
+├── FinancialAccount (master-detail to Account)
+│   ├── FinancialAccountRole (junction: Account ↔ FinancialAccount)
+│   ├── FinancialHolding (master-detail)
+│   └── FinancialAccountTransaction (lookup)
+├── AccountContactRelationship (relationship map)
+├── Referral (lookup to Account)
+├── ActionPlan (lookup — can also be on Contact, Opportunity)
+│   └── ActionPlanItem (master-detail)
+│       └── TaskRelay (successor task config)
+├── DocumentChecklistItem (lookup)
+├── RollupSummaryRule__c (config object — rollup calculations)
+└── InteractionSummary (lookup)
+    └── InteractionSummaryItem (related records)
+```
+
+---
+
+## Sample SOQL Queries
+
+### Financial accounts for a client
+```soql
+SELECT Id, Name, FinServ__FinancialAccountType__c, FinServ__Balance__c,
+       FinServ__Status__c, FinServ__PrimaryOwner__r.Name,
+       (SELECT Id, FinServ__Role__c, FinServ__RelatedAccount__r.Name FROM FinServ__FinancialAccountRoles__r)
+FROM FinServ__FinancialAccount__c
+WHERE FinServ__PrimaryOwner__c = '<ACCOUNT_ID>'
+ORDER BY FinServ__Balance__c DESC LIMIT 20
+```
+
+### Action plans on a record
+```soql
+SELECT Id, Name, ActionPlanTemplateVersion.Name, ActionPlanState, StartDate,
+       (SELECT Id, Subject, Status, Priority, TaskDefinition.Subject, ActionPlanItemState 
+        FROM ActionPlanItems ORDER BY ItemEntityOrder ASC)
+FROM ActionPlan
+WHERE TargetId = '<RECORD_ID>'
+ORDER BY StartDate DESC LIMIT 5
+```
+
+### Rollup summary rules
+```soql
+SELECT Id, FinServ__ParentObject__c, FinServ__ChildObject__c, 
+       FinServ__FieldToAggregate__c, FinServ__AggregateOperation__c,
+       FinServ__Active__c
+FROM FinServ__RollupSummaryRule__c
+WHERE FinServ__Active__c = true
+ORDER BY FinServ__ParentObject__c
+```
+
+### Referrals for an account
+```soql
+SELECT Id, Name, Status, ReferredRecord.Name, Owner.Name,
+       CreatedDate, ClosedDate
+FROM Referral
+WHERE AccountId = '<ACCOUNT_ID>'
+ORDER BY CreatedDate DESC LIMIT 10
+```
+
+---
+
+## Splunk logRecordTypes
+
+| Type | Use |
+|---|---|
+| `axerr` | Apex uncaught exceptions (triggers, action plan logic) |
+| `ipipr` | Integration Procedures (FSC OmniScripts) |
+| `ipdar` | DataRaptors (FSC data operations) |
+| `axlim` | Governor limit consumption (RSR batch, action plan bulk) |
+| `gslog` | Platform Java exceptions |
+
+---
+
+## Code Investigation Paths
+
+### FSC Managed Package (wealth1)
+```
+Tool: mcp__plugin_deep-research_codesearch__search
+query: "repo:git.soma.salesforce.com/industries/wealth1 content:<keyword>"
+max_matches: 10
+```
+
+### FSC Core Components
+```
+Tool: mcp__plugin_deep-research_codesearch__list_directory
+repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
+ref: "p4/262-patch"
+file_path: "core/ui-fsc-components/"
+```
+
+### FSC PTC Layer
+```
+Tool: mcp__plugin_deep-research_codesearch__read_file
+repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
+ref: "p4/262-patch"
+file_path: "core/industries-interaction-ptc/apex/vlocity_ins_fsc/<ClassName>.apex"
+```
+
+### FSC Next-Gen Apps
+```
+Tool: mcp__plugin_deep-research_codesearch__search
+query: "repo:github.com/salesforce-internal/fsc-next-gen-apps content:<keyword>"
+max_matches: 10
+```
+
+---
+
+## Symptom-Driven Fast Path
+
+| Symptom | First Check |
+|---|---|
+| Relationship map not loading | FlexCard datasource config, FinancialAccount sharing rules |
+| Action plan items not created | ActionPlan triggers, IP logic, field FLS, PSL assigned |
+| Action plan "Couldn't create successor tasks" | Task dependency ordering, `ItemEntityOrder` field |
+| Financial account not visible | OWD (Private), sharing rules, Person Account config |
+| RSR not calculating | Rollup summary rule active? Batch job running? Field mapping correct? |
+| Document checklist not showing | `DocumentChecklistItem` CRUD, record type assignment |
+| Referral routing broken | Referral routing config, queue assignment, sharing rules |
+| Timeline empty | Timeline component configuration, record-level access, object support |
+| Interaction summary not saving | Related record linking, field permissions, object access |
+| FSC OmniScript errors | `vlocity_ins_fsc` namespace, PTC layer, OIC flags |
+
+---
+
 ## Escalation
 
 - Slack: `#support-industries-fsc` or `#support-omnistudio-collaboration`
 - GUS product tag: `Industries Financial Services Cloud`
 
+**Swarm template:**
+```
+Customer Sentiment:
+Current Condition:
+Feature: [Action Plans | Financial Accounts | Referrals | RSR | Relationship Map | Timeline | Other]
+Issue Description:
+Person Account enabled?:
+FSC Permission Sets assigned?:
+Reproduced in Demo org?:
+Troubleshooting steps taken?:
+```
 
 ---
 

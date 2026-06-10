@@ -100,6 +100,50 @@ This eliminates the need to replicate custom sObjects, DataRaptors, etc. in the 
 
 ---
 
+## Splunk logRecordTypes
+
+| Type | Use |
+|---|---|
+| `ipipr` | Integration Procedures (DocGen orchestration) |
+| `ipdar` | DataRaptors (token extraction, data pull) |
+| `axerr` | Apex exceptions (template processing, PDF generation) |
+| `axlim` | Governor limits (large document batch generation) |
+
+---
+
+## Code Investigation Paths
+
+### DocGen Package
+```
+Tool: mcp__plugin_git-emu_vmcp-git-emu__get_file_contents
+owner: "sf-industries"
+repo: "via_docgen"
+path: "classes/<ClassName>.cls"
+```
+
+### CLM / Contract DocGen
+```
+Tool: mcp__plugin_git-emu_vmcp-git-emu__get_file_contents
+owner: "sf-industries"
+repo: "via_contract"
+path: "classes/<ClassName>.cls"
+```
+
+### DocGen in via_platform
+```
+Tool: mcp__mcp-adaptor__search
+query: "repo:github.com/sf-industries/via_platform content:DocGen"
+```
+
+### PTC Layer (DocGen classes)
+```
+Tool: mcp__plugin_deep-research_codesearch__search
+query: "repo:gitcore.soma.salesforce.com/core-2206/core-262-public content:DocumentGeneration path:industries-interaction-ptc"
+max_matches: 10
+```
+
+---
+
 ## Escalation
 
 | Channel | Use |
@@ -109,3 +153,16 @@ This eliminates the need to replicate custom sObjects, DataRaptors, etc. in the 
 | `#support-swarm-industries` | General swarm |
 
 **GUS product tags:** `Industries Interaction platform`, `Revenue Cloud`
+
+**Swarm template:**
+```
+Customer Sentiment:
+Current Condition:
+DocGen Flavor: [OmniStudio DocGen | Vlocity DocGen | CLM DocGen | Unknown]
+Template Type: [Word/Docx | Web | PDF]
+Issue Description:
+Template name:
+Reproduced in Demo org?:
+Troubleshooting steps taken?:
+tokenDataMap captured?:
+```

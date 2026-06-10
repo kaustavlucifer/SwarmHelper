@@ -65,11 +65,99 @@ Search `sf-industries/via_platform` for `MediaAdSales.cls`
 
 ---
 
+## Key Objects
+
+| Object | Description |
+|---|---|
+| `MediaAdSalesProduct` | Ad products (inventory types) |
+| `MediaAdSalesSlot` | Available ad slots/inventory |
+| `MediaAdSalesCampaign` | Ad campaigns |
+| `MediaAdSalesBooking` | Booked ad placements |
+| `MediaAdSalesTargeting` | Targeting criteria |
+| `MediaAdSalesReservation` | Reserved inventory |
+| `MediaSubscriber` | Subscriber records (media subscriptions) |
+| `Product2` | Products (shared) |
+| `Order` / `OrderItem` | Orders |
+| `vlocity_cmt__PriceList__c` | Pricing |
+
+---
+
+## Sample SOQL Queries
+
+### Ad campaigns for an account
+```soql
+SELECT Id, Name, Status, StartDate, EndDate, Budget,
+       Account.Name
+FROM Campaign
+WHERE Account.Id = '<ACCOUNT_ID>'
+  AND RecordType.DeveloperName LIKE '%AdSales%'
+ORDER BY StartDate DESC LIMIT 10
+```
+
+### Subscriber details
+```soql
+SELECT Id, Name, Status__c, SubscriptionType__c, Account.Name,
+       StartDate__c, EndDate__c
+FROM MediaSubscriber__c
+WHERE Account.Id = '<ACCOUNT_ID>'
+ORDER BY StartDate__c DESC
+```
+
+---
+
+## Splunk logRecordTypes
+
+| Type | Use |
+|---|---|
+| `axerr` | Apex exceptions (ad pricing, targeting) |
+| `ipipr` | Integration Procedures |
+| `ipdar` | DataRaptors |
+| `axlim` | Governor limits (bulk pricing calculations) |
+
+---
+
+## Code Investigation Paths
+
+### Media Managed Package
+```
+Tool: mcp__plugin_git-emu_vmcp-git-emu__get_file_contents
+owner: "sf-industries"
+repo: "via_media"
+path: "classes/<ClassName>.cls"
+```
+
+### Media PTC Layer
+```
+Tool: mcp__plugin_deep-research_codesearch__read_file
+repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
+ref: "p4/262-patch"
+file_path: "core/industries-interaction-ptc/apex/vlocity_cmt/MediaAdSalesPtc.apex"
+```
+
+### Media Revenue Core
+```
+Tool: mcp__plugin_deep-research_codesearch__list_directory
+repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
+ref: "p4/262-patch"
+file_path: "core/industries-media-revenue-impl/"
+```
+
+---
+
 ## Escalation
 
 - GUS product tag: `Media Cloud`
 - Slack: `#support-swarm-industries`
 
+**Swarm template:**
+```
+Customer Sentiment:
+Current Condition:
+Feature: [Ad Sales | Pricing | Targeting | Campaign Booking | Radio | Subscriber Lifecycle | Other]
+Issue Description:
+Reproduced in Demo org?:
+Troubleshooting steps taken?:
+```
 
 ---
 

@@ -179,7 +179,10 @@ Read the routed vertical's pattern files:
 - FSC also: `action-plans-patterns.md`
 - CPQ also: `developer-patterns.md`
 - Insurance: known error patterns embedded in SKILL.md (Section: Known Error Patterns)
+- Revenue Lifecycle Mgmt: key behavioral notes embedded in SKILL.md
+- Manufacturing, Automotive, Public Sector, Loyalty, Education, Nonprofit, Net Zero: no separate pattern files — common issues in SKILL.md
 - Life Sciences: no pattern files yet — rely on Phase 4 investigation
+- DocGen: common errors embedded in SKILL.md
 
 If the error matches a documented pattern → provide resolution immediately. Still run Phase 4 for confirmation.
 
@@ -191,6 +194,7 @@ Run ALL applicable sources simultaneously using the capability files:
 
 | Source | Capability | When |
 |---|---|---|
+| Monitoring | `.claude/capabilities/monitoring.md` | Always (incident check + pod health) |
 | Splunk | `.claude/capabilities/splunk.md` | Always (if pod + org ID known) |
 | Confluence / KB | `.claude/capabilities/confluence.md` | Always |
 | GUS bugs | `.claude/capabilities/gus.md` | Always |

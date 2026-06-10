@@ -115,11 +115,159 @@ gitcore.soma.salesforce.com/core-2206/core-262-public:
 
 ---
 
+## Key Objects
+
+| Object | Domain | Description |
+|---|---|---|
+| `BillingSchedule` | Billing | Billing schedule for recurring charges |
+| `BillingScheduleGroup` | Billing | Groups related billing schedules |
+| `Invoice` | Billing | Generated invoice records |
+| `InvoiceLine` | Billing | Individual invoice line items |
+| `CreditMemo` / `DebitMemo` | Billing | Adjustments to invoices |
+| `PaymentSchedule` | Billing | Payment plan records |
+| `ExpressionSet` | BRE | Expression set definitions |
+| `ExpressionSetVersion` | BRE | Versioned expression set |
+| `DecisionTable` | BRE | Decision table definitions |
+| `DecisionTableParameter` | BRE | DT input/output parameters |
+| `ContextDefinition` | BRE | Data context for rules |
+| `LookupTable` | BRE | Lookup reference tables |
+| `ProductConfigurationInstance` | Configurator | Config session state |
+| `ConstraintEngineNodeStatus__c` | Configurator | CML rule evaluation status |
+| `ApprovalWorkItem` | Approvals | Pending approvals |
+| `SBAA__Approval__c` | Approvals | Advanced Approval records |
+
+---
+
+## Sample SOQL Queries
+
+### Billing schedules for an order
+```soql
+SELECT Id, BillingScheduleGroupId, ReferenceEntityId, Status,
+       NextBillingDate, BillingFrequency, TotalAmount
+FROM BillingSchedule
+WHERE ReferenceEntityId = '<ORDER_ID>'
+ORDER BY NextBillingDate ASC
+```
+
+### Invoice with lines
+```soql
+SELECT Id, InvoiceNumber, Status, TotalAmount, DueDate, BillingAccountId,
+       (SELECT Id, Product2.Name, Quantity, TotalAmount, Type FROM InvoiceLines)
+FROM Invoice
+WHERE BillingAccountId = '<ACCOUNT_ID>'
+ORDER BY DueDate DESC LIMIT 10
+```
+
+### Decision tables by status
+```soql
+SELECT Id, DeveloperName, Status, LastModifiedDate, LastModifiedBy.Name
+FROM DecisionTable
+WHERE Status IN ('Activation In Progress', 'Active', 'InProgress')
+ORDER BY LastModifiedDate DESC LIMIT 20
+```
+
+### Expression set versions
+```soql
+SELECT Id, ExpressionSetId, ExpressionSet.DeveloperName, VersionNumber,
+       Status, StartDateTime, EndDateTime
+FROM ExpressionSetVersion
+WHERE Status = 'Active'
+ORDER BY ExpressionSet.DeveloperName
+LIMIT 20
+```
+
+### Pending approvals
+```soql
+SELECT Id, SBAA__Approver__r.Name, SBAA__Status__c, SBAA__ApprovalStep__c,
+       SBAA__RecordField__c, CreatedDate
+FROM SBAA__Approval__c
+WHERE SBAA__Status__c = 'Requested'
+ORDER BY CreatedDate ASC LIMIT 20
+```
+
+---
+
+## Splunk logRecordTypes
+
+| Type | Use |
+|---|---|
+| `axerr` | Apex uncaught exceptions (billing batch, approval triggers) |
+| `ipipr` | Integration Procedures (BRE execution, configurator flows) |
+| `ipdar` | DataRaptors (product catalog, pricing data) |
+| `axlim` | Governor limits (invoice batch, DPE processing) |
+| `axque` | Queueable jobs (async billing, approval processing) |
+| `gslog` | Platform Java exceptions (billing engine, DPE) |
+
+---
+
+## Code Investigation Paths
+
+### Revenue Management Package
+```
+Tool: mcp__plugin_git-emu_vmcp-git-emu__get_file_contents
+owner: "sf-industries"
+repo: "via_rm"
+path: "classes/<ClassName>.cls"
+```
+
+### CLM / Contract Package
+```
+Tool: mcp__plugin_git-emu_vmcp-git-emu__get_file_contents
+owner: "sf-industries"
+repo: "via_contract"
+path: "classes/<ClassName>.cls"
+```
+
+### Billing Core Implementation
+```
+Tool: mcp__plugin_deep-research_codesearch__search
+query: "repo:gitcore.soma.salesforce.com/core-2206/core-262-public path:core/billing-impl content:<keyword>"
+max_matches: 10
+```
+
+### CPQ PTC Layer
+```
+Tool: mcp__plugin_deep-research_codesearch__read_file
+repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
+ref: "p4/262-patch"
+file_path: "core/industries-interaction-ptc/apex/vlocity_cmt/CPQServicePtc.apex"
+```
+
+---
+
+## Symptom-Driven Fast Path
+
+| Symptom | First Check |
+|---|---|
+| Decision Table stuck "Activation In Progress" | Row limit (50/200), source object permissions changed |
+| Expression Set not working in sandbox | Sandbox-specific PSL availability, org refresh impact |
+| Billing schedule not generating | Order status, billing treatment, trigger configuration |
+| Invoice batch failing | Batch job logs, DPE errors, record locks |
+| Configurator "Something went wrong" | CML syntax errors, `ConstraintEngineNodeStatus__c` |
+| Advanced Approval not triggering | Entry criteria, approval process config, PSL |
+| CLM DocGen permission error | CLM permission sets, Named Credential |
+| BRE Runtime PSL missing | License assignment, permission set availability |
+| Context Definition won't deactivate | Active references from Expression Sets |
+| Product not showing in catalog | Product visibility rules, Context Definition |
+
+---
+
 ## Escalation
 
 - Slack: `#support-rev-dev-amer`, `#support-omnistudio-collaboration`
 - GUS product tag: `Revenue Cloud`
 
+**Swarm template:**
+```
+Customer Sentiment:
+Current Condition:
+Product Area: [Billing | BRE | Configurator | Approvals | CLM/DocGen | DRO | Product Catalog | Other]
+Issue Description:
+Decision Table / Expression Set name (if BRE):
+Reproduced in Demo org?:
+Troubleshooting steps taken?:
+Recent deployment or sandbox refresh?:
+```
 
 ---
 

@@ -73,11 +73,112 @@ gitcore.soma.salesforce.com/core-2206/core-262-public:
 
 ---
 
+## Key Objects
+
+| Object | Description |
+|---|---|
+| `Product2` / `vlocity_cmt__Product2__c` | Product catalog (shared with Comms) |
+| `Order` / `OrderItem` | Orders and line items |
+| `vlocity_cmt__PriceList__c` | Price lists |
+| `vlocity_cmt__CalculationMatrix__c` | Calculation matrices (pricing, eligibility) |
+| `vlocity_cmt__CalculationProcedure__c` | Calculation procedures |
+| `vlocity_cmt__OrchestrationPlan__c` | Order orchestration |
+| `ServicePoint__c` | Energy service/delivery point |
+| `Premise__c` | Physical location (address) |
+| `EnergyUsage__c` | Usage/consumption records |
+| `vlocity_cmt__ContextDimension__c` | Context-based pricing |
+
+---
+
+## Sample SOQL Queries
+
+### Service points for an account
+```soql
+SELECT Id, Name, ServicePointType__c, Status__c, Premise__r.Name,
+       Account.Name
+FROM ServicePoint__c
+WHERE Account.Id = '<ACCOUNT_ID>'
+ORDER BY Name
+```
+
+### Multisite orders
+```soql
+SELECT Id, OrderNumber, Status, vlocity_cmt__AccountId__c,
+       (SELECT Id, vlocity_cmt__Product2Id__r.Name, vlocity_cmt__ServicePointId__c
+        FROM OrderItems)
+FROM Order
+WHERE vlocity_cmt__AccountId__c = '<ACCOUNT_ID>'
+  AND RecordType.DeveloperName LIKE '%Multisite%'
+ORDER BY CreatedDate DESC LIMIT 10
+```
+
+### Cache batch job status
+```soql
+SELECT Id, Name, vlocity_cmt__Status__c, vlocity_cmt__StartTime__c,
+       vlocity_cmt__EndTime__c, vlocity_cmt__ErrorMessage__c
+FROM vlocity_cmt__BatchRun__c
+WHERE vlocity_cmt__Type__c = 'CacheRefresh'
+ORDER BY CreatedDate DESC LIMIT 5
+```
+
+---
+
+## Splunk logRecordTypes
+
+| Type | Use |
+|---|---|
+| `axerr` | Apex uncaught exceptions (basket, pricing) |
+| `ipipr` | Integration Procedures (VEEDigitalGetBasket, multisite flows) |
+| `ipdar` | DataRaptors (product/pricing extraction) |
+| `axlim` | Governor limits (multisite scaling, basket SOQL count) |
+| `gslog` | Platform Java exceptions |
+
+---
+
+## Code Investigation Paths
+
+### Energy Managed Package
+```
+Tool: mcp__plugin_git-emu_vmcp-git-emu__get_file_contents
+owner: "sf-industries"
+repo: "via_energy"
+path: "classes/<ClassName>.cls"
+```
+
+### E&U Core Components
+```
+Tool: mcp__plugin_deep-research_codesearch__list_directory
+repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
+ref: "p4/262-patch"
+file_path: "core/industries-energy-utilities-udd/"
+```
+
+### E&U UI Components
+```
+Tool: mcp__plugin_deep-research_codesearch__list_directory
+repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
+ref: "p4/262-patch"
+file_path: "core/ui-industries-energy-utilities-components/"
+```
+
+---
+
 ## Escalation
 
 - GUS product tag: `Energy & Utilities Cloud`
 - Slack: `#support-swarm-industries`
 
+**Swarm template:**
+```
+Customer Sentiment:
+Current Condition:
+Feature: [CAM/Basket | DC APIs/Cache | Multisite | Billing/Usage | EPC/Pricing | Other]
+Issue Description:
+Order line count (if multisite):
+Cache recently regenerated?:
+Reproduced in Demo org?:
+Troubleshooting steps taken?:
+```
 
 ---
 

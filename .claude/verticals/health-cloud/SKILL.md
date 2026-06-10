@@ -93,11 +93,127 @@ InsContractServicePtc.apex        ← Contracts
 
 ---
 
+## Sample SOQL Queries
+
+### Care plans for a patient
+```soql
+SELECT Id, Name, Status, StartDate, EndDate, Subject.Name,
+       (SELECT Id, Name, Priority, Status FROM CarePlanProblems),
+       (SELECT Id, Name, Status, TargetDate FROM CarePlanGoals)
+FROM CarePlan
+WHERE Subject.Id = '<PATIENT_CONTACT_ID>'
+ORDER BY StartDate DESC LIMIT 5
+```
+
+### Assessments for a patient
+```soql
+SELECT Id, Name, AssessmentType, Status, TotalScore, CompletedDateTime,
+       (SELECT Id, AssessmentQuestion.Name, ResponseValue, IsRequired
+        FROM AssessmentQuestionResponses)
+FROM AssessmentResponse
+WHERE Subject.Id = '<PATIENT_CONTACT_ID>'
+ORDER BY CompletedDateTime DESC LIMIT 10
+```
+
+### Authorization requests
+```soql
+SELECT Id, CaseNumber, Status, Priority, AuthorizationType,
+       StartDate, EndDate, Account.Name
+FROM AuthorizationRequest
+WHERE Account.Id = '<ACCOUNT_ID>'
+ORDER BY CreatedDate DESC LIMIT 10
+```
+
+### Member plans
+```soql
+SELECT Id, Name, Status, MemberNumber, CoverageStartDate, CoverageEndDate,
+       Account.Name
+FROM MemberPlan
+WHERE Account.Id = '<PATIENT_ACCOUNT_ID>'
+  AND Status = 'Active'
+```
+
+---
+
+## Splunk logRecordTypes
+
+| Type | Use |
+|---|---|
+| `axerr` | Apex uncaught exceptions (HC triggers, IP failures) |
+| `ipipr` | Integration Procedures (HC uses many — care plan flows, enrollment) |
+| `ipdar` | DataRaptors (patient data extraction, care plan creation) |
+| `ipipa` | IP actions/blocks (individual step failures) |
+| `gslog` | Platform Java exceptions (FHIR engine, UM, core HC Java) |
+| `txerr` | Error logs (callout failures, external system errors) |
+
+---
+
+## Code Investigation Paths
+
+### HC Managed Package
+```
+Tool: mcp__plugin_deep-research_codesearch__search
+query: "repo:git.soma.salesforce.com/industries/healthcare content:<keyword>"
+max_matches: 10
+```
+
+### HC Core Java Implementation
+```
+Tool: mcp__plugin_deep-research_codesearch__search
+query: "repo:gitcore.soma.salesforce.com/core-2206/core-262-public path:core/industries-healthcare-impl content:<keyword>"
+max_matches: 10
+```
+
+### HC PTC Layer (Insurance-shared)
+```
+Tool: mcp__plugin_deep-research_codesearch__read_file
+repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
+ref: "p4/262-patch"
+file_path: "core/industries-interaction-ptc/apex/vlocity_ins/AssessmentResponsesPtc.apex"
+```
+
+### OmniStudio Package (INS namespace — HC uses this)
+```
+Tool: mcp__mcp-adaptor__search
+query: "repo:github.com/sf-industries/via_platform content:<keyword> path:package_ins.xml"
+```
+
+---
+
+## Symptom-Driven Fast Path
+
+| Symptom | First Check |
+|---|---|
+| Assessment not saving | `AssessmentResponsesPtc.apex`, FLS on assessment objects, `EnforceDMFLSAndDataEncryption` OIC flag |
+| Care plan IP failing | `InsuranceClaimServicePtc.apex`, OIC flags, IP step order (DML before callout?) |
+| Enrollment errors | `InsEnrollmentServicePtc.apex`, `InsCensusServicePtc.apex`, data format |
+| Benefit verification failing | `InsuranceRatingPtc.apex`, Named Credential config, callout timeout |
+| HC DataRaptor missing fields | `EnforceDMFLSAndDataEncryption` = TRUE → check FLS on all DR fields |
+| FHIR integration timeout/401 | Named Credential status, endpoint URL, FHIR R4 schema mismatch |
+| Provider search empty | Criteria-Based Search permission set, search config, indexed fields |
+| IAM setup failing | Run Health Cloud Troubleshooter (Setup), verify required records |
+| UM authorization stuck | State machine configuration (`VlocityStateModel__c`), valid transitions |
+| HC permission error | HC PSL provisioned? Permission sets assigned? |
+
+---
+
 ## Escalation
 
 - Slack: `#support-health-cloud` or `#support-omnistudio-collaboration`
 - GUS product tag: `Health Cloud` or `Industries Interaction platform`
 
+**Swarm template:**
+```
+Customer Sentiment:
+Current Condition:
+Feature: [Care Plans | Assessments | UM/Auth | FHIR | Provider Network | IAM | Enrollment | Other]
+Payer or Provider context?:
+Issue Description:
+Reproduced in Demo org?:
+Troubleshooting steps taken?:
+HC Troubleshooter run?:
+OmniScript/IP involved?:
+```
 
 ---
 
@@ -105,4 +221,4 @@ InsContractServicePtc.apex        ← Contracts
 
 The following files contain comprehensive troubleshooting patterns with specific error messages, root causes, resolution steps, Splunk queries, and GUS references:
 
-- `known-patterns.md` — Known issue patterns with resolution steps
+- `known-patterns.md` — 12 known issue patterns with triage tree and resolution steps

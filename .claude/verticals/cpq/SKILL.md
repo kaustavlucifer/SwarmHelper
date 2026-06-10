@@ -93,11 +93,143 @@ gitcore.soma.salesforce.com/core-2206/core-262-public:
 
 ---
 
+## SBQQ Object Reference
+
+| Object | Description | Key Fields |
+|---|---|---|
+| `SBQQ__Quote__c` | Quote record | `SBQQ__Status__c`, `SBQQ__Primary__c`, `SBQQ__NetAmount__c`, `SBQQ__Opportunity2__c` |
+| `SBQQ__QuoteLine__c` | Quote line item | `SBQQ__Product__c`, `SBQQ__Quantity__c`, `SBQQ__NetPrice__c`, `SBQQ__Number__c` |
+| `SBQQ__ProductOption__c` | Bundle options | `SBQQ__OptionalSKU__c`, `SBQQ__ConfiguredSKU__c`, `SBQQ__Type__c` |
+| `SBQQ__PricingRule__c` | Pricing rules | `SBQQ__TargetObject__c`, `SBQQ__EvaluationEvent__c`, `SBQQ__Active__c` |
+| `SBQQ__PriceCondition__c` | Rule conditions | `SBQQ__Field__c`, `SBQQ__Operator__c`, `SBQQ__Value__c` |
+| `SBQQ__PriceAction__c` | Rule actions | `SBQQ__TargetObject__c`, `SBQQ__Field__c`, `SBQQ__Value__c` |
+| `SBQQ__Subscription__c` | Active subscriptions | `SBQQ__Contract__c`, `SBQQ__RenewalQuantity__c`, `SBQQ__TermStartDate__c` |
+| `SBQQ__ContractedPrice__c` | Contracted prices | `SBQQ__OriginalQuoteLine__c`, `SBQQ__Price__c` |
+
+### Custom Settings (Critical for Debugging)
+
+| Setting | Key Fields |
+|---|---|
+| `SBQQ__QuoteSettings__c` (org-wide) | `SBQQ__CalculatorServiceTimeout__c`, `SBQQ__EnableQuoteCalculator__c`, `SBQQ__CalculationMethod__c` |
+| `SBQQ__LineEditorSettings__c` | `SBQQ__EnableMultiLineEditing__c` |
+| `SBQQ__Plugins__c` (org-wide) | `SBQQ__PricingPlugin__c` — class name for QCP |
+
+---
+
+## Sample SOQL Queries
+
+### Quote with lines
+```soql
+SELECT Id, Name, SBQQ__Status__c, SBQQ__Primary__c, SBQQ__NetAmount__c,
+       SBQQ__Opportunity2__r.Name, SBQQ__Account__r.Name,
+       (SELECT Id, SBQQ__Product__r.Name, SBQQ__Quantity__c, SBQQ__NetPrice__c,
+               SBQQ__Number__c, SBQQ__SubscriptionTerm__c
+        FROM SBQQ__LineItems__r ORDER BY SBQQ__Number__c)
+FROM SBQQ__Quote__c
+WHERE SBQQ__Opportunity2__c = '<OPPORTUNITY_ID>'
+ORDER BY CreatedDate DESC LIMIT 5
+```
+
+### Active pricing rules
+```soql
+SELECT Id, Name, SBQQ__TargetObject__c, SBQQ__EvaluationEvent__c,
+       SBQQ__Active__c, SBQQ__ConditionsMet__c,
+       (SELECT Id, SBQQ__Field__c, SBQQ__Operator__c, SBQQ__Value__c FROM SBQQ__PriceConditions__r),
+       (SELECT Id, SBQQ__TargetObject__c, SBQQ__Field__c, SBQQ__Value__c FROM SBQQ__PriceActions__r)
+FROM SBQQ__PricingRule__c
+WHERE SBQQ__Active__c = true
+ORDER BY Name LIMIT 20
+```
+
+### Subscriptions for a contract
+```soql
+SELECT Id, SBQQ__Product__r.Name, SBQQ__Quantity__c, SBQQ__NetPrice__c,
+       SBQQ__TermStartDate__c, SBQQ__TermEndDate__c, SBQQ__RenewalQuantity__c
+FROM SBQQ__Subscription__c
+WHERE SBQQ__Contract__c = '<CONTRACT_ID>'
+ORDER BY SBQQ__TermStartDate__c
+```
+
+### QCP plugin configuration
+```soql
+SELECT SBQQ__PricingPlugin__c FROM SBQQ__Plugins__c LIMIT 1
+```
+
+---
+
+## Splunk logRecordTypes
+
+| Type | Use |
+|---|---|
+| `axerr` | Apex uncaught exceptions (quote save, calculation, triggers) |
+| `axlim` | Governor limits (large quotes, 1000+ lines) |
+| `axque` | Queueable jobs (async calculation, renewal processing) |
+| `axftr` | @future methods (background pricing) |
+| `axapx` | Apex execution summary (quote save timing) |
+
+---
+
+## Code Investigation Paths
+
+### SBQQ Managed Package (Steelbrick)
+```
+Tool: mcp__plugin_git-soma_vmcp-git-soma__get_file_contents
+owner: "Steelbrick"
+repo: "CPQ"
+path: "classes/<ClassName>.cls"
+```
+
+### CPQ REST Services (Heroku Calculator)
+```
+Tool: mcp__plugin_git-soma_vmcp-git-soma__get_file_contents
+owner: "Steelbrick"
+repo: "CPQ-REST"
+path: "src/<path>"
+```
+
+### CPQ Core
+```
+Tool: mcp__plugin_deep-research_codesearch__search
+query: "repo:gitcore.soma.salesforce.com/core-2206/core-262-public path:core/cpq content:<keyword>"
+max_matches: 10
+```
+
+---
+
+## Symptom-Driven Fast Path
+
+| Symptom | First Check |
+|---|---|
+| QLE not loading / blank | Browser console (JS errors), SBQQ__Quote__c status field |
+| Apex heap size on quote save | Line count (>500?), QCP complexity, nested bundles |
+| Too many SOQL queries | Trigger stacking, flow loops on quote save |
+| Amendment not working | Contract status, subscription fields, amendment start date |
+| Pricing rule not firing | Rule order, evaluation event, conditions met criteria |
+| Renewal quote failing | Renewal model, subscription term, SBQQ__RenewalModel__c |
+| UNABLE_TO_LOCK_ROW | Concurrent quote saves, background jobs on same records |
+| Calculation service timeout | `SBQQ__CalculatorServiceTimeout__c` setting, QCP performance |
+| Contract not creating from order | Order status, field mapping, validation rules |
+| QCP custom code failing | JavaScript syntax, async/await, console.log debugging |
+
+---
+
 ## Escalation
 
 - Slack: `#support-rev-dev-amer`
 - GUS product tag: `Revenue Cloud` (CPQ bugs filed here)
 
+**Swarm template:**
+```
+Customer Sentiment:
+Current Condition:
+Component: [QLE | QCP | Pricing Rules | Amendments | Renewals | Contracts | API | Other]
+Quote Line Count:
+SBQQ Package Version:
+Issue Description:
+Browser console errors?:
+Reproduced in Demo org?:
+Troubleshooting steps taken?:
+```
 
 ---
 
