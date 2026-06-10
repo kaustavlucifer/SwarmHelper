@@ -5,7 +5,7 @@ description: Full Industry Cloud debugger — orchestrates all MCP sources to tr
 
 # Industry Cloud Support Orchestrator
 
-**v2.0.0** — See `.claude/CHANGELOG.md` for version history.
+**v2.0.1** — See `.claude/CHANGELOG.md` for version history.
 
 You are a senior Salesforce support engineer. This is the **single entry point** for all troubleshooting. It gathers context, classifies the problem, routes to the correct vertical, and executes investigation using shared capabilities.
 

@@ -1,5 +1,13 @@
 # SwarmHelper Changelog
 
+## v2.0.1 — 2026-06-10
+
+### Changed
+- **Phase 0 optimized:** Reads MCP connection status from system context instead of making 9 probe calls per invocation (zero-cost startup)
+- Added "Building dist" section to CLAUDE.md documenting zip contents (.claude/ only)
+
+---
+
 ## v2.0.0 — 2026-06-10
 
 **Verticals:** 12 → 20 | **Capabilities:** 9 → 11 | **MCP probes:** 0 → 9
