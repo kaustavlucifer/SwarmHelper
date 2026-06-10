@@ -117,6 +117,18 @@ ORDER BY TargetDate ASC
 
 ---
 
+---
+
+## Splunk logRecordTypes
+
+| Type | Use |
+|---|---|
+| `axerr` | Apex uncaught exceptions |
+| `axlim` | Governor limit consumption |
+| `ipipr` | Integration Procedures (if OmniStudio components used) |
+| `ipdar` | DataRaptors (if OmniStudio components used) |
+| `gslog` | Platform Java exceptions (core implementation) |
+
 ## Code Investigation Paths
 
 ### Core Implementation
