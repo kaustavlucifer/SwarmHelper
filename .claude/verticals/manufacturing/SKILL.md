@@ -30,15 +30,21 @@
 | `via_platform` | `sf-industries/via_platform` | OmniStudio Apex (shared) |
 | `via_core` | `sf-industries/via_core` | Platform foundation (shared) |
 
-### Core Monorepo Paths
+> **Note:** Manufacturing Cloud is core-only — no dedicated managed package repo.
+
+### Core Monorepo Paths (CONFIRMED via CodeSearch)
 
 ```
 gitcore.soma.salesforce.com/core-2206/core-262-public:
-  core/industries-manufacturing-impl/               ← Manufacturing Cloud implementation
+  core/industries-manufacturing/                    ← Manufacturing Cloud implementation
   core/industries-manufacturing-udd/                ← Manufacturing UDD (objects, config)
   core/ui-industries-manufacturing-components/      ← Manufacturing LWC components
   core/industries-rebate-impl/                      ← Rebate Management implementation
 ```
+
+### Ownership Teams
+- `MFG-Warriors`, `MFG-Core`, `MFG-Titans`, `MFG-Vikings`, `MFG-Strikers`
+- `Industries Einstein - GPT Usecases` (AI features)
 
 ---
 

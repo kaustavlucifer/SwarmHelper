@@ -29,17 +29,24 @@
 | `via_platform` | `sf-industries/via_platform` | OmniStudio Apex (shared) |
 | `via_core` | `sf-industries/via_core` | Platform foundation (shared) |
 
-> **Note:** Automotive shares repository infrastructure with Manufacturing Cloud.
+> **Note:** Automotive Cloud is core-only — no dedicated managed package repo. Shares teams with Manufacturing.
 
-### Core Monorepo Paths
+### Core Monorepo Paths (CONFIRMED via CodeSearch)
 
 ```
 gitcore.soma.salesforce.com/core-2206/core-262-public:
-  core/industries-automotive-impl/                    ← Automotive Cloud implementation
+  core/industries-automotive/                         ← Automotive Cloud implementation
   core/industries-automotive-udd/                     ← Automotive UDD (objects, config)
-  core/ui-industries-automotive-components/           ← Automotive LWC components
-  core/industries-manufacturing-impl/                 ← Shared with Manufacturing
+  core/industries-automotive-setup-home/              ← Setup/config UI
+  core/industries-manufacturing/                      ← Shared Manufacturing infrastructure
 ```
+
+### Ownership Teams
+- `MFG-Knights`, `MFG-Vikings`
+
+### Key Core Classes
+- `VehicleDefinition` — `core/shared-pathassistant/java/src/common/runtime/pipelineview/VehicleDefinition.java`
+- Uses `VehicleDefinitionStandardEntity` from `com.force.commons.sobject.industriesautomotiveudd.entities`
 
 ---
 

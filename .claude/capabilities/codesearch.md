@@ -169,7 +169,7 @@ AssessmentResponsesPtc.apex      OrchestrationPlanCompositionServicePtc.apex
 | `core/ui-omnistudio-components/modules/runtime_omnistudio_flexcards/` | FlexCard runtime |
 | `core/ui-omnistudio-components/modules/builder_omnistudio_*/` | Designer LWC |
 
-### Vertical-Specific Paths
+### Vertical-Specific Paths (CONFIRMED via CodeSearch)
 | Path | Vertical |
 |---|---|
 | `core/ui-fsc-components/omnistudio/` | FSC |
@@ -177,8 +177,30 @@ AssessmentResponsesPtc.apex      OrchestrationPlanCompositionServicePtc.apex
 | `core/industries-communications-msm-impl/omnistudio/` | Communications/Telco |
 | `core/ui-industries-cpq-components/` | CPQ / Revenue Cloud |
 | `core/ui-industries-public-sector-components/omnistudio/` | Public Sector |
+| `core/industries-manufacturing/` | Manufacturing Cloud |
+| `core/industries-automotive/` | Automotive Cloud |
+| `core/industries-loyalty/` | Loyalty Management |
+| `core/industries-education/` | Education Cloud (9 modules) |
+| `core/industries-nonprofit-*` | Nonprofit Cloud |
+| `core/industries-sustainability/` | Net Zero Cloud |
 | `core/ui-industries-digitallending-components/omnistudio/` | Digital Lending |
 | `core/ui-industries-common-components/omnistudio/` | Shared Industries |
+
+### Managed Package Repos (Non-via_platform)
+| Vertical | Repo |
+|---|---|
+| Public Sector | `github.com/sf-industries/via_ps` (Apex package, vlocity_ps namespace) |
+| Net Zero Cloud | `github.com/sf-industries/Sustainability-App` |
+| Insurance | `github.com/sf-industries/via_ins` |
+| Insurance-FSC Bridge | `github.com/sf-industries/via_ins_fsc` |
+| Comms/Telco | `github.com/sf-industries/via_telco` |
+| Energy | `github.com/sf-industries/via_energy` |
+| Media | `github.com/sf-industries/via_media` |
+| Revenue Mgmt | `github.com/sf-industries/via_rm` |
+| CLM/Contracts | `github.com/sf-industries/via_contract` |
+| DocGen | `github.com/sf-industries/via_docgen` |
+| Industries CPQ | `github.com/sf-industries/via_cpq` |
+| Salesforce CPQ | `git.soma.salesforce.com/Steelbrick/CPQ` |
 
 ---
 

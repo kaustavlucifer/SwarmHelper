@@ -21,14 +21,18 @@
 
 ## Repository Architecture
 
-### Core Monorepo Paths
+### Core Monorepo Paths (CONFIRMED via CodeSearch)
 
 ```
 gitcore.soma.salesforce.com/core-2206/core-262-public:
-  core/industries-loyalty-impl/                     ← Loyalty Management implementation
-  core/industries-loyalty-udd/                      ← Loyalty UDD (objects, config)
-  core/ui-industries-loyalty-components/            ← Loyalty LWC components
+  core/industries-loyalty/                          ← Loyalty Management base
+  core/industries-loyalty-api/                      ← API layer (public interfaces)
+  core/industries-loyalty-impl/                     ← Implementation (Java services)
+  core/industries-loyalty-udd/                      ← UDD (objects, config)
+  core/ui-industries-loyalty-api/                   ← UI API layer (LoyaltyProgramTier.java etc.)
 ```
+
+> **Note:** Loyalty Management is core-only — no dedicated managed package. Has CDP (Customer Data Platform) integration.
 
 ---
 

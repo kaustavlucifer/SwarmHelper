@@ -21,18 +21,30 @@
 
 ## Repository Architecture
 
-### Core Monorepo Paths
+### GitHub Repos (CONFIRMED via CodeSearch)
+
+| Repository | Path | Content |
+|---|---|---|
+| `Sustainability-App` | `sf-industries/Sustainability-App` | Net Zero Cloud managed package app |
+
+### Core Monorepo Paths (CONFIRMED via CodeSearch)
 
 ```
 gitcore.soma.salesforce.com/core-2206/core-262-public:
-  core/industries-sustainability/                     ← Net Zero Cloud base
+  core/industries-sustainability/                     ← Net Zero Cloud base (CarbonFootprint, EmissionSource)
   core/industries-sustainability-api/                 ← API layer
   core/industries-sustainability-impl/                ← Implementation
   core/industries-sustainability-udd/                 ← UDD (objects, config)
+  core/industries-sustainability-shared/              ← Shared utilities
   core/ui-industries-sustainability-components/       ← LWC components
   core/ui-industries-sustainability-impl/             ← UI implementation
   core/ui-industries-sustainability-api/              ← UI API layer
 ```
+
+> **Note:** Hybrid architecture — managed package app + core Java services. Key classes: `CarbonFootprintDAO`, energy-to-carbon-footprint automation.
+
+### Key Core Classes
+- `CarbonFootprintDAO` — `core/industries-sustainability/java/src/industries/sustainability/energyusetocarbonfootprintautomation/CarbonFootprintDAO.java`
 
 ---
 

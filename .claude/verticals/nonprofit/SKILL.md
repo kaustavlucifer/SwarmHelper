@@ -35,14 +35,17 @@
 | Nonprofit Cloud | `sfdo_np__` | Newer Nonprofit Cloud objects |
 | Outcomes | `sfdo__` | Program outcomes |
 
-### Core Monorepo Paths
+### Core Monorepo Paths (CONFIRMED via CodeSearch)
 
 ```
 gitcore.soma.salesforce.com/core-2206/core-262-public:
-  core/industries-nonprofit-impl/                    ← Nonprofit Cloud implementation
   core/industries-nonprofit-udd/                     ← Nonprofit UDD
-  core/ui-industries-nonprofit-components/           ← Nonprofit LWC components
+  core/industries-nonprofit-api/                     ← Nonprofit API
+  core/industries-nonprofit-impl/                    ← Nonprofit implementation
+  core/industries-fundraising/                       ← Fundraising feature (related)
 ```
+
+> **Note:** Nonprofit Cloud (core) is separate from traditional NPSP managed package. Core Nonprofit is integrated into the Industries platform.
 
 ---
 

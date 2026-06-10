@@ -32,14 +32,26 @@
 | Accounting Subledger | Financial management |
 | Data Mover | Data migration utilities |
 
-### Core Monorepo Paths
+### Core Monorepo Paths (CONFIRMED via CodeSearch — 9 modules)
 
 ```
 gitcore.soma.salesforce.com/core-2206/core-262-public:
-  core/industries-education-impl/                    ← Education Cloud implementation
-  core/industries-education-udd/                     ← Education UDD
-  core/ui-industries-education-components/           ← Education LWC components
+  core/industries-education/                         ← Education Cloud base
+  core/industries-education-api/                     ← Public interfaces
+  core/industries-education-impl/                    ← Service implementations
+  core/industries-education-udd/                     ← UDD entities (54 enums)
+  core/industries-education-connect-api/             ← Connect API
+  core/industries-education-connect-impl/            ← Connect implementation
+  core/ui-industries-education-api/                  ← UI API layer
+  core/ui-industries-education-impl/                 ← UI implementation
+  core/ui-industries-education-components/           ← LWC components
 ```
+
+> **Note:** Education Cloud is core-only (no via_* managed package). Java root package: `industries.education.*`
+> Cross-dependencies: public-sector (care plans), actionplan, program-mgmt, bre-guardrail, rules-engine, pricing
+
+### Ownership Teams
+- `EDU-Rad-ish`, `EDU-Turmerific`, `EDU-Sweet Potatoes`, `EDU-Turnip the Beets`, `EDU-Garlic Genies`, `EDU-Gingersnaps`, `NPC Cartwheel`
 
 ---
 

@@ -21,22 +21,33 @@
 
 ## Repository Architecture
 
-### GitHub / git.soma Repos
+### GitHub / git.soma Repos (CONFIRMED via CodeSearch)
 
 | Repository | Path | Content |
 |---|---|---|
+| `via_ps` | `sf-industries/via_ps` | **Public Sector managed package** (primary Apex: PSUtils, PSPymnt, BuildingInfo, ApplicationAssets, IncidentMapController) |
+| `via_ps_test` | `sf-industries/via_ps_test` | PS test package |
 | `via_platform` | `sf-industries/via_platform` | OmniStudio Apex (vlocity_ps namespace, `package_ps.xml`) |
 | `via_core` | `sf-industries/via_core` | Platform foundation (shared) |
+
+> **Note:** Public Sector is primarily an Apex managed package (not Java-based like most other Industry Clouds). Uses `vlocity_ps__` namespace.
 
 ### Core Monorepo Paths
 
 ```
 gitcore.soma.salesforce.com/core-2206/core-262-public:
-  core/industries-public-sector-impl/                  ← Public Sector implementation
-  core/industries-public-sector-udd/                   ← Public Sector UDD
   core/ui-industries-public-sector-components/omnistudio/  ← PSS OmniStudio components
-  core/industries-interaction-ptc/apex/vlocity_ps/     ← PTC layer (PS namespace)
+  core/industries-interaction-ptc/apex/vlocity_ps/         ← PTC layer (PS namespace)
 ```
+
+### Key Package Classes (from via_ps)
+| Class | Domain |
+|---|---|
+| `PSUtils` | General PS utilities |
+| `PSPymnt` | Payment processing |
+| `BuildingInfo`, `TenantDetailInfo` | Housing/facility management |
+| `ApplicationAssets`, `ApplicationIncome`, `ApplicationExpenses` | Benefit application processing |
+| `IncidentMapController`, `MapGeoServices` | Geolocation/incident mapping |
 
 ---
 

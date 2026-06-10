@@ -8,6 +8,7 @@ data/solution/
 
 # Large proprietary data files
 knowledge_articles_product_docs_2026-06-09.csv
+data/extracted/
 
 # OS
 .DS_Store
