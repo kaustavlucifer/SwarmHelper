@@ -161,6 +161,7 @@ SELECT SBQQ__PricingPlugin__c FROM SBQQ__Plugins__c LIMIT 1
 
 | Type | Use |
 |---|---|
+| `r1log` | Industries package instrumentation (filter by `instKey`) |
 | `axerr` | Apex uncaught exceptions (quote save, calculation, triggers) |
 | `axlim` | Governor limits (large quotes, 1000+ lines) |
 | `axque` | Queueable jobs (async calculation, renewal processing) |

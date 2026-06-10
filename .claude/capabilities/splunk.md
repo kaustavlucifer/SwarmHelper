@@ -51,6 +51,19 @@ Params:
 | `axque` | Queueable job tracking |
 | `axftr` | @future method debugging |
 
+### Industries (All Verticals)
+| Type | Description | Availability |
+|---|---|---|
+| `r1log` | **Industries managed package instrumentation** — primary logRecordType for ALL Industry verticals. Use `instKey` field to filter by feature area. | All Industries packages |
+
+Query pattern:
+```spl
+index=<POD> organizationId=<ORG_15> logRecordType=r1log instKey=<feature> earliest=-7d
+| head 50
+```
+
+Common `instKey` values: `makeHttpCall`, `InvokeService`, `DREngine`, `CPQService`, etc.
+
 ### OmniStudio
 | Type | Description | Availability |
 |---|---|---|
@@ -145,6 +158,29 @@ index=<POD> organizationId=<ORG_15> <REQUEST_ID>
 | convert ctime(startTimeTemp) as StartTime
 | table logRecordType, StartTime, EndTime, runTimeInSeconds, message
 ```
+
+### Falcon / Off-Platform Services (Revenue Cloud, TPM)
+
+For services running on Falcon (k8s), use the `distapps` index:
+```spl
+index=distapps functional_domain=core1 k8s_namespace=revenue-cloud earliest=-7d
+| head 50
+```
+
+| Namespace | Vertical |
+|---|---|
+| `revenue-cloud` | Revenue Cloud (RLM) Falcon services |
+| `consumer-goods` | TPM off-platform services |
+
+---
+
+## Log Governance
+
+Schema validation for any logRecordType:
+- URL: `https://log-governance.eng.sfdc.net:8080/schema/main?logRecordType=<TYPE>`
+- OmniAnalytics Dashboard: `https://org62.lightning.force.com/analytics/dashboard/0FK0M000000TPcMWAW`
+
+---
 
 ## Time Ranges
 

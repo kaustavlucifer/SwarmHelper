@@ -343,10 +343,12 @@ When debugging trigger-related issues, check:
 
 | Channel | Use |
 |---|---|
-| `#support-health-cloud` | Support swarm (shared with HC) |
-| `#industries-insurance` | Insurance-specific engineering |
-| `#support-omnistudio-collaboration` | OmniStudio-layer issues |
-| `#support-swarm-industries` | General swarm |
+| `#insurance-cce-support-all` (C0AH1JFCJ3D) | Insurance CCE support |
+| `#industries-insurance` (C01PMNSFUKZ) | Insurance industry community |
+| `#industries-insurance-service` (C02765RD8FK) | Internal expertise (no SLA) |
+| `#industries-ins-pct` (C027DRQ28AW) | Insurance package PCT |
+| `#support-omnistudio-collaboration` (C03GSNY2GVC) | OmniStudio-layer issues |
+| `#support-swarm-industries` (C02BEHKLWES) | General Industries swarm |
 
 **GUS product tags:** `Industries Insurance`, `Industries Interaction platform`, `Health Cloud`
 

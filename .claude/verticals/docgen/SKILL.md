@@ -106,6 +106,7 @@ This eliminates the need to replicate custom sObjects, DataRaptors, etc. in the 
 |---|---|
 | `ipipr` | Integration Procedures (DocGen orchestration) |
 | `ipdar` | DataRaptors (token extraction, data pull) |
+| `r1log` | Industries package instrumentation (filter by `instKey`) |
 | `axerr` | Apex exceptions (template processing, PDF generation) |
 | `axlim` | Governor limits (large document batch generation) |
 

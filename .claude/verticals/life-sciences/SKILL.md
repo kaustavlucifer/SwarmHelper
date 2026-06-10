@@ -117,6 +117,7 @@ ORDER BY EffectiveFrom DESC
 
 | Type | Use |
 |---|---|
+| `r1log` | Industries package instrumentation (filter by `instKey`) |
 | `axerr` | Apex exceptions |
 | `ipipr` | Integration Procedures (enrollment flows, consent flows) |
 | `ipdar` | DataRaptors |

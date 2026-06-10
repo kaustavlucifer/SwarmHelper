@@ -152,6 +152,7 @@ ORDER BY Name
 
 | Type | Use |
 |---|---|
+| `r1log` | Industries package instrumentation (filter by `instKey`) |
 | `axerr` | Apex uncaught exceptions (CPQ, decomposition) |
 | `ipipr` | Integration Procedures (order submission, cart operations) |
 | `ipdar` | DataRaptors (product catalog, attribute extraction) |

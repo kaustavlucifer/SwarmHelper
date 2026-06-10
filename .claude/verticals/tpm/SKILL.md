@@ -136,6 +136,7 @@ ORDER BY Name
 
 | Type | Use |
 |---|---|
+| `r1log` | Industries package instrumentation (filter by `instKey`) |
 | `axerr` | Apex uncaught exceptions (KPI calculation, batch failures) |
 | `axlim` | Governor limits (nightly batch, promotion load) |
 | `axque` | Queueable jobs (async KPI processing) |
@@ -182,7 +183,8 @@ TPM relies heavily on nightly batch processing:
 
 ## Escalation
 
-- Slack: `#support-consumer-goods` or `#support-swarm-industries`
+- Slack: `#ent-consumer-goods-se-support` (C098184TA5S) — Consumer Goods SE support
+- General: `#support-swarm-industries` (C02BEHKLWES)
 - GUS product tag: `Consumer Goods Cloud`
 
 **Swarm template:**

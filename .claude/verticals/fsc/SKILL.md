@@ -140,6 +140,7 @@ ORDER BY CreatedDate DESC LIMIT 10
 
 | Type | Use |
 |---|---|
+| `r1log` | Industries package instrumentation (filter by `instKey`) |
 | `axerr` | Apex uncaught exceptions (triggers, action plan logic) |
 | `ipipr` | Integration Procedures (FSC OmniScripts) |
 | `ipdar` | DataRaptors (FSC data operations) |
@@ -201,7 +202,9 @@ max_matches: 10
 
 ## Escalation
 
-- Slack: `#support-industries-fsc` or `#support-omnistudio-collaboration`
+- Slack: `#industries-fsc` (C022BF4TH7B), `#tech-prod-help-financial-services-cloud` (C020H26JCP7), `#fsc-support-cce-eng` (C08MH09LEH3)
+- Escalation: `#support-industry-fsc-hc` (C01L982KF7A) — Signature tier
+- General: `#support-swarm-industries` (C02BEHKLWES)
 - GUS product tag: `Industries Financial Services Cloud`
 
 **Swarm template:**

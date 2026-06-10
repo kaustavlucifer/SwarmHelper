@@ -109,6 +109,7 @@ ORDER BY StartDate__c DESC
 
 | Type | Use |
 |---|---|
+| `r1log` | Industries package instrumentation (filter by `instKey`) |
 | `axerr` | Apex exceptions (ad pricing, targeting) |
 | `ipipr` | Integration Procedures |
 | `ipdar` | DataRaptors |
@@ -147,7 +148,8 @@ file_path: "core/industries-media-revenue-impl/"
 ## Escalation
 
 - GUS product tag: `Media Cloud`
-- Slack: `#support-swarm-industries`
+- Slack: `#industries-media` (C01JESF340P) — Media & Entertainment community
+- General: `#support-swarm-industries` (C02BEHKLWES)
 
 **Swarm template:**
 ```

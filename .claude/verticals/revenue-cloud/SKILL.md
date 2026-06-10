@@ -191,6 +191,7 @@ ORDER BY CreatedDate ASC LIMIT 20
 
 | Type | Use |
 |---|---|
+| `r1log` | Industries package instrumentation (filter by `instKey`) |
 | `axerr` | Apex uncaught exceptions (billing batch, approval triggers) |
 | `ipipr` | Integration Procedures (BRE execution, configurator flows) |
 | `ipdar` | DataRaptors (product catalog, pricing data) |

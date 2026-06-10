@@ -139,6 +139,7 @@ WHERE Account.Id = '<PATIENT_ACCOUNT_ID>'
 
 | Type | Use |
 |---|---|
+| `r1log` | Industries package instrumentation (filter by `instKey`) |
 | `axerr` | Apex uncaught exceptions (HC triggers, IP failures) |
 | `ipipr` | Integration Procedures (HC uses many — care plan flows, enrollment) |
 | `ipdar` | DataRaptors (patient data extraction, care plan creation) |
@@ -199,7 +200,10 @@ query: "repo:github.com/sf-industries/via_platform content:<keyword> path:packag
 
 ## Escalation
 
-- Slack: `#support-health-cloud` or `#support-omnistudio-collaboration`
+- Slack: `#tmp-help-health-cloud` (C020DANSS94) — HC tech questions to engineering
+- Community: `#industries-healthcare` (C01KUUZ3QCV) — providers + payers
+- Signature: `#support-industry-fsc-hc` (C01L982KF7A)
+- General: `#support-swarm-industries` (C02BEHKLWES)
 - GUS product tag: `Health Cloud` or `Industries Interaction platform`
 
 **Swarm template:**

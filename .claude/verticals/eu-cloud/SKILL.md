@@ -127,6 +127,7 @@ ORDER BY CreatedDate DESC LIMIT 5
 
 | Type | Use |
 |---|---|
+| `r1log` | Industries package instrumentation (filter by `instKey`) |
 | `axerr` | Apex uncaught exceptions (basket, pricing) |
 | `ipipr` | Integration Procedures (VEEDigitalGetBasket, multisite flows) |
 | `ipdar` | DataRaptors (product/pricing extraction) |
@@ -166,7 +167,9 @@ file_path: "core/ui-industries-energy-utilities-components/"
 ## Escalation
 
 - GUS product tag: `Energy & Utilities Cloud`
-- Slack: `#support-swarm-industries`
+- Slack: `#energy_cloud-cx-support` (C070CSJGH0Q) — E&U CX requests/blockers
+- Community: `#industries-energy-oil-and-gas` (C01K79X82ER)
+- General: `#support-swarm-industries` (C02BEHKLWES)
 
 **Swarm template:**
 ```
