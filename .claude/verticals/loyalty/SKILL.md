@@ -21,6 +21,10 @@
 
 ## Repository Architecture
 
+### GitHub / git.soma Repos
+
+> **Note:** Loyalty Management has no managed package repo — it is entirely core-only (Java-based).
+
 ### Core Monorepo Paths (CONFIRMED via CodeSearch)
 
 ```
@@ -33,6 +37,13 @@ gitcore.soma.salesforce.com/core-2206/core-262-public:
 ```
 
 > **Note:** Loyalty Management is core-only — no dedicated managed package. Has CDP (Customer Data Platform) integration.
+
+---
+
+
+### PTC Layer
+
+Loyalty is core-only (no PTC layer). No managed package Apex — Java-based implementation in `core/industries-loyalty-impl/`.
 
 ---
 
@@ -126,6 +137,7 @@ ORDER BY ExpirationDate ASC
 
 | Type | Use |
 |---|---|
+| `r1log` | Industries package instrumentation (filter by `instKey`) |
 | `axerr` | Apex uncaught exceptions |
 | `axlim` | Governor limit consumption |
 | `ipipr` | Integration Procedures (if OmniStudio components used) |

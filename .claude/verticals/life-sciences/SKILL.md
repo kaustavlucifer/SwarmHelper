@@ -156,7 +156,7 @@ query: "lifesciences"
 ## Escalation
 
 - GUS product tag: `Life Sciences Cloud`
-- Slack: `#support-swarm-industries`
+- Slack: `#support-swarm-industries` (C02BEHKLWES)
 
 **Swarm template:**
 ```

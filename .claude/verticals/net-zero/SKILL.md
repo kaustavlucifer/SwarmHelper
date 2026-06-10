@@ -48,6 +48,13 @@ gitcore.soma.salesforce.com/core-2206/core-262-public:
 
 ---
 
+
+### PTC Layer
+
+Net Zero Cloud is hybrid (managed app + core Java). No dedicated PTC layer — uses shared OmniStudio PTC if OmniStudio components are involved.
+
+---
+
 ## Engineering Playbooks
 
 | Resource | URL |
@@ -123,6 +130,7 @@ ORDER BY TargetDate ASC
 
 | Type | Use |
 |---|---|
+| `r1log` | Industries package instrumentation (filter by `instKey`) |
 | `axerr` | Apex uncaught exceptions |
 | `axlim` | Governor limit consumption |
 | `ipipr` | Integration Procedures (if OmniStudio components used) |

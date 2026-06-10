@@ -48,6 +48,14 @@ gitcore.soma.salesforce.com/core-2206/core-262-public:
 
 ---
 
+
+### PTC Layer
+
+Manufacturing is core-only (no PTC layer). Uses shared OmniStudio PTC when OmniStudio components are involved:
+- `DataRaptorUtilsPtc.apex`, `IntegrationProcedureUtilsPtc.apex`, `OmniScriptServicePtc.apex`
+
+---
+
 ## Engineering Playbooks
 
 | Resource | URL |
@@ -131,6 +139,7 @@ ORDER BY CreatedDate DESC LIMIT 20
 
 | Type | Use |
 |---|---|
+| `r1log` | Industries package instrumentation (filter by `instKey`) |
 | `axerr` | Apex uncaught exceptions |
 | `axlim` | Governor limit consumption |
 | `ipipr` | Integration Procedures (if OmniStudio components used) |

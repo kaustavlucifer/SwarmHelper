@@ -92,6 +92,7 @@ gitcore.soma.salesforce.com/core-2206/core-262-public:
 
 | Type | Component |
 |---|---|
+| `r1log` | Industries package instrumentation (shared, filter by `instKey`) |
 | `iposs` | OmniScript |
 | `ipipr` | Integration Procedure |
 | `ipipa` | IP actions/blocks |
@@ -120,6 +121,8 @@ gitcore.soma.salesforce.com/core-2206/core-262-public:
 | `#industries-omnistudio-collaboration` | C02LN705BEK | TMP/engineering |
 | `#support-swarm-industries` | C02BEHKLWES | General swarm |
 | `#omnistudio-migration-support` | C0AJACQQ6H3 | Runtime migration |
+
+**GUS product tag:** `Industries Interaction platform`
 
 **Swarm template:**
 ```

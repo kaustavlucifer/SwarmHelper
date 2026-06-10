@@ -55,6 +55,7 @@ gitcore.soma.salesforce.com/core-2206/core-262-public:
 
 | Resource | URL |
 |---|---|
+| DocGen KB (Confluence) | https://confluence.internal.salesforce.com/spaces/OMNISTUDIO/pages/644650321/ |
 | OmniStudio DocGen Setup | https://help.salesforce.com/s/articleView?id=ind.doc_gen_select_templates_for_clm_or_foundation_docgen.htm&type=5 |
 
 ---
@@ -99,6 +100,24 @@ This eliminates the need to replicate custom sObjects, DataRaptors, etc. in the 
 | Async generation stuck | Batch job status; governor limits on bulk generation |
 
 ---
+
+## Sample SOQL Queries
+
+### DocGen templates
+```soql
+SELECT Id, Name, IsActive, VersionNumber, Type, LastModifiedDate
+FROM OmniDocumentTemplate
+WHERE IsActive = true
+ORDER BY Name
+```
+
+### Document generation jobs (async)
+```soql
+SELECT Id, Status, CreatedDate, CompletedDate, NumberOfErrors
+FROM AsyncApexJob
+WHERE ApexClass.Name LIKE '%DocGen%'
+ORDER BY CreatedDate DESC LIMIT 10
+```
 
 ## Splunk logRecordTypes
 
@@ -149,9 +168,9 @@ max_matches: 10
 
 | Channel | Use |
 |---|---|
-| `#support-omnistudio-collaboration` | OmniStudio DocGen issues |
-| `#support-rev-dev-amer` | CLM DocGen / Revenue Cloud |
-| `#support-swarm-industries` | General swarm |
+| `#support-omnistudio-collaboration` (C03GSNY2GVC) | OmniStudio DocGen issues |
+| `#support-rev-dev-amer` (C0275QG40LE) | CLM DocGen / Revenue Cloud |
+| `#support-swarm-industries` (C02BEHKLWES) | General swarm |
 
 **GUS product tags:** `Industries Interaction platform`, `Revenue Cloud`
 

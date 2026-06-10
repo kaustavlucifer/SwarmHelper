@@ -39,6 +39,19 @@ gitcore.soma.salesforce.com/core-2206/core-262-public:
 
 ---
 
+
+### PTC Layer
+
+```
+core/industries-interaction-ptc/apex/vlocity_cmt/
+  CPQServicePtc.apex              ← Cart/quoting operations
+  CalculationServicePtc.apex      ← Pricing calculations
+```
+
+> **Note:** SBQQ (Steelbrick CPQ) does NOT use the PTC layer — it's a standalone managed package. Only Industries CPQ uses PTC.
+
+---
+
 ## Engineering Playbooks
 
 | Resource | URL |

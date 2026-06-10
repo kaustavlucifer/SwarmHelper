@@ -35,6 +35,10 @@
 | Nonprofit Cloud | `sfdo_np__` | Newer Nonprofit Cloud objects |
 | Outcomes | `sfdo__` | Program outcomes |
 
+### GitHub / git.soma Repos
+
+> **Note:** NPSP and its sub-packages are hosted separately (not in sf-industries org). Core Nonprofit Cloud is in the monorepo below.
+
 ### Core Monorepo Paths (CONFIRMED via CodeSearch)
 
 ```
@@ -46,6 +50,13 @@ gitcore.soma.salesforce.com/core-2206/core-262-public:
 ```
 
 > **Note:** Nonprofit Cloud (core) is separate from traditional NPSP managed package. Core Nonprofit is integrated into the Industries platform.
+
+---
+
+
+### PTC Layer
+
+NPSP is an independent managed package (not built on vlocity_* platform). No PTC layer. Core Nonprofit Cloud uses `core/industries-nonprofit-impl/`.
 
 ---
 
@@ -137,6 +148,7 @@ WHERE npsp__Opportunity__c = '<OPPORTUNITY_ID>'
 
 | Type | Use |
 |---|---|
+| `r1log` | Industries package instrumentation (filter by `instKey`) |
 | `axerr` | Apex uncaught exceptions |
 | `axlim` | Governor limit consumption |
 | `ipipr` | Integration Procedures (if OmniStudio components used) |

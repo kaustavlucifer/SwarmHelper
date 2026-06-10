@@ -493,13 +493,33 @@ Run SOQL against the customer org (if accessible via OrgCS/case context) to veri
 
 ---
 
+## Splunk logRecordTypes
+
+| Type | Use |
+|---|---|
+| `r1log` | Industries package instrumentation (filter by `instKey`) |
+| `axerr` | Apex uncaught exceptions (transaction processing, asset operations) |
+| `ipipr` | Integration Procedures (RLM flows) |
+| `axlim` | Governor limits (bulk asset operations, CSV import) |
+| `gslog` | Platform Java exceptions (constraint engine, pricing) |
+
+For Falcon services (off-platform):
+```spl
+index=distapps functional_domain=core1 k8s_namespace=revenue-cloud earliest=-7d
+| head 50
+```
+
+---
+
 ## Escalation
 
 | Channel | Use |
 |---|---|
-| `#support-rev-dev-amer` | Primary support swarm for RLM/Revenue Cloud issues |
-| `#support-omnistudio-collaboration` | OmniStudio-layer issues in RLM flows |
-| `#support-swarm-industries` | General Industries swarm |
+| `#support-rev-rlm-global-swarm-help` (C05TFMXB3RN) | RLM case swarming/collaboration |
+| `#support-rev-rlm` (C06BXE12Y4Q) | RLM support |
+| `#support-rev-dev-amer` (C0275QG40LE) | Rev Dev swarms (Americas) |
+| `#support-omnistudio-collaboration` (C03GSNY2GVC) | OmniStudio-layer issues |
+| `#support-swarm-industries` (C02BEHKLWES) | General Industries swarm |
 
 **GUS product tags:** `Revenue Cloud`, `Revenue Lifecycle Management`, `Industries CPQ`
 

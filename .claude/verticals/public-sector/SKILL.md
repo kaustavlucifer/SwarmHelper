@@ -135,6 +135,7 @@ ORDER BY CreatedDate DESC LIMIT 10
 
 | Type | Use |
 |---|---|
+| `r1log` | Industries package instrumentation (filter by `instKey`) |
 | `axerr` | Apex uncaught exceptions |
 | `axlim` | Governor limit consumption |
 | `ipipr` | Integration Procedures (if OmniStudio components used) |

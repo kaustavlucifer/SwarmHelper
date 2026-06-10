@@ -18,6 +18,18 @@
 
 ---
 
+
+### Core Monorepo Paths
+
+```
+gitcore.soma.salesforce.com/core-2206/core-262-public:
+  core/industries-rcg/                               ← Consumer Goods / TPM (if present)
+```
+
+> **Note:** TPM is primarily managed package (rcg-retail-tpm on git.soma). No dedicated PTC layer — uses shared OmniStudio PTC classes when IPs/DRs are involved.
+
+---
+
 ## Engineering Playbooks
 
 | Resource | URL |

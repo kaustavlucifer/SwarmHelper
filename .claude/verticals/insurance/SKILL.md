@@ -222,6 +222,51 @@ CommissionSchedule → CommissionScheduleAssignment
 
 ---
 
+
+---
+
+## Sample SOQL Queries
+
+### Policies for an account
+```soql
+SELECT Id, Name, PolicyType, Status, EffectiveDate, ExpirationDate,
+       (SELECT Id, Name, CoverageAmount FROM InsurancePolicyCoverages)
+FROM InsurancePolicy
+WHERE NameInsuredId = '<ACCOUNT_ID>'
+ORDER BY EffectiveDate DESC LIMIT 10
+```
+
+### Claims for a policy
+```soql
+SELECT Id, CaseNumber, Subject, Status, CreatedDate,
+       (SELECT Id, Name, Type FROM ClaimItems)
+FROM Claim
+WHERE PolicyNumberId = '<POLICY_ID>'
+ORDER BY CreatedDate DESC LIMIT 10
+```
+
+### Quotes
+```soql
+SELECT Id, Name, Status, ExpirationDate, GrandTotal,
+       Account.Name
+FROM Quote
+WHERE Account.Id = '<ACCOUNT_ID>'
+ORDER BY CreatedDate DESC LIMIT 10
+```
+
+---
+
+## Splunk logRecordTypes
+
+| Type | Use |
+|---|---|
+| `r1log` | Industries package instrumentation (filter by `instKey`) |
+| `axerr` | Apex uncaught exceptions (service classes, triggers) |
+| `ipipr` | Integration Procedures (Insurance IPs for quoting, enrollment) |
+| `ipdar` | DataRaptors (Insurance data operations) |
+| `axlim` | Governor limits (bulk rating, large policy operations) |
+| `gslog` | Platform Java exceptions (InsuranceClaimServicePtc, InsuranceRatingPtc) |
+
 ## Known Error Patterns
 
 | Error | Root Cause | Resolution |

@@ -21,6 +21,10 @@
 
 ## Repository Architecture
 
+### GitHub / git.soma Repos
+
+> **Note:** Education Cloud has no via_* managed package repo. It uses independent managed packages (EDA, Admissions Connect, SSH, GEM) hosted separately from the sf-industries org. Primary development is in core monorepo.
+
 ### Managed Packages
 
 | Package | Description |
@@ -52,6 +56,13 @@ gitcore.soma.salesforce.com/core-2206/core-262-public:
 
 ### Ownership Teams
 - `EDU-Rad-ish`, `EDU-Turmerific`, `EDU-Sweet Potatoes`, `EDU-Turnip the Beets`, `EDU-Garlic Genies`, `EDU-Gingersnaps`, `NPC Cartwheel`
+
+---
+
+
+### PTC Layer
+
+Education Cloud is core-only (no PTC layer). No managed package Apex — Java-based implementation across 9 modules.
 
 ---
 
@@ -143,6 +154,7 @@ WHERE Id = '<PROGRAM_PLAN_ID>'
 
 | Type | Use |
 |---|---|
+| `r1log` | Industries package instrumentation (filter by `instKey`) |
 | `axerr` | Apex uncaught exceptions |
 | `axlim` | Governor limit consumption |
 | `ipipr` | Integration Procedures (if OmniStudio components used) |

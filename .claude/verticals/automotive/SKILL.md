@@ -50,6 +50,15 @@ gitcore.soma.salesforce.com/core-2206/core-262-public:
 
 ---
 
+
+### PTC Layer
+
+Automotive shares PTC classes with Manufacturing. Key PTC files in `core/industries-interaction-ptc/apex/vlocity_cmt/`:
+- No dedicated Automotive PTC — uses shared OmniStudio PTC classes
+- Relevant: `DataRaptorUtilsPtc.apex`, `IntegrationProcedureUtilsPtc.apex`, `OmniScriptServicePtc.apex`
+
+---
+
 ## Engineering Playbooks
 
 | Resource | URL |
@@ -137,6 +146,7 @@ ORDER BY CreatedDate DESC
 
 | Type | Use |
 |---|---|
+| `r1log` | Industries package instrumentation (filter by `instKey`) |
 | `axerr` | Apex uncaught exceptions |
 | `axlim` | Governor limit consumption |
 | `ipipr` | Integration Procedures (if OmniStudio components used) |

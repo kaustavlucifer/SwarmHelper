@@ -26,6 +26,19 @@ gitcore.soma.salesforce.com/core-2206/core-262-public:
 
 ---
 
+
+### PTC Layer
+
+```
+core/industries-interaction-ptc/apex/vlocity_cmt/
+  CPQServicePtc.apex              ← E&U pricing/cart
+  CalculationServicePtc.apex      ← Calculation matrices
+  AvailabilityServicePtc.apex     ← Service qualification
+  EUCInstrumentationPtc.apex      ← E&U-specific instrumentation
+```
+
+---
+
 ## Engineering Playbooks
 
 | Resource | URL |
