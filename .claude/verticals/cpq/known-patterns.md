@@ -31,88 +31,6 @@
 
 > **Note:** Product Bugs (avg 13.4 days TTR) take 2× longer to resolve than documentation cases (avg 6.6 days). Contracts feature area has the highest combined TTR (9.85 days).
 
----
-
-## Prerequisites & Tool Access
-
-| Tool | Purpose | If not connected |
-|------|---------|-----------------|
-| CodeSearch | Trace SBQQ class/trigger root causes | Mark code references as NEEDS CODE REFERENCES |
-| GUS (SF CLI) | Look up bug records, investigations, known issues | Mark as NEEDS GUS DATA |
-| Slack MCP | Search live tribal knowledge in CPQ channels | Mark as NEEDS SLACK INSIGHTS |
-| Google Workspace | Pull case data spreadsheets | Ask user for spreadsheet URL |
-
-### Quick Diagnostic Questions
-
-Ask these first before diving into patterns:
-
-1. What is the **exact error message**? (copy-paste, not paraphrase)
-2. What **org type**? (Production / Sandbox)
-3. What **CPQ package version**? (Setup → Installed Packages → Salesforce CPQ)
-4. Is this happening for **all users** or specific users?
-5. Is this **reproducible** in a sandbox with no QCP/custom triggers?
-6. **When did it start?** After a release, config change, or sandbox refresh?
-7. Is a **QCP (Quote Calculator Plugin)** active in the org?
-
-### Decision Tree
-
-> Branches ordered by case volume (OrgCS, last 365 days).
-
-```
-Customer reports CPQ issue
-│
-├── [#1 Volume: 1,700 cases] Error in Quote Line Editor (QLE)?
-│   ├── "Cannot read properties of null (reading 'lineVO')"  → Pattern 1
-│   ├── "Unexpected end of input"                            → Pattern 2 (Price Rule formula)
-│   ├── "You may not specify additional discount as both..."  → Pattern 3
-│   ├── "No metadata was retrieved for field SBQQ__..."      → Pattern 4 (orphaned Price Rule)
-│   ├── Product selection checkbox unclickable (Console App) → Pattern 5 (Summer '26 Bug)
-│   ├── Custom actions disappear after adding product        → Pattern 6
-│   └── Apex heap size / SOQL limit error                    → Pattern 7
-│
-├── [#2 Volume: 1,237 cases] Amendment / Renewal issue?
-│   ├── "Add a subscription pricing value to all products..."→ Pattern 8
-│   ├── Short-term product not co-terming correctly          → Pattern 9 (WAD/Config)
-│   ├── Backdated amendment NullPointerException             → Pattern 10
-│   ├── Invalid cross reference id on renewal opportunity    → Pattern 11
-│   └── Renewal Opportunity not generated / missing products → Pattern 8 + check Renewal Forecast field
-│
-├── [#3 Volume: 960 cases] Pricing / Calculation issue?
-│   ├── Price rule not firing on first save                  → Pattern 2 / check eval event
-│   ├── "MDQ segments missing or quantity 0 during amendment"→ Pattern 2 (MDQ + pricing rules)
-│   ├── Summary variable not calculating on renewal          → Pattern 15
-│   ├── Formula field incorrect in QLE but correct in DB     → Pattern 2 / calculation sequence
-│   ├── Quotes Showing $0                                    → Pattern 2 / check Price Rule + Pricebook
-│   └── Calculation error: Internal Server Error (async)     → Check QCP, Heroku callout
-│
-├── [#4 Volume: 890 cases] Order Contracting failure?
-│   ├── "Attempt to de-reference a null object"              → Pattern 12
-│   ├── "bad value for restricted picklist field"             → Pattern 13
-│   ├── UNABLE_TO_LOCK_ROW on Quote during Flow              → Pattern 14
-│   ├── "Contracted = true" but no Contract created          → Check Order status, SBQQ settings
-│   └── Order activated but contract not generated           → Pattern 12 / check Opportunity Pricebook
-│
-├── [#5 Volume: 704 cases] Advanced Approvals issue?
-│   ├── Approval not routing to correct approver             → Pattern 19
-│   ├── Approval status stuck / not advancing                → Pattern 19
-│   ├── "Modify All" bypassing approval                      → Pattern 19 (WAD)
-│   └── Approval emails not sending                          → Pattern 19
-│
-├── [#6 Volume: 663 cases] License / PSL / Permission issue?
-│   ├── "Read on Quote can't be granted"                     → Pattern 16
-│   ├── Licensed Objects error when editing Profile          → Pattern 17
-│   ├── CPQ License Expired cases                            → IR "CPQ License" → #C020Y1K42F8
-│   └── Calculation service authorization "Oh no" error     → Pattern 18
-│
-└── Scope / routing question?
-    ├── PROS Smart CPQ / 3rd-party CPQ                        → Out of scope, direct to vendor
-    ├── Conga Doc Gen (CQG) license active                    → Still in scope until license expires
-    ├── RCA / RCB (Revenue Cloud Advanced)                    → Route to #C05TFMXB3RN
-    └── Salesforce Billing                                    → Route to #C026Y0ENETH
-```
-
----
-
 ## B. Known Issue Patterns
 
 ### Pattern 1: "Cannot read properties of null (reading 'lineVO')"
@@ -846,60 +764,7 @@ Customer reports CPQ license issue
 | `OrderGenerator.isStandAlonePOT` | POT/co-term amendment behavior | Controls SubscriptionPricing for standalone POT products |
 | `CPQ_OrderTriggerHandler.bulkAfter` / `filterRecords` | Custom triggers on orders (Pattern 12 related) | Customer custom trigger — not SBQQ managed package |
 
----
-
-## Update Cadence
-
-- Refresh after every Salesforce release (Spring, Summer, Winter — 3x/year)
-- After every new Known Issue published to #support-rev-technical
-- Monthly scan of Slack channels for new recurring patterns
-- When GUS investigations for CPQ close with root cause documented
-
----
-
-## Test Cases
-
-> Sourced from real OrgCS cases, last 365 days.
-
-| Scenario (from real cases) | Expected Skill Response |
-|---------|------------------------|
-| "Customer can't select products in QLE — checkboxes are blocked / invisible sidebar" (14 days TTR) | Check if Console App without Utility Bar → Pattern 5, Summer '26 KI W-22449442, enable Split View workaround |
-| "Getting NullPointerException when contracting an order — error type: Attempt to de-reference null" (19.9 days TTR) | Ask for debug log; query Order Products for product ID mismatch → Pattern 12; check for custom QuoteLineTriggerHandler; check if Master Contract field populated |
-| "CPQ Quotes Showing $0 — Emergency" (6.1 days TTR) | Check active Price Rules → Pattern 2; verify Pricebook is populated on Opportunity; check if any Price Action sets Net Price to 0 |
-| "Amend Contract from Opportunity pulling in previous Amendment" (114.7 days TTR) | Pattern 8 / amendment sequence issue; check if Subscription records are duplicated; verify amendment quote is based on latest contract; may need GUS investigation |
-| "Unable to grant edit access to Admin Profile for CPQ objects" (11.3 days TTR) | Pattern 16 — post CPQ 228 upgrade restriction; remove SBQQ__ / SBAA__ object permissions from profile; move to Permission Sets with PSL |
-| "Approval engine not recognizing 'RVP Approver' field value" (6.8 days TTR) | Pattern 19 — check approval rule SBAA__ApproverField__c mapping; verify user lookup field is populated; check if `Modify All` permission bypassing approval |
-| "Too Many SOQL Queries: 101 Error during contract creation" (108.6 days TTR) | Pattern 7 — Apex limits in SBQQ trigger chain; capture managed package debug log; check for custom triggers running alongside CPQ contracting; check SOQL in QCP if present |
-
----
-
 ## Skill Completeness Report
-
-```
-=== SKILL COMPLETENESS REPORT ===
-
-✅ Case data (OrgCS): 9,023 cases analyzed, 19 patterns identified
-   — Feature area breakdown: 11 areas, TTR data included
-   — Case cause breakdown: 20 sub-cause combinations analyzed
-   — Real case subjects included in each pattern as examples
-❌ CodeSearch: not connected — code references sourced from Slack/manual (managed package class names)
-❌ GUS: not connected — investigation IDs sourced from Slack (W-22449442, W-22488848, W-22439807, W-22453566)
-✅ Slack: 5 channels mined — tribal knowledge in Sections G and per-pattern workarounds
-✅ Help Docs: 12 documentation links included
-
-GAPS:
-- Code references are managed package class names from Slack, not verified CodeSearch file paths
-- GUS investigation details (root cause briefs, found-in-build) not pulled — W-IDs only
-- Feature areas: Proration (17 cases, avg 11.9 days TTR) and Installation/Upgrade (357 cases) lack dedicated patterns
-- Advanced Approvals pattern added (Pattern 19) from case data but not enriched with GUS root cause
-
-RECOMMENDATION:
-- Connect CodeSearch → verify managed package class paths in Section I
-- Connect GUS → pull root cause briefs for W-22449442, W-22439807, and top 5 open CPQ bugs
-- Run skill quarterly: re-query OrgCS to update case volume and TTR data
-```
-
----
 
 ## Scope Limits
 

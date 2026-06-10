@@ -699,31 +699,3 @@ WHERE AssigneeId = '<userId>'
 | Intermittent pricing error | `PlaceSalesTransactionPricingStep.java:123` | Fires when Decision Matrix LookupId is null |
 | Configurator rules execution | `LegacyConfigurationStep.execute()` → `BaseSalesTransactionContextConfigurationHandler.runConfiguratorRules()` → `executeAdvancedConstraints()` | Throws on missing ConstraintEngineNodeStatus |
 | Revenue Settings failure | `RevLifecycleMgmtController.getTransactionProcessingTypes` | `common.api.ApiNameUddX.getEntityInfo` fails when TransactionProcessingType not provisioned |
-
----
-
-## Update Cadence
-
-- Refresh every 4 weeks with new case data from orgcs
-- After every Salesforce release (3x/year) — check for new CML/configurator behavior changes
-- When new known issues published for configurator/CML area
-- When #rlm-office-hours surfaces new recurring patterns
-
----
-
-## Test Cases
-
-1. **Input:** Customer reports "ConstraintEngineNodeStatus field hasn't been added" after enabling CML in Revenue Settings  
-   **Expected:** Guide to check active Context Definition (especially if non-standard Procedure Plan); verify all three TLI nodes have the field mapped; check for Insurance/Health Cloud conflict
-
-2. **Input:** Intermittent "Something went wrong while hydrating the context" during Browse Catalog, self-resolves  
-   **Expected:** Check Context Definition TTL (increase to 45 min); check if pricing procedure was recently activated; RTEL diagnostic with null ErrorCode
-
-3. **Input:** CML rule for "Annual Subscription" auto-adds wrong sibling product  
-   **Expected:** Identify loose name-based condition; suggest using exact productId match in CML; check fractional qty type if quantity involved
-
-4. **Input:** Amendment quote prices all become 0 after "Reprice All"  
-   **Expected:** Check Quantity on QLD records (reverting to 0 = root cause); check pricing procedure step order for amendment; check contracted price step
-
-5. **Input:** Go-live blocked by "CurrencyCode Mismatch of Attribute" during deployment  
-   **Expected:** Reference known issue a02Ka00000mFWYL; follow documented workaround steps; escalate if workaround doesn't resolve

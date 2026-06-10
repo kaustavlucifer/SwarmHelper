@@ -993,12 +993,6 @@ Scenario: Product references PriceList with versioning
 
 ## Updates & Maintenance
 
-### Update Cadence
-- **Monthly:** Review case patterns, update with new issues
-- **Quarterly:** Refresh statistics, update resolution times
-- **After CPQ Release:** Update codebase references (via_cpq-260.9 → 262.x)
-- **As Needed:** Add new patterns as they emerge
-
 ### Skill Effectiveness Metrics
 - Track % of cases resolved with this skill (target: >60%)
 - Monitor avg resolution time (target: <7 days for Urgent)

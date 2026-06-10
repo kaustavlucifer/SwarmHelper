@@ -30,82 +30,6 @@
 
 > **Note:** Apex area has the highest TTR (11.36 days). Product Bugs avg 12.4 days. "Request for code development" cases (out of scope) avg 14.7 days — close early with scope guidance.
 
----
-
-## Prerequisites & Tool Access
-
-| Tool | Purpose | If not connected |
-|------|---------|-----------------|
-| CodeSearch | Trace SBQQ managed package class paths, find trigger entry points | Mark code references as NEEDS CODE REFERENCES |
-| GUS (SF CLI) | Look up bug records for managed package issues | Mark as NEEDS GUS DATA |
-| Slack MCP | Search #support-rev-dev-amer and #support-rev-dev-emeapac for prior resolutions | Mark as NEEDS SLACK INSIGHTS |
-
-### Quick Diagnostic Questions
-
-Ask these before investigating:
-
-1. What is the **exact error message and stack trace**? (full managed package log, not standard Apex log)
-2. What **CPQ package version**? (`Setup → Installed Packages → Salesforce CPQ`)
-3. Is a **QCP (Quote Calculator Plugin)** active? (`SELECT Id, Name FROM SBQQ__CustomScript__c WHERE SBQQ__Active__c = true`)
-4. Is this **reproducible without custom Apex triggers/Flows**? (disable and retest)
-5. Is this happening via **API/integration or UI**? (different code paths)
-6. What **org type**? Production / Full Sandbox / Partial Sandbox
-7. Did this start **after a package upgrade, release, or Hyperforce migration**?
-
-### Decision Tree
-
-> Branches ordered by case volume (OrgCS, last 365 days).
-
-```
-Developer support CPQ case
-│
-├── [#1 Volume: 383 cases] QLE / UI error with code component?
-│   ├── UNABLE_TO_LOCK_ROW from SBQQ managed package          → Pattern 1
-│   ├── "Failed to process Queueable job for class SBQQ"      → Pattern 2
-│   ├── CPQ Queueable job failure - QueueableCalculatorService → Pattern 2
-│   ├── ApexPages.addMessage called from non-VF context        → Pattern 3
-│   ├── Experience Cloud / API Access Control blocking VF page → Pattern 4
-│   └── Trap / intercept QuickSave button behavior             → Pattern 5 (QCP)
-│
-├── [#2 Volume: 332 cases] Contract creation error?
-│   ├── "Attempt to de-reference a null object" on contracting → Pattern 6
-│   ├── Null pointer error on order contracting                → Pattern 6
-│   ├── Contracts not created for specific orders              → Pattern 6
-│   ├── "connect ETIMEDOUT" — CPQ Record Jobs Failing          → Pattern 7
-│   ├── CPQ error after Hyperforce migration                   → Pattern 7
-│   └── EA subscriptions getting terminated unexpectedly       → Pattern 8
-│
-├── [#3 Volume: 246 cases] Amendment / Renewal in code context?
-│   ├── Apex heap size too large when creating contracts        → Pattern 9
-│   ├── SBQQ: Too many queueable jobs error                    → Pattern 10
-│   ├── "System.DmlException: Update failed" on amendment      → Pattern 6
-│   ├── Errors in CaseDebookService Queueable (stack depth)    → Pattern 10
-│   └── "Amend" button not generating amendment opportunity    → Pattern 11
-│
-├── [#4 Volume: 202 cases] Apex / Governor Limit issue?
-│   ├── "Apex heap size too large" (7–14 MB reported)          → Pattern 9
-│   ├── "Too many SOQL queries: 101/301"                       → Pattern 12
-│   ├── "Apex CPU time limit exceeded"                         → Pattern 12
-│   ├── "Too many queueable jobs"                              → Pattern 10
-│   ├── QCP plugin failing / QCP logic debugging               → Pattern 13
-│   ├── CPQ API null pointer exception                         → Pattern 14
-│   └── SBQQ__RequiredBy__c not populated via clone()          → Pattern 15
-│
-├── [#5 Volume: 181 cases] Order / Integration issue?
-│   ├── "Unable to connect to the server (transaction timeout)" → Pattern 7
-│   ├── Managed Apex trigger failing — orders stuck in Draft    → Pattern 16
-│   ├── Unable to Query Quote/CPQ objects from Middleware       → Pattern 4
-│   └── Subscription lines issue / duplicate order products    → Pattern 8
-│
-└── Scope / routing?
-    ├── "Request for code development" (build for me)           → Out of scope, close with guidance
-    ├── Pure config issue (price rules, product rules setup)    → Re-route to config channel
-    ├── RCA / RCB (Revenue Cloud Advanced) code issues         → Route to #C05TFMXB3RN
-    └── Salesforce Billing Apex                                → Route to #C026Y0ENETH
-```
-
----
-
 ## B. Known Issue Patterns
 
 ### Pattern 1: UNABLE_TO_LOCK_ROW from SBQQ Managed Package
@@ -768,59 +692,7 @@ By design, Salesforce's `SObject.clone()` method does not clone relationship fie
 | `SBQQ.JSQC` (JavaScript Quote Calculator) | Pattern 5 | QCP host inside QLE — exception here surfaces as `sbqq__JSQC script exception` |
 | `SBQQ.QuoteService` | Pattern 1 | Throws `unable to obtain exclusive access` on row lock |
 
----
-
-## Update Cadence
-
-- Refresh after every Salesforce release (Spring, Summer, Winter — 3x/year)
-- After every new Known Issue published to #support-rev-technical
-- Monthly scan of #support-rev-dev-amer and #support-rev-dev-emeapac for new recurring patterns
-- When GUS investigations for CPQ close with root cause documented
-
----
-
-## Test Cases
-
-> Sourced from real OrgCS cases, last 365 days.
-
-| Scenario (from real cases) | Expected Skill Response |
-|---|---|
-| "UNABLE_TO_LOCK_ROW issue from SBQQ managed package" (37 days TTR) | Pattern 1 — check `Calculate Immediately` setting; confirm Flow/trigger bulkifies all Quote Line DML as last step; no split insert/update transactions |
-| "When creating contracts from an order, Apex heap size too large: 7959103" (41.9 days TTR) | Pattern 9 — check QCP Quote Line Fields for large fields; enable Large Quote Performance settings; check for custom code with non-transient variables co-running with CPQ |
-| "CPQ - Too MANY SOQL Query during Contract creation" (108.6 days TTR) | Pattern 12 — capture full stack trace to identify namespace; check custom triggers on Order/OrderItem for SOQL inside loops; if all from SBQQ namespace and version-specific → GUS investigation |
-| "Unable to connect to the server (transaction aborted: timeout)" (70.7 days TTR) | Pattern 7 — re-authorize calculation service; check Named Credential for Heroku endpoint; check if Hyperforce migration changed endpoint DNS |
-| "QCP plugin Failing" (40.4 days TTR) | Pattern 5 — capture managed package log at FINEST; disable QCP and confirm error disappears; isolate failing QCP method; remind customer of 200-line review limit for Premier |
-| "Error during Contract creation: Attempt to de-reference a null object" (57.1 days TTR) | Pattern 6 — compare PricebookEntryId on Quote Lines vs Order Products; check custom OrderItem triggers; check for backdated amendment date conflict; check Master Contract field on Quote |
-| "SBQQ__RequiredBy__c Field Not Cloned or Populated via clone()" (29.6 days TTR) | Pattern 15 — WAD platform behavior; provide code snippet to explicitly re-map RequiredBy using old-to-new line ID map after clone, or recommend using CPQ Quote API cloneQuote instead |
-
----
-
 ## Skill Completeness Report
-
-```
-=== SKILL COMPLETENESS REPORT ===
-
-✅ Case data (OrgCS): 1,972 cases analyzed, 16 patterns identified
-   — Feature area breakdown: 10 areas, TTR data included
-   — Case cause breakdown analyzed
-   — Real case subjects included in each pattern as examples
-❌ CodeSearch: not connected — managed package class names sourced from Slack/case data
-❌ GUS: not connected — W-IDs sourced from Slack (W-22449442, W-22488848, W-22439807, W-22453566)
-✅ Slack: 5 channels mined — tribal knowledge in Section G and per-pattern workarounds
-✅ Help Docs: 8 documentation links included
-
-GAPS:
-- Code references are managed package class names, not verified CodeSearch file paths
-- GUS root cause briefs not pulled — W-IDs only
-- Advanced Approvals developer patterns (95 cases) covered at high level only
-
-RECOMMENDATION:
-- Connect CodeSearch → verify managed package class paths in Section I
-- Connect GUS → pull root cause briefs for top 5 open CPQ developer bugs
-- Run skill quarterly: re-query OrgCS to update case volume and TTR data
-```
-
----
 
 ## Scope Limits
 

@@ -907,37 +907,3 @@ Key classes to search when CodeSearch is available:
 | `ApprovalWorkItem` | Individual work item per approver | `content:"ApprovalWorkItem" lang:apex` |
 | Smart Approvals engine | `IsEligibleForSmartApproval` logic | `content:"IsEligibleForSmartApproval" lang:apex` |
 | Background Step context check | Context validation for invocable actions | `content:"UseBackgroundSteps" OR content:"BackgroundStep"` |
-
----
-
-## Update Cadence
-
-Skill generated from 280+ real support cases (Oct 2025 – May 2026). Next refresh: after Summer '26 release.
-
-- Refresh every 4 weeks by re-running Slack searches in `#support-rev-rlm-global-swarm-help`
-- After every Salesforce release (3x/year) — re-verify BT permission names and license requirements
-- When new Known Issues are published for `RLM - Advanced Approvals` GUS tag
-- When #rlm-office-hours surfaces new architectural guidance
-
----
-
-## Test Cases
-
-| # | Input Scenario | Expected Skill Response |
-|---|---------------|------------------------|
-| 1 | "Customer gets error 'doesn't have an active Advanced Approvals license' when saving orchestration flow with Background Steps" | Pattern 1 → check BT for `UseBackgroundSteps` perm, enable it |
-| 2 | "Non-admin approver gets Unhandled Fault when clicking Approve. System admin can approve fine." | Pattern 5 → check FLS/CRUD on ApprovalSubmission and ApprovalWorkItem for non-admin profile |
-| 3 | "Smart Approvals are not auto-approving even though the criteria match. A manual work item is always created instead." | Pattern 6 → check FLS on IsEligibleForSmartApproval, check for conflicting flows and multiple Decision elements above Approval Step |
-| 4 | "Preview shows 'Something went wrong' error immediately when clicking Preview on the Approval Workflow component in sandbox." | Pattern 2 → check ActionInput__RecordId variable type in flow; confirm it's SObject not Text |
-| 5 | "Customer configured getPreviousRelaRecDetails Apex action per the help doc but gets 'You don't have access to this action'." | Pattern 10 → action must run in Background Step as Automation Process User — verify step type and running user context |
-
----
-
-```
-=== SKILL COMPLETENESS REPORT ===
-✅ Case data: 280+ cases analyzed, 18 patterns identified
-✅ Slack: 3 channels mined — 40+ tribal knowledge items
-✅ GUS: Connected — 0 active P0/P1/P2 bugs at time of generation
-❌ CodeSearch: Not connected — code references marked as stubs
-✅ Help Docs: Salesforce Help + Developer Guide URLs included
-```

@@ -1366,29 +1366,6 @@ ORDER BY Duration__c DESC
 LIMIT 50
 ```
 
----
-
-## J. Update Cadence
-
-**Refresh this skill every:**
-- **4 weeks** with new case data (update pattern frequencies, add new patterns)
-- **After every Salesforce release** (3x/year: Spring, Summer, Winter)
-  - Review release notes for E&U Cloud changes
-  - Update package version references
-  - Test new features for performance impact
-- **When new Known Issues are published** by Salesforce
-  - Check Known Issues site for E&U Cloud
-  - Update Section H with new P0/P1 bugs
-- **When Slack surfaces new recurring patterns** (monthly review of #industries-eu-support-engg-collaboration)
-  - Add to Tribal Knowledge section
-  - Update Pro Tips
-
-**Last Updated:** May 29, 2026  
-**Data Sources:** 61 cases, 23 GUS work items, 35+ Slack messages  
-**Next Review Due:** June 26, 2026
-
----
-
 ## K. Test Cases
 
 ### Test Case 1: SOQL Limit Exception in VEEDigitalGetBasket

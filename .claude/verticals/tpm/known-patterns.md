@@ -686,24 +686,3 @@ repo:git.soma.salesforce.com/Localization/rcg-retail-tpm content:"<class or meth
 (index=distapps) substrate=aws k8s_cluster=sam-processing1 k8s_namespace=rcg functional_domain=industries organizationId="<ORG_ID>*" logLevel=error
 ```
 Dashboard: https://splunk-web-noncore.log-analytics.monitoring.aws-esvc1-useast2.aws.sfdc.cl/en-US/app/publicSharing/cgcloud_processing_services__job_chain_jobs_scheduling_and_worker_processing
-
----
-
-## Update Cadence
-
-- Refresh quarterly with new GUS investigations (query pattern above)
-- After each CG Cloud release (3x/year) — verify package-version-specific fixes are noted
-- When new patterns emerge in `#tmp-help-consumer-goods` with 3+ similar cases
-- Update Active Known Issues section (Section H) monthly
-
-## Test Cases
-
-1. **Input:** Customer reports KPIs not updating for 200 promotions in a Kuwait sales org since Dec 22. BRS shows Error. **Expected output:** Pattern 1 → request kpisetid from Splunk/BRS Details → check KPI Set for "ForecastingUnit" reference → Update Configuration → re-trigger NC
-
-2. **Input:** After push promotion, child spend is 0 for Lump Sum tactic. Package 258.3. **Expected output:** Pattern 3b → check Deal Rate UOM on parent tactic header → workaround: clear UOM before push → re-push
-
-3. **Input:** Payment stuck in ToBeClosed, customer has SAP integration, package 258.9. **Expected output:** Pattern 6a → ask if custom trigger sets ToBeClosed on INSERT → if yes, fix trigger to fire after tactic records created
-
-4. **Input:** Agentforce error "User does not have read access" when prompting for account measures. **Expected output:** Pattern 11 → check 3 required PSLs + Promotion Access Definition Policy = "Combined Anchors"
-
-5. **Input:** Push promotion takes 5 minutes for 40 accounts on package 260. **Expected output:** Pattern 3d → create System Setting `PushPromotionExecutionMode = OffPlatform`

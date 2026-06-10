@@ -1553,25 +1553,6 @@ MultiSiteOrderTest.cls - Multi-site performance
 | SOQL Limit | LineItemAdjustmentService | Discount queries in loop |
 | TypeException (post-242) | Custom pricing implementations | SObject casting no longer supported |
 
----
-
-## J. Update Cadence
-
-**Refresh this skill:**
-- **Every 4 weeks** — Update with new case patterns from OrgCS
-- **After every Salesforce release** (3x/year: Spring, Summer, Winter) — Update for version-specific issues
-- **When new Known Issues published** — Add to Section H
-- **Monthly** — Check #industries-esm-support, #industries-cmt-cpq Slack for new tribal knowledge
-
-**How to Update:**
-1. Query OrgCS for new cases (PNT: Industry-Communication Cloud, Feature: Comms Business App-Performance)
-2. Analyze patterns and add to Section B if frequency > 3 cases
-3. Query GUS for newly closed investigations (Product Tags: CME Core - CPQNext, Industries CPQ - DC APIs, Industries CPQ - Cart APIs)
-4. Update code references from via_cpq/via_telco repositories for new versions
-5. Add Slack tribal knowledge from #industries-esm-support, #industries-cmt-cpq
-
----
-
 ## K. Test Cases
 
 ### Test Case 1: Cart Performance Issue
