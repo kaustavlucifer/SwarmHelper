@@ -187,3 +187,9 @@ Calculation job status (if applicable):
 Reproduced in Demo org?:
 Troubleshooting steps taken?:
 ```
+
+---
+
+## Detailed Pattern Files
+
+- `known-patterns.md` — Net Zero Cloud diagnostic patterns (symptom → subsystem → confirm → GUS search).

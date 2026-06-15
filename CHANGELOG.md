@@ -45,6 +45,13 @@ These skills are developed and maintained by Kaustav Chowdhury.
 ### Removed
 - `Archive/` (original per-vertical submissions), `RCG TPM SKILL.md` (703 KB raw dev guide), `SampleTrainingData/` — source material for building `.claude/`, not shipped artifacts. The shipped deliverable is `.claude/` + `CHANGELOG.md`.
 
+### Pre-distribution deep audit (post-enrichment polish)
+- **Tool-routing corrected (probe-verified):** removed all `git-emu` read routing (SSO-blocked) — sf-industries/salesforce-internal repos now route to deep-research codesearch (confirmed indexed: via_platform, via_ins, via_telco, via_media, via_docgen, via_cpq, via_xom); `sf-industries-ls/lifesciences` flagged ⚠️ not-reachable (codesearch returns 0 for that org). Fixed `mcp-adaptor`-on-`via_platform` examples (returns 0) → deep-research in codesearch.md, omnistudio/reference.md, health-cloud, docgen.
+- **OmniProcess IP discriminator fixed (verified on live OmniDemo + CMTLatest orgs):** Standard Runtime uses `OmniProcessType`/`IsIntegrationProcedure`; managed package uses `vlocity_cmt__IsProcedure__c`/`vlocity_cmt__OmniProcessType__c`. `Type`/`SubType` are business labels, NOT the discriminator (metadata-analysis.md had `Type = 'Integration Procedure'` — corrected; bogus `OmniIntegrationProcedure` metadata type removed).
+- **OrderDecompService path fixed (codesearch-verified):** the PTC class is replicated per-namespace dir (`vlocity_cmt/`, `common/`, `omnistudio/`, …); there is NO `vlocity_ins_fsc` copy. Comms now points at the `vlocity_cmt` copy (old "in vlocity_ins_fsc, not vlocity_cmt" claim was backwards).
+- **CLAUDE.md docs synced to disk:** File Structure tree expanded 13→20 verticals + all `known-patterns.md`; capability diagrams now list all 11 (added monitoring + metadata-analysis); Codebase Access table re-routed off git-emu.
+- **CPQ** investigation paths: removed dead `Steelbrick/CPQ` / `CPQ-REST` repos → core `core/qtc/` SBQQ search. **Phase 3** OmniStudio reference files (reference/docgen/vbt) + **Output Format** 20-vertical list updated. 3 orphaned `known-patterns.md` (loyalty, net-zero, public-sector) linked from their SKILLs. Stale `mcp-adaptor auth --provider gus` → `/gus`.
+
 ---
 
 ## v2.1.0 — 2026-06-15

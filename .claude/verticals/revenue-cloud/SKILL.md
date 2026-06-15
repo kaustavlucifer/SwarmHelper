@@ -210,18 +210,18 @@ ORDER BY CreatedDate ASC LIMIT 20
 
 ### Revenue Management Package
 ```
-Tool: mcp__plugin_git-emu_vmcp-git-emu__get_file_contents
-owner: "sf-industries"
-repo: "via_rm"
-path: "classes/<ClassName>.cls"
+Tool: mcp__plugin_deep-research_codesearch__read_file
+repository: "github.com/sf-industries/via_rm"
+ref: "HEAD"
+file_path: "classes/<ClassName>.cls"
 ```
 
 ### CLM / Contract Package
 ```
-Tool: mcp__plugin_git-emu_vmcp-git-emu__get_file_contents
-owner: "sf-industries"
-repo: "via_contract"
-path: "classes/<ClassName>.cls"
+Tool: mcp__plugin_deep-research_codesearch__read_file
+repository: "github.com/sf-industries/via_contract"
+ref: "HEAD"
+file_path: "classes/<ClassName>.cls"
 ```
 
 ### Billing Core Implementation

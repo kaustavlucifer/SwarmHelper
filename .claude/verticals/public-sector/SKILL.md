@@ -157,8 +157,8 @@ file_path: "core/industries-interaction-ptc/apex/vlocity_ps/"
 
 ### Managed Package (PS classes)
 ```
-Tool: mcp__mcp-adaptor__search
-query: "repo:github.com/sf-industries/via_platform content:PublicSector"
+Tool: mcp__plugin_deep-research_codesearch__search
+query: "repo:github.com/sf-industries/via_ps content:PublicSector"
 ```
 
 ### Core Implementation
@@ -197,3 +197,9 @@ Reproduced in Demo org?:
 Troubleshooting steps taken?:
 OmniScript/IP involved?:
 ```
+
+---
+
+## Detailed Pattern Files
+
+- `known-patterns.md` — Public Sector Solutions diagnostic patterns (symptom → subsystem → confirm → GUS search).

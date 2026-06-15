@@ -251,4 +251,4 @@ ref: p4/{CURRENT_GA}-patch
 path: core/ui-omnistudio-components/
 ```
 
-Managed package Apex (`vlocity_cmt`, `vlocity_ins`) is readable via `mcp__mcp-adaptor__read_file` and `mcp__mcp-adaptor__search` against `github.com/sf-industries/via_platform` — always check this for any class in the call stack. The `mcp__plugin_deep-research_codesearch__*` tools return zero results for managed package classes (those tools only cover the core monorepo at gitcore).
+Managed package Apex (`vlocity_cmt`, `vlocity_ins`, `omnistudio`) is readable via `mcp__plugin_deep-research_codesearch__read_file` / `__search` against `github.com/sf-industries/via_platform` — always check this for any class in the call stack (verified 2026-06-15: deep-research indexes both `via_platform` AND the core monorepo). `mcp__mcp-adaptor__*` is only a secondary cross-check via the `vlocity-prod-pkg-source` mirror and returns 0 when filtered on `via_platform`. See `.claude/capabilities/codesearch.md`.

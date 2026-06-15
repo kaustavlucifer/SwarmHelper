@@ -140,24 +140,24 @@ ORDER BY CreatedDate DESC LIMIT 10
 
 ### DocGen Package
 ```
-Tool: mcp__plugin_git-emu_vmcp-git-emu__get_file_contents
-owner: "sf-industries"
-repo: "via_docgen"
-path: "classes/<ClassName>.cls"
+Tool: mcp__plugin_deep-research_codesearch__read_file
+repository: "github.com/sf-industries/via_docgen"
+ref: "HEAD"
+file_path: "classes/<ClassName>.cls"
 ```
 
 ### CLM / Contract DocGen
 ```
-Tool: mcp__plugin_git-emu_vmcp-git-emu__get_file_contents
-owner: "sf-industries"
-repo: "via_contract"
-path: "classes/<ClassName>.cls"
+Tool: mcp__plugin_deep-research_codesearch__read_file
+repository: "github.com/sf-industries/via_contract"
+ref: "HEAD"
+file_path: "classes/<ClassName>.cls"
 ```
 
 ### DocGen in via_platform
 ```
-Tool: mcp__mcp-adaptor__search
-query: "repo:github.com/sf-industries/via_platform content:DocGen"
+Tool: mcp__plugin_deep-research_codesearch__search
+query: "repo:github.com/sf-industries/via_platform DocGen"
 ```
 
 ### PTC Layer (DocGen classes)

@@ -125,10 +125,10 @@ ORDER BY StartDate__c DESC
 
 ### Media Managed Package
 ```
-Tool: mcp__plugin_git-emu_vmcp-git-emu__get_file_contents
-owner: "sf-industries"
-repo: "via_media"
-path: "classes/<ClassName>.cls"
+Tool: mcp__plugin_deep-research_codesearch__read_file
+repository: "github.com/sf-industries/via_media"
+ref: "HEAD"
+file_path: "classes/<ClassName>.cls"
 ```
 
 ### Media PTC Layer

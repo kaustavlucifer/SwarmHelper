@@ -326,28 +326,28 @@ path_filter: "core/industries-interaction-ptc"
 ### Industries Managed Package — via_rm (Revenue Management)
 
 ```
-Tool: mcp__plugin_git-emu_vmcp-git-emu__get_file_contents
-owner: "sf-industries"
-repo: "via_rm"
-path: "classes/<ClassName>.cls"
+Tool: mcp__plugin_deep-research_codesearch__read_file
+repository: "github.com/sf-industries/via_rm"
+ref: "HEAD"
+file_path: "classes/<ClassName>.cls"
 ```
 
 ### Industries Managed Package — via_cpq (Industries CPQ)
 
 ```
-Tool: mcp__plugin_git-emu_vmcp-git-emu__get_file_contents
-owner: "sf-industries"
-repo: "via_cpq"
-path: "classes/<ClassName>.cls"
+Tool: mcp__plugin_deep-research_codesearch__read_file
+repository: "github.com/sf-industries/via_cpq"
+ref: "HEAD"
+file_path: "classes/<ClassName>.cls"
 ```
 
 ### Industries Foundation — via_core
 
 ```
-Tool: mcp__plugin_git-emu_vmcp-git-emu__get_file_contents
-owner: "sf-industries"
-repo: "via_core"
-path: "classes/<ClassName>.cls"
+Tool: mcp__plugin_deep-research_codesearch__read_file
+repository: "github.com/sf-industries/via_core"
+ref: "HEAD"
+file_path: "classes/<ClassName>.cls"
 ```
 
 Relevant foundation classes:
@@ -442,10 +442,10 @@ Based on the error class/method identified in logs:
 
 4. **Check managed package if needed:**
    ```
-   Tool: mcp__plugin_git-emu_vmcp-git-emu__get_file_contents
-   owner: "sf-industries"
-   repo: "via_rm"
-   path: "classes/<ClassName>.cls"
+   Tool: mcp__plugin_deep-research_codesearch__read_file
+   repository: "github.com/sf-industries/via_rm"
+   ref: "HEAD"
+   file_path: "classes/<ClassName>.cls"
    ```
 
 ### Step 6: Check for Recent Patches/Regressions

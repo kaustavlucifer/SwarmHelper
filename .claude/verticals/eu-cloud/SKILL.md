@@ -158,10 +158,10 @@ ORDER BY CreatedDate DESC LIMIT 5
 
 ### Energy Managed Package
 ```
-Tool: mcp__plugin_git-emu_vmcp-git-emu__get_file_contents
-owner: "sf-industries"
-repo: "via_energy"
-path: "classes/<ClassName>.cls"
+Tool: mcp__plugin_deep-research_codesearch__read_file
+repository: "github.com/sf-industries/via_energy"
+ref: "HEAD"
+file_path: "classes/<ClassName>.cls"
 ```
 
 ### E&U Core Components

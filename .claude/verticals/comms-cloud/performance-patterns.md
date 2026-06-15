@@ -1454,11 +1454,7 @@ Add channel: #industries-esm-support, #industries-cmt-cpq
 
 **Note:** GUS is not authenticated. Connect GUS for live query of active P0/P1/P2 bugs.
 
-**To Connect GUS:**
-```
-Run: mcp-adaptor auth --provider gus
-Or: Use Salesforce Internal DX Plugin → Authenticate
-```
+**To Connect GUS:** run `/gus` and follow the prompts (see `.claude/capabilities/gus.md`).
 
 **Recent Known Issues (From Case Data):**
 
@@ -1662,7 +1658,7 @@ MultiSiteOrderTest.cls - Multi-site performance
 - **Low-confidence patterns:** 102 "Other Issues" cases need further categorization (TMF APIs, Omniscript issues, etc.)
 
 **Recommendations to Fill Gaps:**
-1. **Connect GUS:** Authenticate via `mcp-adaptor auth --provider gus` to retrieve:
+1. **Connect GUS:** run `/gus` to authenticate, then retrieve:
    - Root cause briefs for 27 linked investigations
    - Active P0/P1/P2 bugs for product tags
    - Recommended resolutions from engineering

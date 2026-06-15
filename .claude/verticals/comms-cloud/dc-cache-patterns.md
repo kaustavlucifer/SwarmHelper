@@ -756,7 +756,7 @@ START: Slow performance
 
 ## G. Codebase Reference (via_cpq)
 
-**Repository:** `github.com/sf-industries/via_cpq` — read via `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents`  
+**Repository:** `github.com/sf-industries/via_cpq` — read via `mcp__plugin_deep-research_codesearch__read_file` / `__search` (indexed; verified 2026-06-15)  
 **Cache/Regenerate Classes:** ~56 classes (`EcomCacheManagementService` and related)
 
 ### Key Classes

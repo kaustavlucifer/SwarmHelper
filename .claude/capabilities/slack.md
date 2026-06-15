@@ -57,7 +57,7 @@ thread_url: "https://salesforce.slack.com/archives/C03GSNY2GVC/p1234567890"
 | Channel | Coverage | ID |
 |---|---|---|
 | `#support-omnistudio-collaboration` | OmniStudio support swarm | C03GSNY2GVC |
-| `#industries-omnistudio-collaboration` | OmniStudio TMP/engineering | C02LN705BEK |
+| `#industries-omnistudio-collaboration` | OmniStudio team/engineering | C02LN705BEK |
 | `#support-swarm-industries` | General industry swarm | C02BEHKLWES |
 | `#omnistudio` | OmniStudio engineering | C01H0U55GD8 |
 | `#omnistudio-support` | Spring '26 OmniStudio support | C0A693YH82H |

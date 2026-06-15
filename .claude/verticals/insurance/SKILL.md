@@ -316,10 +316,10 @@ ORDER BY CreatedDate DESC LIMIT 10
 
 ### via_ins — Insurance Service Classes (PRIMARY)
 ```
-Tool: mcp__plugin_git-emu_vmcp-git-emu__get_file_contents
-owner: "sf-industries"
-repo: "via_ins"
-path: "classes/<ClassName>.cls"
+Tool: mcp__plugin_deep-research_codesearch__read_file
+repository: "github.com/sf-industries/via_ins"
+ref: "HEAD"
+file_path: "classes/<ClassName>.cls"
 ```
 
 Key service classes by domain:
@@ -336,10 +336,10 @@ Key service classes by domain:
 
 ### via_ins_fsc — FSC Bridge Classes
 ```
-Tool: mcp__plugin_git-emu_vmcp-git-emu__get_file_contents
-owner: "sf-industries"
-repo: "via_ins_fsc"
-path: "classes/<ClassName>.cls"
+Tool: mcp__plugin_deep-research_codesearch__read_file
+repository: "github.com/sf-industries/via_ins_fsc"
+ref: "HEAD"
+file_path: "classes/<ClassName>.cls"
 ```
 
 Key bridge classes:

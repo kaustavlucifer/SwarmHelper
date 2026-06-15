@@ -43,8 +43,8 @@ core/industries-interaction-ptc/apex/vlocity_cmt/
   DroServicePtc.apex
   OrchestrationPlanCompositionServicePtc.apex
 
-core/industries-interaction-ptc/apex/vlocity_ins_fsc/
-  OrderDecompService.apex         ← NOTE: in vlocity_ins_fsc, not vlocity_cmt
+core/industries-interaction-ptc/apex/vlocity_cmt/
+  OrderDecompService.apex         ← in the vlocity_cmt namespace dir (the PTC class is replicated per-namespace: common/, omnistudio/, vlocity_cmt/, vlocity_ins/, etc.). Verified 2026-06-15.
   OrderMgmtLoggingService.apex
 ```
 
@@ -178,13 +178,14 @@ ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/industries-interaction-ptc/apex/vlocity_cmt/CPQServicePtc.apex"
 ```
 
-### Order Decomposition (PTC — note: in vlocity_ins_fsc!)
+### Order Decomposition (PTC — vlocity_cmt namespace)
 ```
 Tool: mcp__plugin_deep-research_codesearch__read_file
 repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
 ref: "p4/{CURRENT_GA}-patch"
-file_path: "core/industries-interaction-ptc/apex/vlocity_ins_fsc/OrderDecompService.apex"
+file_path: "core/industries-interaction-ptc/apex/vlocity_cmt/OrderDecompService.apex"
 ```
+> The PTC class is replicated across namespace dirs (`common/`, `omnistudio/`, `vlocity_cmt/`, `vlocity_ins/`, …). For Comms, read the `vlocity_cmt` copy. There is no `vlocity_ins_fsc` copy.
 
 ### MSM Components
 ```
@@ -196,10 +197,10 @@ file_path: "core/industries-communications-msm-impl/omnistudio/"
 
 ### Managed Package (via_telco)
 ```
-Tool: mcp__plugin_git-emu_vmcp-git-emu__get_file_contents
-owner: "sf-industries"
-repo: "via_telco"
-path: "classes/<ClassName>.cls"
+Tool: mcp__plugin_deep-research_codesearch__read_file
+repository: "github.com/sf-industries/via_telco"
+ref: "HEAD"
+file_path: "classes/<ClassName>.cls"
 ```
 
 ---
@@ -209,7 +210,7 @@ path: "classes/<ClassName>.cls"
 | Symptom | First Check |
 |---|---|
 | Cart pricing wrong | `CalculationServicePtc.apex`, Calculation Matrix data, pricing context |
-| Order decomposition failing | `OrderDecompService.apex` (in vlocity_ins_fsc!), product hierarchy |
+| Order decomposition failing | `OrderDecompService.apex` (vlocity_cmt PTC), product hierarchy |
 | Orchestration plan stuck | `OrchestrationPlanCompositionServicePtc.apex`, AutoTask config |
 | Service qualification error | `AvailabilityServicePtc.apex`, external callout config |
 | IP DML before callout | Reorder: HTTP callout BEFORE DataRaptor Post Action |

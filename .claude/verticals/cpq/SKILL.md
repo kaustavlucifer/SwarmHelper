@@ -26,7 +26,7 @@ description: Salesforce CPQ (SBQQ) troubleshooting — QCP, quote line editor, a
 
 | Repository | Path | Content |
 |---|---|---|
-| `via_cpq` | `sf-industries/via_cpq` | Industries CPQ managed package — read via `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` |
+| `via_cpq` | `sf-industries/via_cpq` | Industries CPQ managed package — read via `mcp__plugin_deep-research_codesearch__*` |
 
 > **Salesforce CPQ (SBQQ):** SBQQ is a Steelbrick-owned managed package; its package source is **not** in the indexed git hosts (the old `Steelbrick/CPQ` / `CPQ-REST` repos no longer resolve — validated 2026-06-15). The core-side Quote-to-Cash code lives under `core/qtc/` in the core monorepo. To inspect SBQQ behavior, search the core monorepo via `mcp__plugin_deep-research_codesearch__search` for `SBQQ__` symbols (e.g. `core/qtc/test/func/java/src/qtc/apex/CPQServiceTest.java`).
 
@@ -190,20 +190,12 @@ SELECT SBQQ__PricingPlugin__c FROM SBQQ__Plugins__c LIMIT 1
 
 ## Code Investigation Paths
 
-### SBQQ Managed Package (Steelbrick)
+### SBQQ (Salesforce CPQ) — core-side Quote-to-Cash
+> SBQQ package source is NOT in any indexed git host (the old `Steelbrick/CPQ` / `CPQ-REST` repos no longer resolve — validated 2026-06-15). Inspect SBQQ behavior via `SBQQ__` symbols in the core monorepo `core/qtc/`.
 ```
-Tool: mcp__plugin_git-soma_vmcp-git-soma__get_file_contents
-owner: "Steelbrick"
-repo: "CPQ"
-path: "classes/<ClassName>.cls"
-```
-
-### CPQ REST Services (Heroku Calculator)
-```
-Tool: mcp__plugin_git-soma_vmcp-git-soma__get_file_contents
-owner: "Steelbrick"
-repo: "CPQ-REST"
-path: "src/<path>"
+Tool: mcp__plugin_deep-research_codesearch__search
+query: "repo:gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public path:core/qtc content:SBQQ"
+max_matches: 10
 ```
 
 ### CPQ Core

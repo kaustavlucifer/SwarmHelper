@@ -43,10 +43,11 @@ end_line: 100   # optional
 
 ### List directory
 ```
-Tool: mcp__mcp-adaptor__list_directory
+Tool: mcp__plugin_deep-research_codesearch__list_directory
 repository: "github.com/sf-industries/via_platform"
 directory_path: "classes"
 ```
+> Use deep-research (not `mcp-adaptor`) for `via_platform` — the adaptor index returns 0 for that repo.
 
 ### Key Classes by Component
 
@@ -256,15 +257,16 @@ For every class in an error call stack:
 
 ---
 
-## GitHub EMU / Internal Repos
+## Reading repos beyond the core monorepo (which tool, validated 2026-06-15)
 
-For repos beyond via_platform:
-```
-mcp__plugin_git-emu_vmcp-git-emu__search_repositories   — find repos on GitHub EMU
-mcp__plugin_git-emu_vmcp-git-emu__get_file_contents     — read file from GitHub EMU repo
-mcp__plugin_git-soma_vmcp-git-soma__search_repositories — find repos on git.soma
-mcp__plugin_git-soma_vmcp-git-soma__get_file_contents   — read file from git.soma repo
-```
+| Host / repo | Tool | Notes |
+|---|---|---|
+| `github.com/sf-industries/*` (via_platform, via_ins, via_telco, via_media, via_docgen, via_cpq, via_xom, via_core, via_ps, via_energy, via_rm, via_contract, …) | `mcp__plugin_deep-research_codesearch__search` / `read_file` | **Indexed.** A bare `repo:<name>` filter with NO content term may return only the repo name — add a content term (e.g. `repo:…/via_cpq class`) to get file contents. Confirmed indexed: via_platform, via_ins, via_telco, via_media, via_docgen, via_cpq, via_xom. |
+| `git.soma.salesforce.com/*` (TPM `industries-rcg/rcgps-retail-tpm`) | `mcp__plugin_git-soma_vmcp-git-soma__get_file_contents` / `search_repositories` | codesearch does NOT index git.soma. |
+| `github.com/salesforce-internal/*` (cgcloud-solutions, fsc-next-gen-apps) | `mcp__plugin_deep-research_codesearch__*` | Indexed. |
+| `github.com/sf-industries-ls/lifesciences` | ⚠️ **not reachable** | codesearch returns 0 for the `sf-industries-ls` org (probed 2026-06-15); git-emu is SSO-blocked. Browse on git directly. |
+
+> `mcp__plugin_git-emu_vmcp-git-emu__*` is **SSO-blocked** (403 on everything) — do NOT route reads here. Use deep-research codesearch for sf-industries/salesforce-internal, git-soma for git.soma.
 
 **Authoritative repo mapping:** https://confluence.internal.salesforce.com/spaces/IN/pages/1079189041/Industries+Managed+Packages+and+Repository+Mapping
 

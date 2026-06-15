@@ -427,7 +427,7 @@ In such cases, the skill will:
 
 ## M. XOM Codebase Reference (via_xom)
 
-**Repository:** `github.com/sf-industries/via_xom` — read via `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents`  
+**Repository:** `github.com/sf-industries/via_xom` — read via `mcp__plugin_deep-research_codesearch__read_file` / `__search` (indexed; verified 2026-06-15)  
 **Scope:** ~645 Apex classes, ~72 custom objects (XOM order decomposition + orchestration)
 
 This section provides direct code references from the actual XOM codebase to use when decomposing stories.

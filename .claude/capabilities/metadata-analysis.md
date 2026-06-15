@@ -39,20 +39,33 @@ sf project retrieve start --metadata CustomObject:MyObject__c --target-org <alia
 
 For OmniStudio components that don't deploy via standard metadata:
 ```soql
--- OmniScript definition (Standard Runtime)
-SELECT Id, Name, Type, SubType, Language, IsActive, VersionNumber, PropertySetConfig
+-- OmniScript definition (OmniProcessType discriminates OmniScript vs IP; Type/SubType are business labels, NOT the discriminator)
+SELECT Id, Name, OmniProcessType, Type, SubType, Language, IsActive, VersionNumber, PropertySetConfig
 FROM OmniProcess
-WHERE Name = '<OS_NAME>' AND IsActive = true
+WHERE OmniProcessType = 'OmniScript' AND Name = '<OS_NAME>' AND IsActive = true
 
--- DataRaptor/DataTransform
+-- DataRaptor/DataTransform (Type = Extract | Load | Transform | Turbo Extract)
 SELECT Id, Name, Type, IsActive, InputType, OutputType
 FROM OmniDataTransform
 WHERE Name = '<DR_NAME>'
 
--- Integration Procedure (Standard Runtime)
-SELECT Id, Name, Type, SubType, IsActive, PropertySetConfig
+-- Integration Procedure (filter on OmniProcessType or IsIntegrationProcedure — NOT Type)
+SELECT Id, Name, OmniProcessType, IsIntegrationProcedure, Type, SubType, IsActive, PropertySetConfig
 FROM OmniProcess
-WHERE Type = 'Integration Procedure' AND Name = '<IP_NAME>'
+WHERE OmniProcessType = 'Integration Procedure' AND Name = '<IP_NAME>'
+```
+
+> **Runtime matters — the object model differs (verified on live orgs 2026-06-15):**
+> - **Standard Runtime:** object `OmniProcess`; IP discriminator `OmniProcessType` (`OmniScript`/`Integration Procedure`/`Test Procedure`) or boolean `IsIntegrationProcedure`. DataRaptors → `OmniDataTransform`.
+> - **Managed Package (vlocity_cmt):** object `vlocity_cmt__OmniScript__c`; IP discriminator boolean **`vlocity_cmt__IsProcedure__c`** or `vlocity_cmt__OmniProcessType__c`. DataRaptors → `vlocity_cmt__DRBundle__c`; elements → `vlocity_cmt__Element__c`.
+> - In BOTH, `Type`/`SubType` are user-defined business labels (e.g. Contract, Licensing & Permitting), NOT the OmniScript-vs-IP discriminator.
+
+```soql
+-- Managed-package (vlocity_cmt) Integration Procedure
+SELECT Id, Name, vlocity_cmt__OmniProcessType__c, vlocity_cmt__IsProcedure__c,
+       vlocity_cmt__Type__c, vlocity_cmt__SubType__c, vlocity_cmt__IsActive__c, vlocity_cmt__Version__c
+FROM vlocity_cmt__OmniScript__c
+WHERE vlocity_cmt__IsProcedure__c = true AND Name = '<IP_NAME>'
 ```
 
 ---
@@ -135,7 +148,7 @@ When `.object-meta.xml` is provided:
 | Category | Metadata Types |
 |---|---|
 | Logic | `ApexClass`, `ApexTrigger`, `Flow`, `ApexPage` |
-| OmniStudio | `OmniProcess`, `OmniDataTransform`, `OmniUiCard`, `OmniIntegrationProcedure` |
+| OmniStudio | `OmniProcess` (OmniScripts AND Integration Procedures — discriminate via `OmniProcessType` field: `OmniScript`/`Integration Procedure`/`Test Procedure`, or `IsIntegrationProcedure`), `OmniDataTransform` (DataRaptors), `OmniUiCard` (FlexCards) |
 | Data Model | `CustomObject`, `CustomField`, `ValidationRule`, `RecordType` |
 | Security | `PermissionSet`, `Profile`, `SharingRule`, `CustomPermission` |
 | Configuration | `CustomMetadata`, `CustomSetting`, `NamedCredential`, `ExternalService` |

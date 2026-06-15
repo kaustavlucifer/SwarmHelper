@@ -26,8 +26,8 @@ description: Life Sciences Cloud troubleshooting — clinical trials, patient se
 
 | Repository | Path | Content |
 |---|---|---|
-| `lifesciences` | `sf-industries-ls/lifesciences` | Life Sciences main repo (note: separate org) |
-| `HealthCloudCCDAandEMRDatakit` | `sf-industries/HealthCloudCCDAandEMRDatakit` | CCDA/EMR data kit (shared with HC) |
+| `lifesciences` | `sf-industries-ls/lifesciences` | Life Sciences main repo (separate org). ⚠️ **Not indexed by codesearch** (the `sf-industries-ls` org returns 0; probed 2026-06-15) — content not reachable via the validated tools. Browse on git directly. |
+| `HealthCloudCCDAandEMRDatakit` | `sf-industries/HealthCloudCCDAandEMRDatakit` | CCDA/EMR data kit (shared with HC) — readable via deep-research codesearch |
 
 ### Core Monorepo Paths
 
@@ -140,10 +140,7 @@ max_matches: 10
 ```
 
 ### Life Sciences Managed Package
-```
-Tool: mcp__plugin_git-emu_vmcp-git-emu__search_repositories
-query: "lifesciences"
-```
+> ⚠️ `sf-industries-ls/lifesciences` is **not indexed by codesearch** (probed 2026-06-15 — 0 results) and git-emu is SSO-blocked. Its source is not reachable via the validated MCP tools. Focus investigation on the core impl path above + shared Health Cloud core; browse the LS repo on git.soma/GitHub directly if package source is needed.
 
 ---
 

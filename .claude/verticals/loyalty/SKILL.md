@@ -202,3 +202,9 @@ Program Name:
 Reproduced in Demo org?:
 Troubleshooting steps taken?:
 ```
+
+---
+
+## Detailed Pattern Files
+
+- `known-patterns.md` — Loyalty Management diagnostic patterns (symptom → subsystem → confirm → GUS search).

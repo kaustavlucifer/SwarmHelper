@@ -202,7 +202,7 @@ If no clear signal, check the OmniStudio vertical first (most common).
 ## Phase 3: Check Known Errors
 
 Read the routed vertical's pattern files:
-- OmniStudio: `known-errors.md`
+- OmniStudio: `known-errors.md` (also `reference.md` for architecture/OIC flags/runtime, `docgen-reference.md` for DocGen, `vbt-reference.md` for VBT)
 - Health Cloud, FSC, CPQ, TPM, E&U Cloud, Media: `known-patterns.md`
 - Comms Cloud: `dc-cache-patterns.md`, `order-management-patterns.md`, `performance-patterns.md`, `promotion-discount-patterns.md`
 - Revenue Cloud: `approvals-patterns.md`, `billing-patterns.md`, `bre-patterns.md`, `clm-docgen-patterns.md`, `configurator-patterns.md`, `dro-patterns.md`, `product-to-order-patterns.md`
@@ -267,7 +267,7 @@ See `.claude/capabilities/codesearch.md` — Regression Analysis section.
 
 ```
 ## Summary
-- **Vertical**: [OmniStudio | HC | Insurance | DocGen | FSC | Comms | Revenue Cloud | CPQ | TPM | Life Sciences | E&U | Media]
+- **Vertical**: [OmniStudio | HC | Insurance | DocGen | FSC | Comms | Revenue Cloud | RLM | CPQ | TPM | Life Sciences | E&U | Media | Manufacturing | Automotive | Public Sector | Loyalty | Education | Nonprofit | Net Zero]
 - **Runtime**: [Managed Package | Standard Runtime | N/A]
 - **Classification**: [Known Issue | Existing Bug | Config Issue | Code Regression | New Issue]
 

@@ -172,8 +172,8 @@ file_path: "core/industries-interaction-ptc/apex/vlocity_ins/AssessmentResponses
 
 ### OmniStudio Package (INS namespace — HC uses this)
 ```
-Tool: mcp__mcp-adaptor__search
-query: "repo:github.com/sf-industries/via_platform content:<keyword> path:package_ins.xml"
+Tool: mcp__plugin_deep-research_codesearch__search
+query: "repo:github.com/sf-industries/via_platform <keyword> path:package_ins.xml"
 ```
 
 ---

@@ -18,6 +18,7 @@ Single-command troubleshooting framework for Industry Cloud support cases. Engin
     │   ├── confluence.md    ← Documentation search
     │   ├── columbo.md       ← Gack/exception investigation
     │   ├── monitoring.md    ← Incident & pod health check
+    │   ├── metadata-analysis.md   ← Apex/Flow/OmniScript export analysis
     │   ├── debug-log-analysis.md  ← Debug log parsing rules
     │   └── har-analysis.md  ← HAR file parsing (+ PII redaction)
     │
@@ -96,6 +97,8 @@ SwarmHelper/
     │   ├── slack.md                     ← Slack channel search
     │   ├── confluence.md               ← Confluence/KB/Quip/SO search
     │   ├── columbo.md                  ← Gack investigation
+    │   ├── monitoring.md               ← Incident (PagerDuty) & pod health check
+    │   ├── metadata-analysis.md        ← Apex/Flow/OmniScript export analysis
     │   ├── debug-log-analysis.md       ← Debug log parsing (+ PII redaction)
     │   └── har-analysis.md             ← HAR file parsing (+ PII redaction)
     └── verticals/                       ← Domain knowledge (auto-routed by swarm-helper)
@@ -141,13 +144,35 @@ SwarmHelper/
         │   ├── SKILL.md                 ← Trade Promotion Management
         │   └── known-patterns.md        ← Known issue patterns
         ├── life-sciences/
-        │   └── SKILL.md                 ← Life Sciences Cloud
+        │   ├── SKILL.md                 ← Life Sciences Cloud
+        │   └── known-patterns.md        ← Diagnostic patterns
         ├── eu-cloud/
         │   ├── SKILL.md                 ← Energy & Utilities Cloud
         │   └── known-patterns.md        ← Known issue patterns
-        └── media/
-            ├── SKILL.md                 ← Media Cloud / Ad Sales
-            └── known-patterns.md        ← Known issue patterns
+        ├── media/
+        │   ├── SKILL.md                 ← Media Cloud / Ad Sales
+        │   └── known-patterns.md        ← Known issue patterns
+        ├── manufacturing/
+        │   ├── SKILL.md                 ← Manufacturing Cloud
+        │   └── known-patterns.md        ← Diagnostic patterns
+        ├── automotive/
+        │   ├── SKILL.md                 ← Automotive Cloud
+        │   └── known-patterns.md        ← Diagnostic patterns
+        ├── public-sector/
+        │   ├── SKILL.md                 ← Public Sector Solutions
+        │   └── known-patterns.md        ← Diagnostic patterns
+        ├── loyalty/
+        │   ├── SKILL.md                 ← Loyalty Management
+        │   └── known-patterns.md        ← Diagnostic patterns
+        ├── education/
+        │   ├── SKILL.md                 ← Education Cloud / EDA
+        │   └── known-patterns.md        ← Diagnostic patterns
+        ├── nonprofit/
+        │   ├── SKILL.md                 ← Nonprofit Cloud / NPSP
+        │   └── known-patterns.md        ← Diagnostic patterns
+        └── net-zero/
+            ├── SKILL.md                 ← Net Zero Cloud
+            └── known-patterns.md        ← Diagnostic patterns
 ```
 
 ---
@@ -180,23 +205,27 @@ Run `/swarm-helper` — it will use whatever MCP tools are available. If a tool 
 
 ## Codebase Access
 
+> **Tool selection (validated 2026-06-15):** `github.com/sf-industries/*` and `gitcore.soma.salesforce.com/*` are read via **`mcp__plugin_deep-research_codesearch__*`** (it indexes both). `git.soma.salesforce.com/*` (e.g. TPM `rcgps-retail-tpm`) uses **`mcp__plugin_git-soma_vmcp-git-soma__get_file_contents`**. The `git-emu` tool is SSO-blocked (403 on everything) and is NOT a reliable path — do not route here. See `.claude/capabilities/codesearch.md` for full detail. Release branches use `{CURRENT_GA}` — resolve per codesearch.md.
+
 | Source | Tool | Content |
 |---|---|---|
 | `github.com/sf-industries/via_platform` | `mcp__plugin_deep-research_codesearch__search` / `read_file` | All managed package Apex (OmniStudio, INS, CMT) |
-| `github.com/sf-industries/via_ins` | `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` | Insurance service Apex |
-| `github.com/sf-industries/via_ins_fsc` | `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` | Insurance ↔ FSC bridge |
-| `github.com/sf-industries/via_media` | `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` | Media Cloud package |
-| `github.com/sf-industries/via_rm` | `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` | Revenue Management |
-| `github.com/sf-industries/via_contract` | `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` | CLM / Contract management |
-| `github.com/sf-industries/via_docgen` | `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` | DocGen package |
-| `core/qtc/` in `gitcore.soma.salesforce.com/core-2206/core-262-public` | `mcp__plugin_deep-research_codesearch__search` | Salesforce CPQ (SBQQ) core-side — no standalone package repo (validated 2026-06-15) |
-| `github.com/sf-industries/via_core` | `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` | Platform foundation (InvokeService, DREngine) |
-| `github.com/sf-industries/via_telco` | `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` | Comms Cloud / Telco package |
-| `github.com/sf-industries/via_cpq` | `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` | Industries CPQ package |
-| `github.com/sf-industries/via_energy` | `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` | Energy & Utilities package |
-| `gitcore.soma.salesforce.com/core-2206/core-262-public` | `mcp__plugin_deep-research_codesearch__*` | Standard Runtime Java + PTC + LWC |
+| `github.com/sf-industries/via_ins` | `mcp__plugin_deep-research_codesearch__*` | Insurance service Apex |
+| `github.com/sf-industries/via_ins_fsc` | `mcp__plugin_deep-research_codesearch__*` | Insurance ↔ FSC bridge |
+| `github.com/sf-industries/via_media` | `mcp__plugin_deep-research_codesearch__*` | Media Cloud package |
+| `github.com/sf-industries/via_rm` | `mcp__plugin_deep-research_codesearch__*` | Revenue Management |
+| `github.com/sf-industries/via_contract` | `mcp__plugin_deep-research_codesearch__*` | CLM / Contract management |
+| `github.com/sf-industries/via_docgen` | `mcp__plugin_deep-research_codesearch__*` | DocGen package |
+| `core/qtc/` in `gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public` | `mcp__plugin_deep-research_codesearch__search` | Salesforce CPQ (SBQQ) core-side — no standalone package repo (validated 2026-06-15) |
+| `github.com/sf-industries/via_core` | `mcp__plugin_deep-research_codesearch__*` | Platform foundation (InvokeService, DREngine) |
+| `github.com/sf-industries/via_telco` | `mcp__plugin_deep-research_codesearch__*` | Comms Cloud / Telco package |
+| `github.com/sf-industries/via_cpq` | `mcp__plugin_deep-research_codesearch__*` | Industries CPQ package |
+| `github.com/sf-industries/via_energy` | `mcp__plugin_deep-research_codesearch__*` | Energy & Utilities package |
+| `git.soma.salesforce.com/industries-rcg/rcgps-retail-tpm` | `mcp__plugin_git-soma_vmcp-git-soma__get_file_contents` | TPM managed pkg + off-core Node service (`packages/tpm/`) |
+| `gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public` | `mcp__plugin_deep-research_codesearch__*` | Standard Runtime Java + PTC + LWC |
 | `github.com/salesforce-internal/fsc-next-gen-apps` | `mcp__plugin_deep-research_codesearch__search` | FSC patterns |
-| `github.com/salesforce-internal/cgcloud-solutions` | `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` | Consumer Goods / TPM |
+| `github.com/salesforce-internal/cgcloud-solutions` | `mcp__plugin_deep-research_codesearch__*` | Consumer Goods / TPM |
+| `github.com/sf-industries-ls/lifesciences` | `mcp__plugin_deep-research_codesearch__*` | Life Sciences managed pkg (presentation-player, prompts) |
 
 ---
 

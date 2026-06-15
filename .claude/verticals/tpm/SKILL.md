@@ -241,10 +241,10 @@ Pick the package by failure type: calc → `rcgps-calcengine`/`rcgps-accplnprm`,
 
 ### Consumer Goods Solutions
 ```
-Tool: mcp__plugin_git-emu_vmcp-git-emu__get_file_contents
-owner: "salesforce-internal"
-repo: "cgcloud-solutions"
-path: "<path>"
+Tool: mcp__plugin_deep-research_codesearch__read_file
+repository: "github.com/salesforce-internal/cgcloud-solutions"
+ref: "HEAD"
+file_path: "<path>"
 ```
 
 ---
