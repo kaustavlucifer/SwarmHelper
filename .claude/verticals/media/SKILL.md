@@ -71,23 +71,25 @@ Search `sf-industries/via_platform` for `MediaAdSales.cls`
 
 ## Key Objects
 
-> ⚠️ **The `MediaAdSales*` object names below are NOT yet verified** and are pending the live-org sweep. The PTC layer (`MediaPlanHandlerPtc`, probed 2026-06-15) actually operates on objects named **`AdQuote`, `AdQuoteLine`, `AdOrderItem`, `AdQuoteLineUnitsSplit`, `AdQuoteLinePrintIssue`** — so the real Ad Sales schema likely uses an `Ad*` naming family, not `MediaAdSales*`. Confirm exact object/field API names via `EntityDefinition`/describe in a Media Cloud (Ad Sales) org before relying on them.
+> **Verified 2026-06-15** against a Media Cloud (Ad Sales) org via `describe`. The real Ad Sales schema is the **`Ad*` standard-object family** — the earlier `MediaAdSales*` / `MediaSubscriber__c` names were **fabricated** and have been removed. All objects below returned HTTP 200.
 
-| Object (⚠️ verify in org) | Description |
+| Object (verified ✅) | Description |
 |---|---|
-| `AdQuote` / `AdQuoteLine` | Ad quote + lines (confirmed referenced by `MediaAdSalesPtc`/`MediaPlanHandlerPtc`) |
-| `AdOrderItem` | Ad order line items (confirmed referenced by PTC) |
-| `AdQuoteLineUnitsSplit`, `AdQuoteLinePrintIssue` | Quote-line splits / print issues (confirmed referenced by PTC) |
-| `MediaAdSalesProduct` *(verify)* | Ad products (inventory types) |
-| `MediaAdSalesSlot` *(verify)* | Available ad slots/inventory |
-| `MediaAdSalesCampaign` *(verify)* | Ad campaigns |
-| `MediaAdSalesBooking` *(verify)* | Booked ad placements |
-| `MediaAdSalesTargeting` *(verify)* | Targeting criteria |
-| `MediaAdSalesReservation` *(verify)* | Reserved inventory |
-| `MediaSubscriber` *(verify)* | Subscriber records (media subscriptions) |
+| `AdQuote` / `AdQuoteLine` | Ad quote + lines (core of Ad Sales quoting) |
+| `AdQuoteLineUnitsSplit` / `AdQuoteLinePrintIssue` | Quote-line unit splits / print-issue scheduling |
+| `AdQuoteLineAdTarget` / `AdQuoteLineCreativeSizeType` / `AdQuoteLineHiatus` | Quote-line targeting, creative sizes, hiatus periods |
+| `AdOrderItem` | Ad order line items |
+| `AdOrderItemUnitsSplit` / `AdOrderItemPrintIssue` / `AdOrderItemCreativeSizeType` | Order-item splits / print issues / creative sizes |
+| `AdOrderLineAdTarget` / `AdOrderLineHiatus` | Order-line targeting / hiatus |
+| `AdOpportunity` | Ad sales opportunity |
+| `AdServer` / `AdServerAccount` / `AdServerUser` / `AdBuyServerAccount` | Ad-server integration + trafficking accounts |
+| `AdDigitalAvailability` / `AdLinearAvailability` / `AdAvailabilityJob` / `AdAvailabilityDimensions` / `AdAvailabilityViewConfig` | Inventory availability (digital + linear) |
+| `AdTargetCategory` / `AdTargetCategorySegment` / `AdProductTargetCategory` | Targeting categories / segments |
+| `AdCreativeSizeType` / `AdDemographicCode` / `AdPageLayoutType` | Creative sizes, demographic codes, layouts |
+| `AdSpaceSpecification` / `AdSpaceCreativeSizeType` / `AdSpaceGroupMember` / `AdSpecMediaPrintIssue` | Ad-space specs and print issues |
 | `Product2` | Products (shared) |
 | `Order` / `OrderItem` | Orders |
-| `vlocity_cmt__PriceList__c` | Pricing |
+| `vlocity_cmt__PriceList__c` | Pricing (managed pkg, when present) |
 
 ---
 
@@ -103,14 +105,15 @@ WHERE Account.Id = '<ACCOUNT_ID>'
 ORDER BY StartDate DESC LIMIT 10
 ```
 
-### Subscriber details
+### Ad quotes + lines for an account
 ```soql
-SELECT Id, Name, Status__c, SubscriptionType__c, Account.Name,
-       StartDate__c, EndDate__c
-FROM MediaSubscriber__c
-WHERE Account.Id = '<ACCOUNT_ID>'
-ORDER BY StartDate__c DESC
+SELECT Id, Name, Status, TotalAmount,
+       (SELECT Id, Name, NetAmount, AdProduct.Name FROM AdQuoteLines)
+FROM AdQuote
+WHERE Opportunity.Account.Id = '<ACCOUNT_ID>'
+ORDER BY CreatedDate DESC LIMIT 10
 ```
+> Field API names (`Status`, `TotalAmount`, `NetAmount`, child-relationship `AdQuoteLines`) should be confirmed via `describe` on the target org — object names are verified; field names per-object are not yet swept.
 
 ---
 

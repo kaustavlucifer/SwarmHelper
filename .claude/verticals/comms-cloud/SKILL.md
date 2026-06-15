@@ -62,15 +62,18 @@ core/industries-interaction-ptc/apex/vlocity_cmt/
 
 ## Comms-Specific Objects
 
+> **Verified 2026-06-15** against a Comms/EPC org. EPC products use **standard `Product2`** (there is no `vlocity_cmt__Product2__c`); the managed package adds `vlocity_cmt__*` *helper* objects around it (`ProductChildItem`, `ProductRelationship`, `CatalogProductRelationship`, etc.).
+
 | Object | Description |
 |---|---|
-| `Product2` / `vlocity_cmt__Product2__c` | Product catalog |
-| `vlocity_cmt__PriceList__c` | Pricing |
+| `Product2` | Product catalog — EPC products (standard object; ✅ verified) |
+| `vlocity_cmt__ProductChildItem__c` / `vlocity_cmt__ProductRelationship__c` | Product bundle structure / relationships (✅ verified) |
+| `vlocity_cmt__PriceList__c` | Pricing (✅ verified) |
 | `Order` / `OrderItem` | Orders and line items |
-| `vlocity_cmt__OrchestrationPlan__c` | Order orchestration |
-| `vlocity_cmt__ContextDimension__c` | Context-based pricing |
-| `vlocity_cmt__CalculationMatrix__c` | Calculation matrices |
-| `vlocity_cmt__CalculationProcedure__c` | Calculation procedures |
+| `vlocity_cmt__OrchestrationPlan__c` | Order orchestration (✅ verified) |
+| `vlocity_cmt__ContextDimension__c` | Context-based pricing (✅ verified) |
+| `vlocity_cmt__CalculationMatrix__c` | Calculation matrices (✅ verified) |
+| `vlocity_cmt__CalculationProcedure__c` | Calculation procedures (✅ verified) |
 
 ---
 

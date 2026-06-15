@@ -12,8 +12,8 @@ description: Nonprofit Cloud / NPSP diagnostic patterns — symptom to subsystem
 > - **Nonprofit Cloud (core)** — Java under `core/industries-nonprofit-impl/java/src/industries/nonprofit/impl/` plus `core/industries-fundraising/`. Verified core subsystems (from the feature taxonomy): **Fundraising** (`BusinessProcessAPI`, `GiftEntry`, `GiftCommitmentManagement`, `RollUps`, `GiftDesignation`, `ExternalIDSupport`), **Grantmaking** (`ApplicationManagement`), **ProgramManagement** (`ScheduleSessionRegistration`, `UnscheduledBenefits`, `AttendanceTracking`, `BenefitScheduleSetup`). The bare tag `Nonprofit Cloud` carries no bugs — use the layer-specific tags below.
 
 ## Pattern: Recurring donation installment not creating / high CPU on rollups
-- **Likely subsystem:** NPSP Recurring Donations (`npe03__`/`npsp__RecurringDonations2__c`) and the rollup engine; fixed-length + customizable rollups + custom naming is a known CPU hot path.
-- **How to confirm:** Check RD schedule config and `npsp__RecurringDonations2__c` settings; for slow/failed runs check `axlim` (CPU/SOQL) on the rollup batch; isolate whether rollups or naming is the cost.
+- **Likely subsystem:** NPSP Recurring Donations (`npe03__Recurring_Donation__c`, Enhanced RD) and the rollup engine; fixed-length + customizable rollups + custom naming is a known CPU hot path.
+- **How to confirm:** Check RD schedule config and the `npe03__Recurring_Donations_Settings__c` custom setting; for slow/failed runs check `axlim` (CPU/SOQL) on the rollup batch; isolate whether rollups or naming is the cost.
 - **GUS search:** `Product_Tag__r.Name LIKE '%Nonprofit Success Pack (NPSP)%' AND Subject__c LIKE '%Recurring Donation%'` (apply build-staleness rule)
 
 ## Pattern: Donation rollups wrong / soft credit not rolling up (NPSP)

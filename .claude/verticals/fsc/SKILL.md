@@ -45,16 +45,20 @@ gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
 
 ## FSC-Specific Objects
 
+> **Verified 2026-06-15** against an FSC org. **FSC ships in two editions** — confirm which the customer has via `describe`:
+> - **Managed package (`FinServ__`)** — most common: `FinServ__FinancialAccount__c`, `FinServ__FinancialAccountRole__c`, `FinServ__FinancialHolding__c`, `FinServ__FinancialGoal__c`, `FinServ__FinancialAccountTransaction__c`, `FinServ__AccountAccountRelation__c`, `FinServ__ContactContactRelation__c`.
+> - **Core / standard objects** — newer FSC-on-core: `FinancialGoal`, `FinancialPlan`, `FinancialDeal*`, etc.
+
 | Object | Description |
 |---|---|
-| `FinancialAccount` | Core financial account |
-| `FinancialAccountRole` | Account roles (owner, beneficiary) |
-| `FinancialHolding` | Holdings within accounts |
-| `ActionPlan` / `ActionPlanItem` | FSC action plans |
-| `Referral` | Referral tracking |
-| `AccountContactRelationship` | Relationship maps |
+| `FinServ__FinancialAccount__c` *(or core `FinancialAccount` where licensed)* | Core financial account |
+| `FinServ__FinancialAccountRole__c` | Account roles (owner, beneficiary) |
+| `FinServ__FinancialHolding__c` | Holdings within accounts |
+| `ActionPlan` / `ActionPlanItem` | FSC action plans (standard — ✅ verified) |
+| `Referral` | Referral tracking (✅ verified) |
+| `AccountContactRelation` | Relationship maps (standard object — **not** `AccountContactRelationship`; ✅ verified) |
 | `RollupSummaryRule__c` | Rollup summary rules |
-| `DocumentChecklistItem` | Document checklists |
+| `DocumentChecklistItem` | Document checklists (✅ verified) |
 
 ---
 
@@ -84,7 +88,7 @@ Account (Person Account / Business Account / Household)
 │   ├── FinancialAccountRole (junction: Account ↔ FinancialAccount)
 │   ├── FinancialHolding (master-detail)
 │   └── FinancialAccountTransaction (lookup)
-├── AccountContactRelationship (relationship map)
+├── AccountContactRelation (relationship map)
 ├── Referral (lookup to Account)
 ├── ActionPlan (lookup — can also be on Contact, Opportunity)
 │   └── ActionPlanItem (master-detail)

@@ -16,12 +16,12 @@ description: Loyalty Management diagnostic patterns — symptom to subsystem to 
 
 ## Pattern: Member currency / points balance wrong or missing (incl. escrow)
 - **Likely subsystem:** `core/industries-loyalty-impl/java/src/loyalty/impl/actions/QueryExecutor.java` (`fetchLoyaltyMemberCurrency`); `LoyaltyMemberCurrency` UDD constants/fields
-- **How to confirm:** Compare LoyaltyMemberCurrency PointsBalance vs. summed TransactionJournalEntry; check for escrow/stale-check discrepancies (known failure mode: escrow points balance missing from a stale-check record); verify no in-flight reversal
+- **How to confirm:** Compare `LoyaltyMemberCurrency` PointsBalance vs. summed `TransactionJournal` (and `LoyaltyLedger`) entries; check for escrow/stale-check discrepancies (known failure mode: escrow points balance missing from a stale-check record); verify no in-flight reversal
 - **GUS search:** `Product_Tag__r.Name LIKE '%Loyalty Management%' AND Subject__c LIKE '%currency%'` (also try `%escrow%` / `%balance%`; apply build-staleness rule)
 
 ## Pattern: Promotion not applying or wrong promotion dates
 - **Likely subsystem:** `core/industries-loyalty-impl/java/src/loyalty/impl/memberpromotionsview/`; promotion rule templates under `core/industries-loyalty-api/`; `runtime_industries_offermgmt` UI namespace
-- **How to confirm:** Verify LoyaltyPromotion Start/End dates (known failure mode: dates overridden with defaults 1/1/1970 & 1/1/3000 on new/edit); check eligibility criteria and member segment; confirm `LoyaltyProgramMbrPromotion` linkage
+- **How to confirm:** Verify promotion Start/End dates on the `Promotion` / `LoyaltyProgramMbrPromotion` records (known failure mode: dates overridden with defaults 1/1/1970 & 1/1/3000 on new/edit); check eligibility criteria and member segment; confirm `LoyaltyProgramMbrPromotion` linkage
 - **GUS search:** `Product_Tag__r.Name LIKE '%Loyalty Management%' AND Subject__c LIKE '%promotion%'` (apply build-staleness rule)
 
 ## Pattern: Voucher won't redeem or issue

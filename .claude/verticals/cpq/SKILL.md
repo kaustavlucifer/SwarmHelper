@@ -105,7 +105,7 @@ core/industries-interaction-ptc/apex/vlocity_cmt/
 
 1. **Browser console** (F12) — QLE/QCP errors appear here
 2. **Debug logs** — Apex execution for quote save/calculate
-3. **SBQQ Settings** — Custom Setting `SBQQ__QuoteSetting__c` controls behavior
+3. **SBQQ Settings** — Custom Settings (`SBQQ__GeneralSettings__c`; name varies by package version) control behavior
 4. **Calculation order** — Price Rules → QCP → Calculator → Plugins
 5. **Package version** — Check installed version vs known bug fixes
 
@@ -113,24 +113,29 @@ core/industries-interaction-ptc/apex/vlocity_cmt/
 
 ## SBQQ Object Reference
 
+> **Verified 2026-06-15** against a Salesforce CPQ org. Corrected: the pricing-rule object is **`SBQQ__PriceRule__c`** (not `SBQQ__PricingRule__c`), and Subscription term dates are `SBQQ__StartDate__c`/`SBQQ__EndDate__c` (not `TermStartDate__c`/`TermEndDate__c`).
+
 | Object | Description | Key Fields |
 |---|---|---|
-| `SBQQ__Quote__c` | Quote record | `SBQQ__Status__c`, `SBQQ__Primary__c`, `SBQQ__NetAmount__c`, `SBQQ__Opportunity2__c` |
-| `SBQQ__QuoteLine__c` | Quote line item | `SBQQ__Product__c`, `SBQQ__Quantity__c`, `SBQQ__NetPrice__c`, `SBQQ__Number__c` |
-| `SBQQ__ProductOption__c` | Bundle options | `SBQQ__OptionalSKU__c`, `SBQQ__ConfiguredSKU__c`, `SBQQ__Type__c` |
-| `SBQQ__PricingRule__c` | Pricing rules | `SBQQ__TargetObject__c`, `SBQQ__EvaluationEvent__c`, `SBQQ__Active__c` |
-| `SBQQ__PriceCondition__c` | Rule conditions | `SBQQ__Field__c`, `SBQQ__Operator__c`, `SBQQ__Value__c` |
-| `SBQQ__PriceAction__c` | Rule actions | `SBQQ__TargetObject__c`, `SBQQ__Field__c`, `SBQQ__Value__c` |
-| `SBQQ__Subscription__c` | Active subscriptions | `SBQQ__Contract__c`, `SBQQ__RenewalQuantity__c`, `SBQQ__TermStartDate__c` |
-| `SBQQ__ContractedPrice__c` | Contracted prices | `SBQQ__OriginalQuoteLine__c`, `SBQQ__Price__c` |
+| `SBQQ__Quote__c` | Quote record | `SBQQ__Status__c`, `SBQQ__Primary__c`, `SBQQ__NetAmount__c`, `SBQQ__Opportunity2__c` (✅ verified) |
+| `SBQQ__QuoteLine__c` | Quote line item | `SBQQ__Product__c`, `SBQQ__Quantity__c`, `SBQQ__NetPrice__c`, `SBQQ__Number__c` (✅ verified) |
+| `SBQQ__ProductOption__c` | Bundle options | `SBQQ__OptionalSKU__c`, `SBQQ__ConfiguredSKU__c`, `SBQQ__Type__c` (✅ verified) |
+| `SBQQ__PriceRule__c` | Pricing rules | `SBQQ__TargetObject__c`, `SBQQ__EvaluationEvent__c`, `SBQQ__Active__c`, `SBQQ__ConditionsMet__c` (✅ verified) |
+| `SBQQ__PriceCondition__c` | Rule conditions | `SBQQ__Field__c`, `SBQQ__Operator__c`, `SBQQ__Value__c`; parent `SBQQ__Rule__c` (✅ verified) |
+| `SBQQ__PriceAction__c` | Rule actions | `SBQQ__TargetObject__c`, `SBQQ__Field__c`, `SBQQ__Value__c`; parent `SBQQ__Rule__c` (✅ verified) |
+| `SBQQ__Subscription__c` | Active subscriptions | `SBQQ__Contract__c`, `SBQQ__RenewalQuantity__c`, `SBQQ__StartDate__c`, `SBQQ__EndDate__c` (✅ verified) |
+| `SBQQ__ContractedPrice__c` | Contracted prices | `SBQQ__OriginalQuoteLine__c`, `SBQQ__Price__c` (✅ verified) |
+
+> Related rule objects also present in the package: `SBQQ__ProductRule__c`, `SBQQ__ConfigurationRule__c`, `SBQQ__PriceSchedule__c`/`SBQQ__PriceTier__c`, `SBQQ__PricingGuidance__c`.
 
 ### Custom Settings (Critical for Debugging)
 
-| Setting | Key Fields |
+> ⚠️ Settings object names vary by CPQ package version. In the verified org, SBQQ settings consolidate to **`SBQQ__GeneralSettings__c`** (the legacy split objects `SBQQ__QuoteSettings__c` / `SBQQ__LineEditorSettings__c` / `SBQQ__Plugins__c` were **not present**). Confirm via `describe` / Setup → Custom Settings in the target org before querying.
+
+| Setting | Notes |
 |---|---|
-| `SBQQ__QuoteSettings__c` (org-wide) | `SBQQ__CalculatorServiceTimeout__c`, `SBQQ__EnableQuoteCalculator__c`, `SBQQ__CalculationMethod__c` |
-| `SBQQ__LineEditorSettings__c` | `SBQQ__EnableMultiLineEditing__c` |
-| `SBQQ__Plugins__c` (org-wide) | `SBQQ__PricingPlugin__c` — class name for QCP |
+| `SBQQ__GeneralSettings__c` | Org-wide CPQ behavior settings (calculator, line editor, plugin config). Field API names vary by version — inspect in the target org. |
+| QCP plugin (`SBQQ__PricingPlugin__c`) | The Quote Calculator Plugin class name. Location depends on package version (legacy `SBQQ__Plugins__c` vs. consolidated settings) — confirm in-org. |
 
 ---
 
@@ -154,7 +159,7 @@ SELECT Id, Name, SBQQ__TargetObject__c, SBQQ__EvaluationEvent__c,
        SBQQ__Active__c, SBQQ__ConditionsMet__c,
        (SELECT Id, SBQQ__Field__c, SBQQ__Operator__c, SBQQ__Value__c FROM SBQQ__PriceConditions__r),
        (SELECT Id, SBQQ__TargetObject__c, SBQQ__Field__c, SBQQ__Value__c FROM SBQQ__PriceActions__r)
-FROM SBQQ__PricingRule__c
+FROM SBQQ__PriceRule__c
 WHERE SBQQ__Active__c = true
 ORDER BY Name LIMIT 20
 ```
@@ -162,15 +167,18 @@ ORDER BY Name LIMIT 20
 ### Subscriptions for a contract
 ```soql
 SELECT Id, SBQQ__Product__r.Name, SBQQ__Quantity__c, SBQQ__NetPrice__c,
-       SBQQ__TermStartDate__c, SBQQ__TermEndDate__c, SBQQ__RenewalQuantity__c
+       SBQQ__StartDate__c, SBQQ__EndDate__c, SBQQ__RenewalQuantity__c
 FROM SBQQ__Subscription__c
 WHERE SBQQ__Contract__c = '<CONTRACT_ID>'
-ORDER BY SBQQ__TermStartDate__c
+ORDER BY SBQQ__StartDate__c
 ```
 
 ### QCP plugin configuration
 ```soql
-SELECT SBQQ__PricingPlugin__c FROM SBQQ__Plugins__c LIMIT 1
+-- Settings object varies by CPQ package version; in the verified org settings live on
+-- SBQQ__GeneralSettings__c. Legacy packages expose SBQQ__Plugins__c.SBQQ__PricingPlugin__c.
+-- Confirm via Setup → Custom Settings before querying.
+SELECT Id FROM SBQQ__GeneralSettings__c LIMIT 1
 ```
 
 ---

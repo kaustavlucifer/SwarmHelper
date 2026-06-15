@@ -73,19 +73,25 @@ Net Zero Cloud is hybrid (managed app + core Java). No dedicated PTC layer — u
 
 ## Key Objects
 
+> **Verified 2026-06-15** against a Net Zero Cloud org via `EntityDefinition`. Corrected several names that don't exist: `PrcsdCrbnFtprntData`, `SustainabilityGoal`, `WaterFootprint`, `EmissionFactor`/`EmissionFactorItem`, `EnergyUse`/`EnergyUseItem`, `SustainabilityIndicator` → replaced with the real (heavily-abbreviated) API names below. Net Zero uses terse 8.3-style API names (`Emssn`, `Crbn`, `Ftprnt`, `Enrgy`, `Stnry`).
+
 | Object | Description |
 |---|---|
-| `StnryAssetEnvrSrc` | Stationary Asset Environmental Source |
-| `StnryAssetCrbnFtprnt` | Stationary Asset Carbon Footprint |
-| `VehicleAssetEmssnSrc` | Vehicle Asset Emission Source |
-| `PrcsdCrbnFtprntData` | Processed Carbon Footprint Data |
-| `SustainabilityGoal` | Reduction targets and goals |
-| `BldgEnrgyIntensity` | Building Energy Intensity |
-| `WasteFootprint` | Waste tracking records |
-| `WaterFootprint` | Water consumption records |
-| `EmissionFactor` / `EmissionFactorItem` | Emission factor reference data |
-| `EnergyUse` / `EnergyUseItem` | Energy consumption records |
-| `SustainabilityIndicator` | KPI/metric tracking |
+| `StnryAssetEnvrSrc` | Stationary Asset Environmental Source (✅ verified) |
+| `StnryAssetCrbnFtprnt` / `StnryAssetCrbnFtprntItm` | Stationary Asset Carbon Footprint (+ items) (✅ verified) |
+| `StnryAssetEnrgyUse` | Stationary Asset Energy Use (✅ verified) |
+| `StnryAssetWaterFtprnt` / `StnryAssetWaterActvty` | Stationary Asset Water Footprint / activity (✅ verified) |
+| `VehicleAssetEmssnSrc` / `VehicleAssetCrbnFtprnt` | Vehicle Asset Emission Source / Carbon Footprint (✅ verified) |
+| `Scope3CrbnFtprnt` / `Scope3EmssnSrc` | Scope 3 carbon footprint / emission source (✅ verified) |
+| `AnnualEmssnInventory` / `AnnualEmssnRdctnTarget` | Annual emissions inventory + reduction target (✅ verified) |
+| `EmssnReductionTarget` / `EmssnRdctnCommitment` | Emission reduction targets / commitments (✅ verified) |
+| `EmissionsActivity` / `EmissionsAllocation` / `EmissionsForecastFact` | Emissions activity, allocation, forecast (✅ verified) |
+| `ProductEmissionsFactor` / `ElectricityEmssnFctrSet` / `RefrigerantEmssnFctr` | Emission factor reference data (✅ verified) |
+| `BldgEnrgyIntensity` (+ `Cnfg` / `Val`) | Building Energy Intensity (✅ verified) |
+| `WasteFootprint` / `WasteFootprintItem` | Waste tracking records (✅ verified) |
+| `CrbnCreditProject` / `CrbnCreditAlloc` / `CrbnCreditDistribution` | Carbon credit project / allocation / distribution (✅ verified) |
+| `SustainabilityScorecard` / `SustainabilityCredit` / `SustainabilityTask` | Scorecards, credits, tasks (✅ verified) |
+| `Product_Carbon_Footprint__c` | Product carbon footprint (custom object; ✅ verified) |
 
 ---
 
@@ -108,24 +114,24 @@ Net Zero Cloud is hybrid (managed app + core Java). No dedicated PTC layer — u
 
 ## Sample SOQL Queries
 
-### Carbon footprint records
+### Stationary-asset carbon footprint records (verified fields 2026-06-15)
 ```soql
-SELECT Id, Name, RecordType.DeveloperName, 
-       EmissionsScope1, EmissionsScope2, EmissionsScope3,
-       ReportingYear, Status
+SELECT Id, Name, Co2EmissionsInKg, Ch4EmissionsInKg,
+       FootprintStage, AuditApprovalStatus, EndDate,
+       AnnualEmssnInventoryId, BuildingEnergyIntensityId
 FROM StnryAssetCrbnFtprnt
 WHERE OwnerId = '<USER_ID>'
-ORDER BY ReportingYear DESC LIMIT 20
+ORDER BY EndDate DESC LIMIT 20
 ```
 
-### Sustainability goals
+### Emission reduction targets (verified fields 2026-06-15)
 ```soql
-SELECT Id, Name, TargetValue, CurrentValue, Status,
-       StartDate, TargetDate, Category
-FROM SustainabilityGoal
-WHERE OwnerId = '<USER_ID>'
-ORDER BY TargetDate ASC
+SELECT Id, Name, BaseYear, BaseYearEmissions, BaseYearEmissionIntensity,
+       TargetSettingMethod, TargetEmssnChangePercentage
+FROM EmssnReductionTarget
+ORDER BY BaseYear DESC
 ```
+> `SustainabilityGoal` does not exist; reduction goals live on `EmssnReductionTarget` / `AnnualEmssnRdctnTarget` / `EmssnRdctnCommitment`.
 
 ---
 

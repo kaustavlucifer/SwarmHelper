@@ -77,22 +77,28 @@ NPSP is an independent managed package (not built on vlocity_* platform). No PTC
 
 ## Key Objects
 
+> **Verified 2026-06-15** against an NPSP org. Fundraising objects are NPSP-packaged (`npsp__`/`npe03__`/`npe4__`/`npe5__`). **Program Management uses the `pmdm__` namespace** (Program Management Module managed package) — the earlier bare `Program__c`/`ProgramCohort__c`/`Participant__c`/`Outcome__c` names don't exist. **Grantmaking uses the `outfunds__` namespace** (Outbound Funds Module). All objects below returned a row from `EntityDefinition`.
+
 | Object | Description |
 |---|---|
 | `Opportunity` | Donations (NPSP uses Opportunity for gifts) |
-| `npe03__Recurring_Donation__c` | Recurring donation schedules |
-| `npsp__Allocation__c` | Fund allocations (GAU splits) |
-| `npsp__General_Accounting_Unit__c` | Fund/GAU definitions |
-| `npsp__Batch__c` | Gift entry batches |
-| `npsp__DataImport__c` | NPSP data import records |
+| `npe03__Recurring_Donation__c` | Recurring donation schedules (✅ verified) |
+| `npsp__Allocation__c` | Fund allocations (GAU splits) (✅ verified) |
+| `npsp__General_Accounting_Unit__c` | Fund/GAU definitions (✅ verified) |
+| `npsp__Batch__c` | Gift entry batches (✅ verified) |
+| `npsp__DataImport__c` | NPSP data import records (✅ verified) |
 | `Account` (Household/Organization) | Household accounts, organization accounts |
-| `npe5__Affiliation__c` | Organization affiliations |
-| `npe4__Relationship__c` | Contact-to-contact relationships |
-| `npsp__Address__c` | NPSP address management |
-| `Program__c` | Program definitions |
-| `ProgramCohort__c` | Program cohorts |
-| `Participant__c` | Program participants |
-| `Outcome__c` | Outcomes tracking |
+| `npe5__Affiliation__c` | Organization affiliations (✅ verified) |
+| `npe4__Relationship__c` | Contact-to-contact relationships (✅ verified) |
+| `npsp__Address__c` | NPSP address management (✅ verified) |
+| **Program Management (`pmdm__`)** | |
+| `pmdm__Program__c` / `pmdm__ProgramCohort__c` | Program definitions / cohorts (✅ verified) |
+| `pmdm__ProgramEngagement__c` / `pmdm__ServiceParticipant__c` | Program engagement / service participants (✅ verified) |
+| `pmdm__Service__c` / `pmdm__ServiceDelivery__c` / `pmdm__ServiceSchedule__c` / `pmdm__ServiceSession__c` | Services + delivery (outcomes tracked here, no bare `Outcome__c`) (✅ verified) |
+| **Grantmaking (`outfunds__`)** | |
+| `outfunds__Funding_Program__c` / `outfunds__Funding_Request__c` | Grant programs + requests (✅ verified) |
+| `outfunds__Disbursement__c` / `outfunds__Requirement__c` / `outfunds__Review__c` | Disbursements, requirements, reviews (✅ verified) |
+| `outfundsnpspext__GAU_Expenditure__c` | GAU expenditure (Outbound Funds↔NPSP bridge) (✅ verified) |
 
 ---
 
@@ -100,7 +106,7 @@ NPSP is an independent managed package (not built on vlocity_* platform). No PTC
 
 | Symptom | Check |
 |---|---|
-| Recurring donation installment not creating | RD schedule configuration, `npsp__RecurringDonations2__c` settings |
+| Recurring donation installment not creating | RD schedule configuration, `npe03__Recurring_Donations_Settings__c` custom setting (Enhanced RD) |
 | Gift entry batch errors | Batch template configuration, field mapping, permissions |
 | Household naming not updating | NPSP Household Naming settings, trigger handler config |
 | Donation rollup wrong | NPSP Rollup settings, hard credit vs soft credit rules |
@@ -131,7 +137,7 @@ ORDER BY CloseDate DESC LIMIT 20
 ```soql
 SELECT Id, Name, npe03__Amount__c, npsp__Status__c,
        npsp__InstallmentFrequency__c, npsp__Day_of_Month__c,
-       npe03__Contact__r.Name, npsp__Next_Payment_Date__c
+       npe03__Contact__r.Name, npe03__Next_Payment_Date__c
 FROM npe03__Recurring_Donation__c
 WHERE npe03__Contact__c = '<CONTACT_ID>'
 ORDER BY CreatedDate DESC

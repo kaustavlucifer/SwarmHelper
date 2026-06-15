@@ -51,22 +51,24 @@ gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
 
 ## Key Objects
 
+> **Verified 2026-06-15** against a Life Sciences org. The Patient Services / `CareProgram*` family is fully confirmed. *(license-gated)* objects are real Salesforce objects that need the Clinical/Trial feature license — they 404 in orgs without it; treat absence as a licensing check, not a wrong name.
+
 | Object | Description |
 |---|---|
-| `ResearchStudy` | Clinical trial definitions |
-| `ResearchStudySubject` | Trial participants |
-| `ResearchSite` | Trial site locations |
-| `MedicationDispense` | Drug dispensing records |
-| `MedicationRequest` | Prescription / drug requests |
-| `IndividualApplication` | Patient enrollment applications |
-| `CareProgram` | Drug/care program definitions |
-| `CareProgramEnrollee` | Program participants |
-| `CareProgramProduct` | Products in program |
-| `ContactPointConsent` | Consent management |
+| `CareProgram` | Drug/care program definitions (✅ verified) |
+| `CareProgramEnrollee` | Program participants (✅ verified) |
+| `CareProgramProduct` | Products in program (✅ verified) |
+| `IndividualApplication` | Patient enrollment applications (✅ verified) |
+| `MedicationDispense` | Drug dispensing records (✅ verified) |
+| `MedicationRequest` | Prescription / drug requests (✅ verified) |
+| `ContactPointConsent` | Consent management (✅ verified) |
+| `Visit` | Provider visit records (✅ verified) |
+| `VisitedParty` | Parties visited (this org's analog; bare `VisitedPlace` not present) |
 | `PersonAccount` | HCP and patient records |
-| `Visit` | Provider visit records |
-| `VisitedPlace` | Visit location tracking |
-| `Briefing` | Account briefings (Agentforce) |
+| `ResearchStudy` *(license-gated)* | Clinical trial definitions |
+| `ResearchStudySubject` *(license-gated)* | Trial participants |
+| `ResearchSite` *(license-gated)* | Trial site locations |
+| `Briefing` *(license-gated)* | Account briefings (Agentforce) |
 
 ---
 

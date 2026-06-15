@@ -68,17 +68,25 @@ InsContractServicePtc.apex        ← Contracts
 
 ## HC-Specific Objects
 
+> **Verified 2026-06-15** against an HC org. **Care management ships in two editions** — confirm via `describe`:
+> - **Standard `CarePlan`** (Health Cloud on core) — ✅ `CarePlan`, `CarePlanActivity`, `CarePlanDetail`, `CarePlanTemplate` verified.
+> - **Managed package (`HealthCloudGA__`)** — `HealthCloudGA__CarePlanProblem__c`, `HealthCloudGA__CarePlanGoal__c`, `HealthCloudGA__EhrCarePlan__c`, etc. (the bare `CarePlanProblem`/`CarePlanGoal` standard objects do **not** exist — they're managed-pkg).
+>
+> Objects marked *(license-gated)* are real Salesforce objects that require the relevant HC license/feature — they 404 in orgs without it; treat absence as a licensing check, not a wrong name.
+
 | Object | Description |
 |---|---|
-| `CarePlan` / `CarePlanProblem` / `CarePlanGoal` | Care management |
-| `HealthCondition` | Patient conditions |
-| `CareGap` | Care gap identification |
-| `AssessmentQuestion` / `AssessmentResponse` | Assessments |
-| `MemberPlan` | Insurance membership |
-| `InsuranceCoverage` | Coverage details |
-| `Claim` / `ClaimItem` | Insurance claims |
-| `AuthorizationRequest` | Utilization management |
-| `CarePreauth` | Prior authorization |
+| `CarePlan` / `CarePlanActivity` / `CarePlanDetail` / `CarePlanTemplate` | Care management (standard — ✅ verified) |
+| `HealthCloudGA__CarePlanProblem__c` / `HealthCloudGA__CarePlanGoal__c` | Care problems / goals (managed pkg — ✅ verified) |
+| `HealthCondition` | Patient conditions (✅ verified) |
+| `CareBarrier` / `CareBarrierType` | Care barriers (this org's analog of "care gaps"; ✅ verified) |
+| `CareGap` *(license-gated)* | Care gap identification |
+| `AssessmentQuestion` / `AssessmentQuestionResponse` | Assessments (**not** `AssessmentResponse`; ✅ verified) |
+| `MemberPlan` | Insurance membership (✅ verified) |
+| `CarePreauth` / `CarePreauthItem` | Prior authorization (✅ verified) |
+| `InsuranceCoverage` *(license-gated)* | Coverage details |
+| `Claim` / `ClaimItem` *(license-gated)* | Insurance claims (payer-side) |
+| `AuthorizationRequest` / `InfoAuthorizationRequest` *(license-gated)* | Utilization management |
 
 ---
 
@@ -101,23 +109,23 @@ InsContractServicePtc.apex        ← Contracts
 
 ### Care plans for a patient
 ```soql
-SELECT Id, Name, Status, StartDate, EndDate, Subject.Name,
-       (SELECT Id, Name, Priority, Status FROM CarePlanProblems),
-       (SELECT Id, Name, Status, TargetDate FROM CarePlanGoals)
+SELECT Id, Name, Status, StartDate, EndDate, Subject.Name
 FROM CarePlan
 WHERE Subject.Id = '<PATIENT_CONTACT_ID>'
 ORDER BY StartDate DESC LIMIT 5
 ```
+> Problems/goals depend on edition: managed-pkg orgs query `HealthCloudGA__CarePlanProblem__c` / `HealthCloudGA__CarePlanGoal__c` (related via their lookup to the care plan), not standard child subqueries. Confirm the child-relationship name via `describe` before adding a nested subquery.
 
 ### Assessments for a patient
 ```soql
-SELECT Id, Name, AssessmentType, Status, TotalScore, CompletedDateTime,
-       (SELECT Id, AssessmentQuestion.Name, ResponseValue, IsRequired
+SELECT Id, Name, AssessmentStatus, EffectiveDateTime,
+       (SELECT Id, AssessmentQuestion.Name, ResponseText
         FROM AssessmentQuestionResponses)
-FROM AssessmentResponse
-WHERE Subject.Id = '<PATIENT_CONTACT_ID>'
-ORDER BY CompletedDateTime DESC LIMIT 10
+FROM Assessment
+WHERE AccountId = '<PATIENT_ACCOUNT_ID>'
+ORDER BY EffectiveDateTime DESC LIMIT 10
 ```
+> Verified 2026-06-15: parent object `Assessment` (not `AssessmentResponse`), subject field `AccountId`, status `AssessmentStatus`, child object `AssessmentQuestionResponse`.
 
 ### Authorization requests
 ```soql

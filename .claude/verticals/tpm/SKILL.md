@@ -74,13 +74,29 @@ TPM is **not** in the core monorepo (`core/industries-rcg/` is not a confirmed p
 
 ## Key Objects
 
+> **Verified 2026-06-15** against a TPM (`cgcloud`) org. Corrected names that don't exist in the package: KPIs are `cgcloud__KPI_Definition__c` / `cgcloud__KPI_Set__c` / `cgcloud__Promotion_Template_KPI_Definition__c` (not `Promotion_KPI__c`); batch tracking is `cgcloud__Batch_Run_Status__c` (not `Batch_Run__c`); there is no `cgcloud__Claim__c` object.
+
 | Object | Description |
 |---|---|
-| `cgcloud__Promotion__c` | Trade promotions |
-| `cgcloud__Promotion_KPI__c` | KPI records |
-| `cgcloud__Fund__c` | Funding |
-| `cgcloud__Payment__c` / `cgcloud__Claim__c` | Payment/claim lifecycle |
-| `cgcloud__Batch_Run__c` | Batch job tracking |
+| `cgcloud__Promotion__c` | Trade promotions (✅ verified) |
+| `cgcloud__KPI_Definition__c` / `cgcloud__KPI_Set__c` / `cgcloud__Promotion_Template_KPI_Definition__c` | KPI definitions and sets (✅ verified) |
+| `cgcloud__Fund__c` | Funding (✅ verified) |
+| `cgcloud__Payment__c` / `cgcloud__Payment_Tactic__c` | Payment lifecycle (✅ verified) |
+| `cgcloud__Batch_Run_Status__c` / `cgcloud__Batch_Run_Status_Detail__c` | Batch job tracking (✅ verified) |
+
+### Retail Execution objects (Consumer Goods Cloud)
+
+> **Verified 2026-06-15** against a Retail Consumer Goods org. The retail-execution side (store visits, audits, orders, assortments) uses both `cgcloud__` package objects and standard Salesforce Consumer Goods objects.
+
+| Object | Description |
+|---|---|
+| `cgcloud__Visit_Job__c` / `cgcloud__Visit_Template__c` / `cgcloud__Account_Visit_Setting__c` | Store visit jobs, templates, settings (✅ verified) |
+| `cgcloud__Asset_Audit__c` | In-store asset/shelf audit (✅ verified) |
+| `cgcloud__Order__c` / `cgcloud__Order_Item__c` / `cgcloud__Order_Template__c` | Retail orders + items + templates (✅ verified) |
+| `cgcloud__Product_Assortment_Template__c` / `cgcloud__Product_Assortment_Store__c` | Product assortments by store (✅ verified) |
+| `RetailStore` / `InStoreLocation` / `RetailLocationGroup` | Standard store / in-store location / location group (✅ verified) |
+| `RetailStoreKpi` / `RetailVisitKpi` | Standard store + visit KPIs (✅ verified) |
+| `ProductCategory` / `AssessmentTask` | Standard product category + visit assessment tasks (✅ verified) |
 
 ---
 
@@ -134,7 +150,7 @@ All versioned routes sit behind a `/v<N>/` prefix. Health/ops routes have no pre
 
 ## Debugging Approach
 
-1. **Check Batch Run records** — `cgcloud__Batch_Run__c` shows status and errors
+1. **Check Batch Run records** — `cgcloud__Batch_Run_Status__c` (+ `_Detail__c`) shows status and errors
 2. **Nightly calculation log** — Debug logs during scheduled window
 3. **KPI formula audit** — Verify calculation formula matches expected logic
 4. **Push promotion hierarchy** — Parent → Child distribution rules
@@ -145,53 +161,52 @@ All versioned routes sit behind a `/v<N>/` prefix. Health/ops routes have no pre
 ## Data Model Relationships
 
 ```
-cgcloud__Promotion__c (Trade Promotion)
-├── cgcloud__Promotion_KPI__c (master-detail — KPIs)
-│   └── cgcloud__Promotion_KPI_Value__c (calculated values)
-├── cgcloud__Tactic__c (promotion tactics/activities)
-│   └── cgcloud__Tactic_KPI__c (tactic-level KPIs)
-├── cgcloud__Fund__c (funding allocation)
-│   └── cgcloud__Fund_Item__c (fund line items)
-├── cgcloud__Payment__c (payments)
-│   └── cgcloud__Claim__c (claims against payments)
-└── cgcloud__Condition__c (promotion conditions/rules)
+cgcloud__Promotion__c (Trade Promotion)                              ✅ verified
+├── cgcloud__Tactic__c (promotion tactics/activities)                ✅ verified
+│   └── cgcloud__Tactic_Fund__c (tactic↔fund junction)               ✅ verified
+├── cgcloud__Fund__c (funding allocation)                            ✅ verified
+│   ├── cgcloud__Fund_Transaction__c (fund transactions)             ✅ verified
+│   └── cgcloud__Fund_Product__c (fund product scope)                ✅ verified
+├── cgcloud__Payment__c (payments)                                   ✅ verified
+│   └── cgcloud__Payment_Tactic__c (payment↔tactic detail)           ✅ verified
+└── cgcloud__Promotion_Template_KPI_Definition__c (KPI defs)         ✅ verified
 
-cgcloud__Batch_Run__c (Batch Job Tracking)
-├── cgcloud__Batch_Run_Step__c (individual steps)
-└── Error logs / status records
+cgcloud__KPI_Set__c → cgcloud__KPI_Definition__c (KPI catalog)       ✅ verified
+cgcloud__Batch_Run_Status__c (Batch Job Tracking)                    ✅ verified
+└── cgcloud__Batch_Run_Status_Detail__c (per-step status)            ✅ verified
 ```
+> Verified against a TPM org 2026-06-15. Earlier diagram objects `Promotion_KPI__c`, `Promotion_KPI_Value__c`, `Tactic_KPI__c`, `Fund_Item__c`, `Claim__c`, `Condition__c`, `Batch_Run__c`, `Batch_Run_Step__c` returned 404 (do not exist in the package).
 
 ---
 
 ## Sample SOQL Queries
 
-### Promotions with KPIs
+> Field API names below are verified where noted; TPM promotions use **date-range + account-set targeting** (`cgcloud__Date_From__c`/`cgcloud__Date_Thru__c`, `cgcloud__Anchor_Account__c`), not a single `Account__c`/`Status__c`. Always `describe` the object in the target org before finalizing field selections.
+
+### Promotions (by date window)
 ```soql
-SELECT Id, Name, cgcloud__Promotion_Status__c, cgcloud__Start_Date__c, cgcloud__End_Date__c,
-       cgcloud__Account__r.Name,
-       (SELECT Id, Name, cgcloud__KPI_Type__c, cgcloud__Planned_Value__c, cgcloud__Actual_Value__c
-        FROM cgcloud__Promotion_KPIs__r)
+SELECT Id, Name, cgcloud__Date_From__c, cgcloud__Date_Thru__c,
+       cgcloud__Anchor_Account__c, cgcloud__Commit_Date__c
 FROM cgcloud__Promotion__c
-WHERE cgcloud__Account__c = '<ACCOUNT_ID>'
+WHERE cgcloud__Anchor_Account__c = '<ACCOUNT_ID>'
+ORDER BY cgcloud__Date_From__c DESC LIMIT 10
+```
+> KPIs are not child records of a promotion — they live in the catalog (`cgcloud__KPI_Set__c` → `cgcloud__KPI_Definition__c`) and are attached via `cgcloud__Promotion_Template_KPI_Definition__c`.
+
+### Batch run status (verified fields)
+```soql
+SELECT Id, Name, cgcloud__Batch_State__c, cgcloud__Batch_Type__c, cgcloud__Job_Name__c,
+       cgcloud__Start_Date__c, cgcloud__End_Date__c, cgcloud__Process_Count__c, cgcloud__Items_Error__c
+FROM cgcloud__Batch_Run_Status__c
+WHERE cgcloud__Batch_State__c != 'Completed'
 ORDER BY cgcloud__Start_Date__c DESC LIMIT 10
 ```
 
-### Batch run status
+### Payments (verified fields)
 ```soql
-SELECT Id, Name, cgcloud__Status__c, cgcloud__Start_Time__c, cgcloud__End_Time__c,
-       cgcloud__Error_Message__c, cgcloud__Records_Processed__c
-FROM cgcloud__Batch_Run__c
-WHERE cgcloud__Status__c != 'Completed'
-ORDER BY cgcloud__Start_Time__c DESC LIMIT 10
-```
-
-### Payments and claims
-```soql
-SELECT Id, Name, cgcloud__Status__c, cgcloud__Amount__c,
-       cgcloud__Promotion__r.Name,
-       (SELECT Id, cgcloud__Status__c, cgcloud__Amount__c FROM cgcloud__Claims__r)
+SELECT Id, Name, cgcloud__Payment_Status__c, cgcloud__Payment_Amount__c,
+       cgcloud__Family_Status__c, cgcloud__Rejected_Amount__c
 FROM cgcloud__Payment__c
-WHERE cgcloud__Promotion__r.cgcloud__Account__c = '<ACCOUNT_ID>'
 ORDER BY CreatedDate DESC LIMIT 20
 ```
 
@@ -259,7 +274,7 @@ TPM relies heavily on nightly batch processing:
 4. **Fund Reconciliation** — Updates fund committed/spent values
 
 **Debugging batch failures:**
-1. Check `cgcloud__Batch_Run__c` for error messages
+1. Check `cgcloud__Batch_Run_Status__c` for error messages
 2. Check scheduled job status (Setup → Scheduled Jobs)
 3. Look for governor limit hits in debug logs during batch window
 4. Verify no conflicting batch jobs running simultaneously

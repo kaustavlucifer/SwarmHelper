@@ -108,7 +108,7 @@
 3. **Enable CPQ Indexing:**
    ```
    Request via support case: "Please enable CPQ indexing for Org [OrgID]"
-   Indexes: vlocity_cmt__Product2__c, vlocity_cmt__ProductChildItem__c
+   Indexes: Product2, vlocity_cmt__ProductChildItem__c
    Fields: vlocity_cmt__GlobalKey__c, vlocity_cmt__ProductCode__c
    ```
 
@@ -857,13 +857,13 @@
 1. **Run Complete EPC Refresh (In Sequence):**
    ```apex
    // Step 1: EPCProductAttributeJSONBatchJob
-   Database.executeBatch(new EPCProductAttributeJSONBatchJob('SELECT Id FROM vlocity_cmt__Product2__c WHERE vlocity_cmt__ProductSpec__c != null'), 100);
+   Database.executeBatch(new EPCProductAttributeJSONBatchJob('SELECT Id FROM Product2 WHERE vlocity_cmt__ProductSpec__c != null'), 100);
    
    // Step 2: FixProductAttribJSONBatchJob
-   Database.executeBatch(new FixProductAttribJSONBatchJob('SELECT Id FROM vlocity_cmt__Product2__c WHERE vlocity_cmt__ProductSpec__c != null'), 100);
+   Database.executeBatch(new FixProductAttribJSONBatchJob('SELECT Id FROM Product2 WHERE vlocity_cmt__ProductSpec__c != null'), 100);
    
    // Step 3: EPCFixCompiledAttributeOverrideBatchJob
-   Database.executeBatch(new EPCFixCompiledAttributeOverrideBatchJob('SELECT Id FROM vlocity_cmt__Product2__c WHERE vlocity_cmt__ProductSpec__c != null'), 100);
+   Database.executeBatch(new EPCFixCompiledAttributeOverrideBatchJob('SELECT Id FROM Product2 WHERE vlocity_cmt__ProductSpec__c != null'), 100);
    
    // Step 4: ProductAttributesCacheBatchJob
    Database.executeBatch(new ProductAttributesCacheBatchJob(), 200);

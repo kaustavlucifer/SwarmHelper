@@ -65,20 +65,21 @@ Loyalty is core-only (no PTC layer). No managed package Apex — Java-based impl
 
 ## Key Objects
 
+> **Verified 2026-06-15** against a Loyalty-enabled org via `describe`. Corrected two names that don't exist: `TransactionJournalEntry` (there is only `TransactionJournal`) and `LoyaltyPromotion` (the real promotion-link objects are `LoyaltyProgramMbrPromotion` / `LoyaltyPgmPartnerPromotion`).
+
 | Object | Description |
 |---|---|
-| `LoyaltyProgram` | Program definition (tiers, rules, benefits) |
-| `LoyaltyProgramMember` | Member enrollment record |
-| `LoyaltyMemberTier` | Member's current/historical tier |
-| `LoyaltyMemberCurrency` | Member's point balances |
-| `TransactionJournal` | Point accrual/redemption transactions |
-| `TransactionJournalEntry` | Individual journal entries |
-| `LoyaltyPromotion` | Loyalty-specific promotions |
-| `Voucher` / `VoucherDefinition` | Voucher records and templates |
-| `LoyaltyPartnerProduct` | Partner products for redemption |
-| `LoyaltyProgramPartner` | Coalition partner records |
-| `MemberBenefit` | Benefits assigned to members |
-| `BenefitType` | Benefit type definitions |
+| `LoyaltyProgram` | Program definition (tiers, rules, benefits) (✅ verified) |
+| `LoyaltyProgramMember` | Member enrollment record (✅ verified) |
+| `LoyaltyMemberTier` | Member's current/historical tier (✅ verified) |
+| `LoyaltyMemberCurrency` | Member's point balances (✅ verified) |
+| `TransactionJournal` | Point accrual/redemption transactions (✅ verified) |
+| `LoyaltyLedger` / `LoyaltyProgramPartnerLedger` | Point ledger entries (✅ verified) |
+| `LoyaltyProgramMbrPromotion` / `LoyaltyPgmPartnerPromotion` | Member / partner promotion links (✅ verified) |
+| `Voucher` / `VoucherDefinition` | Voucher records and templates (✅ verified) |
+| `LoyaltyPartnerProduct` / `PromotionLoyaltyPtnrProdt` | Partner products for redemption (✅ verified) |
+| `LoyaltyProgramPartner` | Coalition partner records (✅ verified) |
+| `MemberBenefit` / `BenefitType` | Benefits assigned to members + type definitions (✅ verified) |
 
 ---
 

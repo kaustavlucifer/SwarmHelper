@@ -147,19 +147,19 @@ index=<POD> organizationId=<ORG_15> "CareGap" (level=error OR logRecordType=axer
 
 **Symptoms:**
 - Assessment responses not persisting after submit
-- `NoAccessException` or FLS error on AssessmentResponse
+- `NoAccessException` or FLS error on `Assessment` / `AssessmentQuestionResponse`
 - Assessment OmniScript renders but fails on save
 - `AssessmentResponsesPtc.apex` in error trace
 
 **Root Cause:**
 Health Cloud assessments use OmniStudio (OmniScripts/IPs) with PTC layer. Common causes:
-- FLS not granted on `AssessmentQuestion`, `AssessmentResponse` objects
+- FLS not granted on `AssessmentQuestion`, `Assessment`, `AssessmentQuestionResponse` objects
 - `EnforceDMFLSAndDataEncryption` OIC flag is TRUE but permissions not updated
 - PTC layer change in `AssessmentResponsesPtc.apex`
 - Assessment DataRaptor save step misconfigured
 
 **Resolution:**
-1. Check FLS: Verify running user has Read/Create/Edit on `AssessmentQuestion`, `AssessmentResponse`, `AssessmentQuestionResponse`
+1. Check FLS: Verify running user has Read/Create/Edit on `AssessmentQuestion`, `Assessment`, `AssessmentQuestionResponse`
 2. Check OIC flag: `EnforceDMFLSAndDataEncryption` — if TRUE, all field-level permissions must be explicit
 3. Check PTC changes:
 ```

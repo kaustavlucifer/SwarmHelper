@@ -93,9 +93,11 @@ core/industries-interaction-ptc/apex/vlocity_cmt/
 
 ## Key Objects
 
+> ⚠️ E&U objects below are **not yet org-verified** (no E&U org in the sweep) — confirm via `describe`. One correction carried from the Comms verification (E&U shares the EPC catalog): products use standard **`Product2`**, not `vlocity_cmt__Product2__c` (which does not exist).
+
 | Object | Description |
 |---|---|
-| `Product2` / `vlocity_cmt__Product2__c` | Product catalog (shared with Comms) |
+| `Product2` | Product catalog (standard; shared EPC catalog with Comms — **no** `vlocity_cmt__Product2__c`) |
 | `Order` / `OrderItem` | Orders and line items |
 | `vlocity_cmt__PriceList__c` | Price lists |
 | `vlocity_cmt__CalculationMatrix__c` | Calculation matrices (pricing, eligibility) |

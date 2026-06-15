@@ -116,7 +116,7 @@ CalculationServicePtc.apex          ← Pricing calculation entry
 
 ## Key Objects
 
-> ⚠️ **Object/field API names below are pending live-org verification** (RLM org sweep). Standard objects (Quote, Order, Asset, Contract, Product2, Pricebook2) are reliable; the RLM-specific ones (`SalesTransaction`, `SalesTransactionItem`, `PriceAdjustmentSchedule`, `PriceAdjustmentTier`, `UsageGrant`, `ConstraintEngineNodeStatus__c`) should be confirmed via `EntityDefinition`/describe in a Revenue Lifecycle Management–enabled org before relying on exact names. Do not assume a custom field exists.
+> **Partially verified 2026-06-15.** `PriceAdjustmentSchedule` and `PriceAdjustmentTier` confirmed as **standard objects** (HTTP 200 across multiple orgs). Standard objects (Quote, Order, Asset, Contract, Product2, Pricebook2) are reliable. The transaction/usage objects (`SalesTransaction`, `SalesTransactionItem`, `UsageGrant`, `ConstraintEngineNodeStatus__c`) **could not be verified** — the two revenue-flavored orgs probed (Comms CPQ + a Revenue demo org) both returned 404 (neither was RLM-SalesTransaction–enabled). ⚠️ Confirm these via `EntityDefinition`/describe in a true **Revenue Lifecycle Management–enabled** org before relying on exact names. Do not assume a custom field exists.
 
 ### Quote & Order
 

@@ -11,12 +11,12 @@ description: Net Zero Cloud diagnostic leads — symptom to subsystem to confirm
 
 ## Pattern: Carbon footprint not calculating / stale after data load
 - **Likely subsystem:** `core/industries-sustainability/java/src/industries/sustainability/calculations/` and `energyusetocarbonfootprintautomation/` (energy-use → carbon-footprint automation, `CarbonFootprintDAO`)
-- **How to confirm:** Check the calculation batch ran (gslog/axlim for the batch job); verify activity data (EnergyUse/EnergyUseItem) is complete for the reporting period; confirm an emission factor mapped to the activity.
+- **How to confirm:** Check the calculation batch ran (gslog/axlim for the batch job); verify activity/energy-use data (`StnryAssetEnrgyUse`, `EmissionsActivity`) is complete for the reporting period; confirm an emission factor (`ProductEmissionsFactor` / `ElectricityEmssnFctrSet`) mapped to the activity.
 - **GUS search:** `Product_Tag__r.Name LIKE '%Net Zero Cloud%' AND Subject__c LIKE '%carbon footprint%'` (apply build-staleness rule)
 
 ## Pattern: Emission factor not found / wrong factor applied
 - **Likely subsystem:** `fetchEmissionsFactor/` + `referencedata/` / `referencedatav2/` / `referencedatav3/` (versioned reference-data layers)
-- **How to confirm:** Confirm which reference-data version the org is on (v2 vs v3 behave differently); check EmissionFactor/EmissionFactorItem load completed; verify activity-type → factor mapping and the factor's effective date range covers the reporting period.
+- **How to confirm:** Confirm which reference-data version the org is on (v2 vs v3 behave differently); check the emission-factor sets (`ProductEmissionsFactor`, `ElectricityEmssnFctrSet`, `RefrigerantEmssnFctr`, `OtherEmssnFctrSet`) loaded; verify activity-type → factor mapping and the factor's effective date range covers the reporting period.
 - **GUS search:** `Product_Tag__r.Name LIKE '%Net Zero Cloud%' AND Subject__c LIKE '%emission factor%'` (apply build-staleness rule)
 
 ## Pattern: Reference data load job failing or partial

@@ -35,8 +35,8 @@ description: Life Sciences Cloud diagnostic leads — symptom to subsystem to co
 - **GUS search:** `Product_Tag__r.Name LIKE '%Life Sciences Cloud - Product Management%' AND Subject__c LIKE '%care program%'` (also try `%eligib%`; apply build-staleness rule)
 
 ## Pattern: HCP engagement / visit tracking issues
-- **Likely subsystem:** Visit / VisitedPlace objects + activity-capture config (commercial / HCP engagement)
-- **How to confirm:** Check Visit object permissions and scheduling config; verify activity-capture and compliance rules; confirm VisitedPlace location data.
+- **Likely subsystem:** `Visit` / `VisitedParty` objects + activity-capture config (commercial / HCP engagement). *(`VisitedParty` is the verified object; bare `VisitedPlace` may not exist in all orgs — `describe` to confirm.)*
+- **How to confirm:** Check `Visit` object permissions and scheduling config; verify activity-capture and compliance rules; confirm `VisitedParty` data.
 - **GUS search:** `Product_Tag__r.Name LIKE '%Life Sciences Cloud - Product Management%' AND Subject__c LIKE '%visit%'` (also try `%HCP%`; apply build-staleness rule)
 
 ## Pattern: Agentforce briefing / prompt-template feature failing

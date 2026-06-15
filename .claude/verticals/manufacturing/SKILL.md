@@ -80,8 +80,8 @@ Manufacturing is core-only (no PTC layer). Uses shared OmniStudio PTC when OmniS
 | `SalesAgreementProduct` | Products within a sales agreement |
 | `AccountForecast` | Account-level forecast records |
 | `AccountForecastAdjustment` | Manual forecast adjustments |
-| `ManufacturingProgram__c` | Manufacturing program definition |
-| `ManufacturingProgramForecast__c` | Program forecast records |
+| `ManufacturingProgram__c` *(⚠️ verify in org)* | Manufacturing program definition — custom-object name unverified; recent Manufacturing Cloud may use standard program-based-business objects. Confirm via `describe`. |
+| `ManufacturingProgramForecast__c` *(⚠️ verify in org)* | Program forecast records — unverified; confirm via `describe`. |
 | `Asset` | Managed assets (fleet, equipment) |
 | `Claim` / `ClaimItem` / `ClaimCoverage` | Warranty claims |
 | `Product2` / `Pricebook2` | Product catalog |
