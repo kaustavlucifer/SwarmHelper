@@ -1,3 +1,8 @@
+---
+name: omnistudio
+description: OmniStudio troubleshooting — OmniScript, IP, DataRaptor, FlexCard, DocGen, VBT; managed package and standard runtime. Routed by /swarm-helper.
+---
+
 # OmniStudio Troubleshooter
 
 **Trigger:** OmniScript, FlexCard, DataRaptor, Integration Procedure, DocGen, VBT, `vlocity_cmt`, `vlocity_ins`, `omnistudio` namespace, `OmniProcess`, `OmniDataTransform`, managed package runtime issues.

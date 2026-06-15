@@ -1,10 +1,15 @@
+---
+name: media
+description: Media Cloud / Ad Sales troubleshooting — ad inventory, campaign management, MediaAdSales, media business app. Routed by /swarm-helper.
+---
+
 # Media Cloud — Ad Sales Debugger
 
 **Trigger:** Media Cloud, Ad Sales Management, media business app, ad inventory, campaign management, `MediaAdSales` classes.
 
 ---
 
-## Key Areas
+## Product Areas
 
 | Area | Scope |
 |---|---|

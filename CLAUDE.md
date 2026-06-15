@@ -182,15 +182,14 @@ Run `/swarm-helper` — it will use whatever MCP tools are available. If a tool 
 
 | Source | Tool | Content |
 |---|---|---|
-| `github.com/sf-industries/via_platform` | `mcp__mcp-adaptor__read_file` / `search` | All managed package Apex (OmniStudio, INS, CMT) |
+| `github.com/sf-industries/via_platform` | `mcp__plugin_deep-research_codesearch__search` / `read_file` | All managed package Apex (OmniStudio, INS, CMT) |
 | `github.com/sf-industries/via_ins` | `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` | Insurance service Apex |
 | `github.com/sf-industries/via_ins_fsc` | `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` | Insurance ↔ FSC bridge |
 | `github.com/sf-industries/via_media` | `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` | Media Cloud package |
 | `github.com/sf-industries/via_rm` | `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` | Revenue Management |
 | `github.com/sf-industries/via_contract` | `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` | CLM / Contract management |
 | `github.com/sf-industries/via_docgen` | `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` | DocGen package |
-| `git.soma.salesforce.com/Steelbrick/CPQ` | `mcp__plugin_git-soma_vmcp-git-soma__get_file_contents` | Salesforce CPQ (SBQQ) managed package |
-| `git.soma.salesforce.com/Steelbrick/CPQ-REST` | `mcp__plugin_git-soma_vmcp-git-soma__get_file_contents` | CPQ JS services (Heroku calculator) |
+| `core/qtc/` in `gitcore.soma.salesforce.com/core-2206/core-262-public` | `mcp__plugin_deep-research_codesearch__search` | Salesforce CPQ (SBQQ) core-side — no standalone package repo (validated 2026-06-15) |
 | `github.com/sf-industries/via_core` | `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` | Platform foundation (InvokeService, DREngine) |
 | `github.com/sf-industries/via_telco` | `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` | Comms Cloud / Telco package |
 | `github.com/sf-industries/via_cpq` | `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` | Industries CPQ package |
@@ -203,20 +202,22 @@ Run `/swarm-helper` — it will use whatever MCP tools are available. If a tool 
 
 ## Building dist
 
-The `dist/` folder contains a distributable zip with a versioned wrapper folder containing `.claude/`. It excludes `settings.local.json` (user-specific permissions).
+The `dist/` folder contains a distributable zip with a versioned wrapper folder containing `.claude/` **and an empty `data/` folder** (the drop-zone for case files). It excludes `settings.local.json` (user-specific permissions).
 
 ```bash
-VERSION="v2.0.2"
+VERSION="v2.1.0"
 rm -rf /tmp/swarm-helper-${VERSION} dist/swarm-helper-${VERSION}.zip
 mkdir -p /tmp/swarm-helper-${VERSION}
 cp -r .claude /tmp/swarm-helper-${VERSION}/
 rm -f /tmp/swarm-helper-${VERSION}/.claude/settings.local.json
-cd /tmp && zip -r - swarm-helper-${VERSION}/ > /dev/null && cd -
+# empty data/ drop-zone (.gitkeep keeps the dir in the zip)
+mkdir -p /tmp/swarm-helper-${VERSION}/data
+touch /tmp/swarm-helper-${VERSION}/data/.gitkeep
 (cd /tmp && zip -r - swarm-helper-${VERSION}/) > dist/swarm-helper-${VERSION}.zip
 rm -rf /tmp/swarm-helper-${VERSION}
 ```
 
-When unzipped, recipients get: `swarm-helper-v2.0.2/.claude/` — they copy `.claude/` into their project root.
+When unzipped, recipients get: `swarm-helper-v2.1.0/.claude/` + `swarm-helper-v2.1.0/data/` — they copy both `.claude/` and `data/` into their project root.
 
 `dist/` is gitignored — rebuild locally before sharing.
 

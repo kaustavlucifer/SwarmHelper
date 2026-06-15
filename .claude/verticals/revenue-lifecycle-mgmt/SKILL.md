@@ -1,3 +1,8 @@
+---
+name: revenue-lifecycle-mgmt
+description: Revenue Lifecycle Management troubleshooting — asset lifecycle, quote-to-order, sales transactions, usage selling, CPI uplift, amendments/renewals. Routed by /swarm-helper.
+---
+
 # Revenue Lifecycle Management (RLM) Debugger
 
 **Trigger:** Revenue Lifecycle Management, RLM, Asset Lifecycle Management, Quote to Order Capture, sales transactions, transaction rollbacks, contract cotermination, usage selling, usage-based assets, grant management, consumption tracking, CPI uplift, renewal price uplift, swap amendment, upgrade/downgrade amendment, quote detail lines, CSV import into quote, order orchestration, `ConstraintEngineNodeStatus__c`, product variations, product attributes, product classifications, price lists, price adjustments, asset add/amend/renew/cancel operations.
@@ -378,7 +383,7 @@ Query the case to identify org, pod, and taxonomy:
 ### Step 3: Check for Known Issues (GUS)
 
 ```
-Tool: mcp__plugin_dxmcp-gus_dxmcp-gus__query_gus_records
+Tool: mcp__plugin_gus_gus_server__query_gus_records
 Query:
   SELECT Id, Name, Subject__c, Status__c, Priority__c, Found_in_Build__c
   FROM ADM_Work__c

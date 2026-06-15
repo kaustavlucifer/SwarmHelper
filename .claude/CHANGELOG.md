@@ -2,6 +2,30 @@
 
 These skills are developed and maintained by Kaustav Chowdhury.
 
+## v2.1.0 — 2026-06-15
+
+**Consolidation + live validation pass.** All repo paths and Confluence playbooks validated against live MCP sources; structure standardized; tool surface pruned.
+
+### Fixed (repo paths — validated via live codesearch/git probes 2026-06-15)
+- **CPQ:** removed non-existent `Steelbrick/CPQ` + `CPQ-REST` repos; SBQQ core-side source pointed at `core/qtc/` in the core monorepo (no standalone package repo exists)
+- **Health Cloud / FSC:** removed non-existent `git.soma/industries/healthcare` + `industries/wealth1` + `industries/core` + `industries/build`; pointed at validated core monorepo paths (`core/industries-healthcare-impl/`, `core/ui-fsc-components/`) — these clouds migrated into core
+- **TPM:** corrected primary repo `industries-rcg/rcg-retail-tpm` → `industries-rcg/rcgps-retail-tpm`; removed non-existent `rcg-retail-se` + `RCGSF_SF_Mobility_Sync`
+- **FSC playbook:** corrected Confluence pageId `187545535` → `187545546`
+- Updated `CLAUDE.md` Codebase Access table + Phase 5 to match
+
+### Changed
+- **codesearch.md rewritten:** documented the *actual* tool→index mapping — `deep-research_codesearch` is primary (covers `via_platform` + core monorepo); `mcp-adaptor` indexes the `vlocity-prod-pkg-source` mirror, not `via_platform`. Added `repo:` substring-match caveat.
+- **All 20 vertical `SKILL.md` now have YAML frontmatter** (`name` + `description`); normalized lead section to `## Product Areas` (except intentional domain-specific first steps)
+- **FSC dedupe:** removed ~900 lines of Action Plan content duplicated between `known-patterns.md` and `action-plans-patterns.md`; `known-patterns.md` now points to the authoritative file and keeps only FSC-wide patterns (Referrals, RSR, Financial Accounts, Timeline, Households, Goals)
+- **CPQ case-volume stats** date-stamped ("snapshot ~May 2026") so staleness is visible
+- Removed personal local paths (`/Users/...`) from comms-cloud pattern files; replaced with repo references
+
+### Removed
+- 2 duplicate MCP tool permissions (`dxmcp-gus`, `plugin_codesearch_codesearch`) + 1 unreferenced (`deep-research_search__doc_parse`); settings allow-list 56 → 53
+- Codesearch "Tool 3 fallback" section (consolidated to single-path)
+
+---
+
 ## v2.0.2 — 2026-06-10
 
 ### Changed

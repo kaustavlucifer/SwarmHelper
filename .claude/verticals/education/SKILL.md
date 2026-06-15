@@ -1,3 +1,8 @@
+---
+name: education
+description: Education Cloud / EDA troubleshooting — student success, admissions, academic terms, courses, hed__/sfedo__. Routed by /swarm-helper.
+---
+
 # Education Cloud Debugger
 
 **Trigger:** Education Cloud, EDA (Education Data Architecture), student success, admissions, enrollment (education context), academic terms, courses, program plans, student records, `hed__`, `sfedo__`.

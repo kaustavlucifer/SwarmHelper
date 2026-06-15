@@ -1,3 +1,8 @@
+---
+name: life-sciences
+description: Life Sciences Cloud troubleshooting — clinical trials, patient services, drug programs, consent, REMS. Routed by /swarm-helper.
+---
+
 # Life Sciences Cloud Debugger
 
 **Trigger:** Life Sciences Cloud, clinical trials, drug programs, MedTech, patient services, consent management, referral management (LS context), REMS, companion diagnostics.

@@ -1,3 +1,8 @@
+---
+name: nonprofit
+description: Nonprofit Cloud / NPSP troubleshooting — fundraising, donations, grants, gift entry, program & volunteer management. Routed by /swarm-helper.
+---
+
 # Nonprofit Cloud Debugger
 
 **Trigger:** Nonprofit Cloud, NPSP (Nonprofit Success Pack), fundraising, donations, grants, gift entry, donor management, `npsp__`, `npe01__`, `npo02__`, program management, volunteer management, outcomes.

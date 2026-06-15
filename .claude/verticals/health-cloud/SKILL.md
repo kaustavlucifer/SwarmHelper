@@ -1,3 +1,8 @@
+---
+name: health-cloud
+description: Health Cloud troubleshooting — care plans, assessments, utilization management, benefit verification, FHIR, payer-side vlocity_ins. Routed by /swarm-helper.
+---
+
 # Health Cloud Debugger
 
 **Trigger:** Health Cloud, care plans, care gaps, assessments, utilization management, benefit verification, `vlocity_ins` namespace (payer-side), HC-specific OmniStudio components, FHIR/HL7, provider network, virtual care, social determinants, DORA, account provisioning.
@@ -24,11 +29,10 @@
 
 | Repository | Path | Content |
 |---|---|---|
-| `healthcare` | `git.soma.salesforce.com/industries/healthcare` | Health Cloud managed package (primary) |
-| `core` | `git.soma.salesforce.com/industries/core` | Shared Industries core |
-| `build` | `git.soma.salesforce.com/industries/build` | Build infrastructure |
 | `via_platform` | `github.com/sf-industries/via_platform` | OmniStudio Apex (vlocity_ins namespace, `package_ins.xml`) |
 | `HealthCloudCCDAandEMRDatakit` | `github.com/sf-industries/HealthCloudCCDAandEMRDatakit` | CCDA and EMR data kit |
+
+> **Health Cloud core source lives in the core monorepo** (`core/industries-healthcare-impl/`, validated 2026-06-15), searchable via `mcp__plugin_deep-research_codesearch__search`. The legacy `git.soma/industries/healthcare`, `industries/core`, `industries/build` repos no longer resolve — HC migrated into core.
 
 ### Core Monorepo Paths
 
@@ -150,13 +154,6 @@ WHERE Account.Id = '<PATIENT_ACCOUNT_ID>'
 ---
 
 ## Code Investigation Paths
-
-### HC Managed Package
-```
-Tool: mcp__plugin_deep-research_codesearch__search
-query: "repo:git.soma.salesforce.com/industries/healthcare content:<keyword>"
-max_matches: 10
-```
 
 ### HC Core Java Implementation
 ```

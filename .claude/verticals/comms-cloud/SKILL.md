@@ -1,3 +1,8 @@
+---
+name: comms-cloud
+description: Communications Cloud troubleshooting — EPC, Industries CPQ, order decomposition, orchestration, MSM, pricing. Routed by /swarm-helper.
+---
+
 # Communications Cloud Debugger
 
 **Trigger:** Communications Cloud, Telco, EPC, CPQ (Industries), order management, product catalog, pricing, order decomposition, orchestration plans, MSM, `vlocity_cmt` namespace in comms context, service qualification.

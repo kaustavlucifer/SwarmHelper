@@ -754,11 +754,10 @@ START: Slow performance
 
 ---
 
-## G. Codebase Reference (via_cpq-260.9)
+## G. Codebase Reference (via_cpq)
 
-**Codebase Path:** `/Users/sandesh.kulkarni/MPCode/via_cpq-260.9`  
-**Total Classes:** 214,317 lines of code  
-**Cache/Regenerate Classes:** 56 classes
+**Repository:** `github.com/sf-industries/via_cpq` — read via `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents`  
+**Cache/Regenerate Classes:** ~56 classes (`EcomCacheManagementService` and related)
 
 ### Key Classes
 

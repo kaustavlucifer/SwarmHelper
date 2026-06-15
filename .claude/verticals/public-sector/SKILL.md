@@ -1,3 +1,8 @@
+---
+name: public-sector
+description: Public Sector Solutions troubleshooting — permits, licensing, inspections, complaints, constituent services, vlocity_ps. Routed by /swarm-helper.
+---
+
 # Public Sector Solutions Debugger
 
 **Trigger:** Public Sector, PSS, government, permits, licensing, inspections, complaints, case management (government context), `vlocity_ps` namespace, constituent services, compliance management.

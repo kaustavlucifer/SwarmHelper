@@ -1,3 +1,8 @@
+---
+name: cpq
+description: Salesforce CPQ (SBQQ) troubleshooting — QCP, quote line editor, amendments, renewals, pricing rules, order contracting. Routed by /swarm-helper.
+---
+
 # Salesforce CPQ (SBQQ) Debugger
 
 **Trigger:** Salesforce CPQ, SBQQ, QCP (Quote Calculator Plugin), quote line editor (QLE), amendments, contracts, pricing rules, CPQ API, subscription pricing, renewals, order contracting, MDQ, document generation (CPQ flavor).
@@ -21,16 +26,16 @@
 
 | Repository | Path | Content |
 |---|---|---|
-| `via_cpq` | `sf-industries/via_cpq` | Industries CPQ managed package |
-| `CPQ` | `git.soma.salesforce.com/Steelbrick/CPQ` | Salesforce CPQ (SBQQ) managed package — Apex, VF, JS, CSS |
-| `CPQ-REST` | `git.soma.salesforce.com/Steelbrick/CPQ-REST` | CPQ JS services (calculator, amend/renew) on Heroku |
-| `org62-cpq-aws-*` | `SF-BT/org62-cpq-aws-*` | CPQ pricing, approval rules, config loader, evaluation engine |
+| `via_cpq` | `sf-industries/via_cpq` | Industries CPQ managed package — read via `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents` |
 
-### Core Monorepo Paths
+> **Salesforce CPQ (SBQQ):** SBQQ is a Steelbrick-owned managed package; its package source is **not** in the indexed git hosts (the old `Steelbrick/CPQ` / `CPQ-REST` repos no longer resolve — validated 2026-06-15). The core-side Quote-to-Cash code lives under `core/qtc/` in the core monorepo. To inspect SBQQ behavior, search the core monorepo via `mcp__plugin_deep-research_codesearch__search` for `SBQQ__` symbols (e.g. `core/qtc/test/func/java/src/qtc/apex/CPQServiceTest.java`).
+
+### Core Monorepo Paths (validated 2026-06-15)
 
 ```
 gitcore.soma.salesforce.com/core-2206/core-262-public:
-  core/industries-cpq/                    ← Industries CPQ core (rule engine)
+  core/qtc/                              ← Quote-to-Cash (Salesforce CPQ / SBQQ core-side)
+  core/industries-cpq/                   ← Industries CPQ core (rule engine)
   core/industries-cpq-impl/              ← Industries CPQ implementation
   core/industries-cpq-pricing-common-api/ ← CPQ pricing common API
   core/cpq/                              ← Core CPQ functionality

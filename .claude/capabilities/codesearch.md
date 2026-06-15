@@ -2,42 +2,44 @@
 
 ## Two Toolsets
 
-| Tool | Access | Use For |
+> **Validated 2026-06-15.** Both tools are general code search backed by *different indexes* — they are NOT cleanly split by repo. `deep-research` reliably resolves `github.com/sf-industries/via_platform` AND the `gitcore` core monorepo, so it is the **primary** for almost everything. `mcp-adaptor` indexes a managed-package mirror under a different repo name (`github.com/sf-industries/vlocity-prod-pkg-source`) and returns 0 for a `repo:github.com/sf-industries/via_platform` filter — use it only as a secondary/cross-check for managed-package Apex.
+
+| Tool | Index actually covers | Use For |
 |---|---|---|
-| `mcp__mcp-adaptor__search` / `read_file` / `list_directory` | `github.com/sf-industries/via_platform` | **Managed package Apex** (vlocity_cmt, vlocity_ins, omnistudio) |
-| `mcp__plugin_deep-research_codesearch__search` / `read_file` / `list_directory` / `commit_search` / `get_commit_diff` / `find_references` / `go_to_definition` | `gitcore.soma.salesforce.com` | **Core monorepo** (Standard Runtime Java/Apex/LWC, PTC layer) |
+| `mcp__plugin_deep-research_codesearch__search` / `read_file` / `list_directory` / `commit_search` / `get_commit_diff` / `find_references` / `go_to_definition` | `gitcore.soma.salesforce.com` core monorepo **and** `github.com/sf-industries/via_*` | **Primary** — managed package Apex (via_platform: vlocity_cmt, vlocity_ins, omnistudio) AND core monorepo (Standard Runtime Java/Apex/LWC, PTC layer) |
+| `mcp__mcp-adaptor__search` / `read_file` / `list_directory` | `github.com/sf-industries/vlocity-prod-pkg-source` (managed-pkg mirror) | Secondary cross-check for managed package Apex; do NOT filter on `via_platform` (returns 0) |
 
 ## Auth Troubleshooting
 
 - CodeSearch tools require no explicit auth (SSO-passed)
 - `mcp__mcp-adaptor__*` tools require MCP adaptor to be connected
-- If either returns empty results, check that the code host / repo is correct
+- If either returns empty results, check the code host / repo name — note the two tools use DIFFERENT repo namespaces (see above)
+- The `repo:` filter is a **substring** match, not exact — anchor with `repo:^...$` to disambiguate (e.g. `via_ins` also matches `via_ins_ps`, `via_ins_fsc`)
 
 ---
 
-## Tool 1: Managed Package Source (`mcp-adaptor`)
+## Tool 1: Managed Package Source (`via_platform` via deep-research codesearch)
 
-**Repository:** `github.com/sf-industries/via_platform`
-
-Contains all Apex for vlocity_cmt, vlocity_ins, omnistudio (PS), and telco packages.
+**Repository:** `github.com/sf-industries/via_platform` — resolves in the **deep-research** index (validated 2026-06-15). Contains all Apex for vlocity_cmt, vlocity_ins, omnistudio (PS), and telco packages.
 
 ### Search
 ```
-Tool: mcp__mcp-adaptor__search
-query: "repo:github.com/sf-industries/via_platform content:<keyword>"
-regex: false   # exact match
-regex: true    # regex pattern
+Tool: mcp__plugin_deep-research_codesearch__search
+query: "repo:github.com/sf-industries/via_platform DREngine"
+regex: false   # false = literal/exact; true = regex pattern
 ```
 
 ### Read a file
 ```
-Tool: mcp__mcp-adaptor__read_file
+Tool: mcp__plugin_deep-research_codesearch__read_file
 repository: "github.com/sf-industries/via_platform"
 ref: "HEAD"
 file_path: "classes/DREngine.cls"
 start_line: 1   # optional
 end_line: 100   # optional
 ```
+
+> The `mcp-adaptor` toolset can also search managed-package Apex, but via the `vlocity-prod-pkg-source` mirror (different repo name) — use it only as a secondary cross-check.
 
 ### List directory
 ```
@@ -200,14 +202,14 @@ AssessmentResponsesPtc.apex      OrchestrationPlanCompositionServicePtc.apex
 | CLM/Contracts | `github.com/sf-industries/via_contract` |
 | DocGen | `github.com/sf-industries/via_docgen` |
 | Industries CPQ | `github.com/sf-industries/via_cpq` |
-| Salesforce CPQ | `git.soma.salesforce.com/Steelbrick/CPQ` |
+| Salesforce CPQ (SBQQ) | Core monorepo `core/qtc/` — SBQQ package source not in indexed git hosts (search `SBQQ__` via codesearch) |
 
 ---
 
 ## Regression Analysis (MANDATORY)
 
 For every class in an error call stack:
-1. **Managed package class** → read via `mcp__mcp-adaptor__read_file`
+1. **Managed package class** → read via `mcp__plugin_deep-research_codesearch__read_file` (repo `github.com/sf-industries/via_platform`)
 2. **PTC class** → read via `mcp__plugin_deep-research_codesearch__read_file`, then check commits with `commit_search`
 3. **Core Java class** → search via `mcp__plugin_deep-research_codesearch__search`
 
@@ -233,30 +235,21 @@ mcp__plugin_git-soma_vmcp-git-soma__get_file_contents   — read file from git.s
 
 ### Key Repo Hosts by Vertical
 
+> **Repo hosts validated 2026-06-15.** Health Cloud and FSC source migrated into the **core monorepo** (`core/industries-healthcare-impl/`, `core/ui-fsc-components/`) — their old `git.soma/industries/*` package repos no longer resolve. Salesforce CPQ (SBQQ) package source is not in any indexed git host (search `SBQQ__` symbols in core `core/qtc/`).
+
 | Vertical | Primary Repo Host |
 |---|---|
-| Health Cloud | `git.soma.salesforce.com/industries/healthcare` |
-| FSC | `git.soma.salesforce.com/industries/wealth1` |
-| TPM/Consumer Goods | `git.soma.salesforce.com/industries-rcg/rcg-retail-tpm` |
+| Health Cloud | Core monorepo `core/industries-healthcare-impl/` (codesearch) |
+| FSC | Core monorepo `core/ui-fsc-components/` (codesearch) + `github.com/sf-industries/via_ins_fsc` |
+| TPM/Consumer Goods | `git.soma.salesforce.com/industries-rcg/rcgps-retail-tpm` |
 | Life Sciences | `github.com/sf-industries-ls/lifesciences` |
 | OmniStudio/Insurance/Comms/E&U/Media | `github.com/sf-industries/via_*` |
-| Salesforce CPQ (SBQQ) | `git.soma.salesforce.com/Steelbrick/CPQ` |
+| Salesforce CPQ (SBQQ) | Core monorepo `core/qtc/` (codesearch; no standalone package repo) |
 
 ---
 
-## Tool 3: Alternative CodeSearch (Fallback)
+## Wiki Summaries (code context)
 
-If `mcp__plugin_deep-research_codesearch__*` tools are unavailable, use:
-
-```
-Tool: mcp__plugin_codesearch_codesearch__search
-query: "content:<keyword> lang:java"
-max_matches: 10
-```
-
-This tool searches the same core monorepo but through a different plugin. Already in permissions.
-
-### Wiki Summaries (code context)
 ```
 Tool: mcp__plugin_deep-research_codesearch__search_wiki_summaries
 query: "OmniStudio DataRaptor"

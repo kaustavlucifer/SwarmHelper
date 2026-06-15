@@ -1,4 +1,6 @@
-## Case Volume Statistics (Last 365 Days — OrgCS)
+## Case Volume Statistics (OrgCS, trailing 365 days — snapshot May 2026)
+
+> Snapshot date: **~May 2026**. Re-run the OrgCS volume query to refresh; treat counts as directional, not live.
 
 **Total closed cases for "Revenue-CPQ Developer Support": 1,972 | Avg TTR: 9.47 days**
 

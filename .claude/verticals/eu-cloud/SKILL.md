@@ -1,3 +1,8 @@
+---
+name: eu-cloud
+description: Energy & Utilities Cloud troubleshooting — CAM, multisite orders, DC API cache, billing & usage, E&U Business App. Routed by /swarm-helper.
+---
+
 # Energy & Utilities Cloud Debugger
 
 **Trigger:** Energy & Utilities Cloud, E&U, CAM (Customer Acquisition & Management), multisite orders, VEEDigitalGetBasket, DC API cache, package upgrade errors, billing & usage components, E&U Business App performance.
@@ -50,7 +55,7 @@ core/industries-interaction-ptc/apex/vlocity_cmt/
 
 ---
 
-## Key Areas
+## Product Areas
 
 | Area | Scope |
 |---|---|

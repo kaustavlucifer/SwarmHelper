@@ -1,3 +1,8 @@
+---
+name: tpm
+description: Trade Promotion Management / Consumer Goods troubleshooting — trade promotions, KPI batch, push promotions, claims, Funding Grid, cgcloud. Routed by /swarm-helper.
+---
+
 # Trade Promotion Management (TPM) Debugger
 
 **Trigger:** TPM, Consumer Goods Cloud, trade promotions, KPI calculations, nightly batch jobs, push promotions, payment/claim lifecycle, Agentforce for TPM, RTR reports, Funding Grid, `cgcloud` namespace.
@@ -10,11 +15,12 @@
 
 | Repository | Path | Content |
 |---|---|---|
-| `rcg-retail-tpm` | `git.soma.salesforce.com/industries-rcg/rcg-retail-tpm` | TPM managed package (primary) |
-| `RCGSF_SF_Mobility_Sync` | `git.soma.salesforce.com/industries-rcg/RCGSF_SF_Mobility_Sync` | Mobility Sync |
-| `rcg-retail-se` | `git.soma.salesforce.com/industries-rcg/rcg-retail-se` | Service Excellence |
+| `rcgps-retail-tpm` | `git.soma.salesforce.com/industries-rcg/rcgps-retail-tpm` | TPM managed package (primary, active) |
+| `rcg-retail-tpm` | `git.soma.salesforce.com/Localization/rcg-retail-tpm` | TPM localization branch (see known-patterns.md) |
 | `cgcloud-solutions` | `github.com/salesforce-internal/cgcloud-solutions` | Consumer Goods Cloud solutions |
 | `RCG_RE_TPM` | `github.com/sf-industries/RCG_RE_TPM` | RCG Retail Execution TPM |
+
+> Repo names validated 2026-06-15. The primary TPM package is `industries-rcg/rcgps-retail-tpm` (the old `industries-rcg/rcg-retail-tpm`, `rcg-retail-se`, and `RCGSF_SF_Mobility_Sync` paths do not resolve).
 
 ---
 
@@ -162,7 +168,7 @@ ORDER BY Name
 ```
 Tool: mcp__plugin_git-soma_vmcp-git-soma__get_file_contents
 owner: "industries-rcg"
-repo: "rcg-retail-tpm"
+repo: "rcgps-retail-tpm"
 path: "classes/<ClassName>.cls"
 ```
 

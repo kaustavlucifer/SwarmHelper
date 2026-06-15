@@ -1,3 +1,8 @@
+---
+name: docgen
+description: Document Generation troubleshooting — DocGen templates, merge fields, tokenDataMap, PDF/Docx rendering. Shared across OmniStudio, Revenue Cloud, Insurance. Routed by /swarm-helper.
+---
+
 # Document Generation (DocGen) Debugger
 
 **Trigger:** Document generation, DocGen, document templates, merge fields, template transform, tokenDataMap, `Workspace Not found`, template rendering, PDF generation, Docx generation. Shared feature used across OmniStudio, Revenue Cloud (CLM), Insurance, and other verticals.

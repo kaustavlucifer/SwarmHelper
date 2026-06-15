@@ -1,3 +1,8 @@
+---
+name: manufacturing
+description: Manufacturing Cloud troubleshooting — sales agreements, account forecasting, warranty, fleet, rebates, sample management. Routed by /swarm-helper.
+---
+
 # Manufacturing Cloud Debugger
 
 **Trigger:** Manufacturing Cloud, warranty, plant management, sales agreements, account forecasting, fleet management, sample management, dealer search, `mfg`, `ManufacturingCloud`, rebate management, program-based business.

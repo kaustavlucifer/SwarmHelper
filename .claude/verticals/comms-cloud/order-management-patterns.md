@@ -425,12 +425,10 @@ In such cases, the skill will:
 
 ---
 
-## M. XOM Codebase Reference (via_xom-262.8)
+## M. XOM Codebase Reference (via_xom)
 
-**Codebase Path:** `/Users/sandesh.kulkarni/MPCode/via_xom-262.8`  
-**Version:** 262.8  
-**Total Classes:** 645 Apex classes  
-**Total Objects:** 72 custom objects
+**Repository:** `github.com/sf-industries/via_xom` — read via `mcp__plugin_git-emu_vmcp-git-emu__get_file_contents`  
+**Scope:** ~645 Apex classes, ~72 custom objects (XOM order decomposition + orchestration)
 
 This section provides direct code references from the actual XOM codebase to use when decomposing stories.
 
@@ -696,24 +694,26 @@ GET /viewDecomposedRootOrderItem?orderId={id}&rootOrderItemId={id}
 
 When using CodeSearch to find similar implementations:
 
+Repo: `github.com/sf-industries/via_xom` (path `classes/<ClassName>.cls`)
+
 ```
 Decomposition logic:
-  /Users/sandesh.kulkarni/MPCode/via_xom-262.8/classes/SimpleDecompositionController.cls
-  /Users/sandesh.kulkarni/MPCode/via_xom-262.8/classes/XOMDecompV2Constant.cls
-  /Users/sandesh.kulkarni/MPCode/via_xom-262.8/classes/XOMDecompV2TreeDiffManager.cls
+  classes/SimpleDecompositionController.cls
+  classes/XOMDecompV2Constant.cls
+  classes/XOMDecompV2TreeDiffManager.cls
 
 Orchestration logic:
-  /Users/sandesh.kulkarni/MPCode/via_xom-262.8/classes/OrchestrationManager.cls
-  /Users/sandesh.kulkarni/MPCode/via_xom-262.8/classes/OrchestrationItemsManager.cls
-  /Users/sandesh.kulkarni/MPCode/via_xom-262.8/classes/OrchestrationItemsExecutor.cls
+  classes/OrchestrationManager.cls
+  classes/OrchestrationItemsManager.cls
+  classes/OrchestrationItemsExecutor.cls
 
 Lock/Retry patterns:
-  /Users/sandesh.kulkarni/MPCode/via_xom-262.8/classes/XOMLockManager.cls
-  /Users/sandesh.kulkarni/MPCode/via_xom-262.8/classes/XOMIntegrationRetryPolicy.cls
+  classes/XOMLockManager.cls
+  classes/XOMIntegrationRetryPolicy.cls
 
 Test patterns:
-  /Users/sandesh.kulkarni/MPCode/via_xom-262.8/classes/XOMTestStoriesDecompositionMultiLevel.cls
-  /Users/sandesh.kulkarni/MPCode/via_xom-262.8/classes/OrchestrationItemsExecutorTest.cls
+  classes/XOMTestStoriesDecompositionMultiLevel.cls
+  classes/OrchestrationItemsExecutorTest.cls
 ```
 
 ### Architectural Flow References

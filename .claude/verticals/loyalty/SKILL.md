@@ -1,3 +1,8 @@
+---
+name: loyalty
+description: Loyalty Management troubleshooting — programs, points, tiers, rewards, vouchers, partner loyalty. Routed by /swarm-helper.
+---
+
 # Loyalty Management Debugger
 
 **Trigger:** Loyalty Management, loyalty programs, rewards, points, tiers, member benefits, promotions (loyalty context), vouchers, partner management (loyalty), `LoyaltyManagement`.

@@ -1,3 +1,8 @@
+---
+name: automotive
+description: Automotive Cloud troubleshooting — vehicle lifecycle, dealer management, auto finance, VIN, warranty. Routed by /swarm-helper.
+---
+
 # Automotive Cloud Debugger
 
 **Trigger:** Automotive Cloud, vehicle, dealer, VIN, auto, `AutomotiveCloud`, vehicle lifecycle, dealer management, auto finance, warranty claims (automotive context), parts and accessories.

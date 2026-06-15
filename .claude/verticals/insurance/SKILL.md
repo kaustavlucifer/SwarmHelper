@@ -1,3 +1,8 @@
+---
+name: insurance
+description: Industries Insurance troubleshooting (carrier-side) — policy admin, quoting, rating, enrollment, billing, commissions, Ins*Service classes. Routed by /swarm-helper.
+---
+
 # Industry Insurance Debugger
 
 **Trigger:** Industries Insurance services, insurance rating, quoting, policy administration, claims processing, enrollment, billing, commissions, `vlocity_ins` namespace (carrier-side), FSC Insurance objects (`InsurancePolicy`, `Claim`), Insurance-specific OmniStudio components, `InsPolicyService`, `InsQuoteService`, `InsClaimService`, `InsProductService`, `InsEnrollmentService`.

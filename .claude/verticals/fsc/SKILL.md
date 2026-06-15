@@ -1,3 +1,8 @@
+---
+name: fsc
+description: Financial Services Cloud troubleshooting — financial accounts, action plans, referrals, rollup summaries, relationship maps, goals/life events. Routed by /swarm-helper.
+---
+
 # FSC Debugger
 
 **Trigger:** Financial Services Cloud, FSC, financial accounts, account hierarchy, referrals, relationship maps, action plans, `vlocity_ins_fsc` namespace, rollup summary rules, document checklist items, goals, life events, interaction summaries.
@@ -10,12 +15,11 @@
 
 | Repository | Path | Content |
 |---|---|---|
-| `wealth1` | `git.soma.salesforce.com/industries/wealth1` | FSC managed package (primary) |
-| `core` | `git.soma.salesforce.com/industries/core` | Shared Industries core |
-| `build` | `git.soma.salesforce.com/industries/build` | Build infrastructure |
 | `via_ins_fsc` | `github.com/sf-industries/via_ins_fsc` | Insurance Industries Extension for FSC |
 | `via_platform` | `github.com/sf-industries/via_platform` | OmniStudio Apex (vlocity_ins_fsc namespace) |
 | `fsc-next-gen-apps` | `github.com/salesforce-internal/fsc-next-gen-apps` | FSC Next-Gen Apps |
+
+> **FSC core source lives in the core monorepo** (paths below), searchable via `mcp__plugin_deep-research_codesearch__search`. The legacy `git.soma/industries/wealth1`, `industries/core`, `industries/build` repos no longer resolve (validated 2026-06-15) — FSC migrated into core.
 
 ### Core Monorepo Paths
 
@@ -35,7 +39,7 @@ gitcore.soma.salesforce.com/core-2206/core-262-public:
 
 | Resource | URL |
 |---|---|
-| FSC Main Page | https://confluence.internal.salesforce.com/spaces/IN/pages/187545535/Financial+Services+Cloud+-+FSC |
+| FSC Main Page | https://confluence.internal.salesforce.com/spaces/IN/pages/187545546/Financial+Services+Cloud+-+FSC |
 
 ---
 
@@ -151,10 +155,10 @@ ORDER BY CreatedDate DESC LIMIT 10
 
 ## Code Investigation Paths
 
-### FSC Managed Package (wealth1)
+### FSC Core Source (core monorepo)
 ```
 Tool: mcp__plugin_deep-research_codesearch__search
-query: "repo:git.soma.salesforce.com/industries/wealth1 content:<keyword>"
+query: "repo:gitcore.soma.salesforce.com/core-2206/core-262-public content:<keyword> file:core/ui-fsc-"
 max_matches: 10
 ```
 

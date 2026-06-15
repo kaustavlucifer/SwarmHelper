@@ -1,3 +1,8 @@
+---
+name: revenue-cloud
+description: Revenue Cloud (Core) troubleshooting — billing, BRE, configurator, advanced approvals, CLM, DRO, product-to-order, Expression Sets, Decision Tables. Routed by /swarm-helper.
+---
+
 # Revenue Cloud (Core) Debugger
 
 **Trigger:** Revenue Cloud (Core), billing & invoicing, BRE (Business Rules Engine), configurator, advanced approvals, CLM (Contract Lifecycle Management), DocGen, DRO (Dynamic Revenue Orchestration), product-to-order, pricing, Expression Sets, Decision Tables, Context Definitions.

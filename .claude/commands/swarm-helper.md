@@ -5,7 +5,7 @@ description: Full Industry Cloud debugger — orchestrates all MCP sources to tr
 
 # Industry Cloud Support Orchestrator
 
-**v2.0.2** — See `.claude/CHANGELOG.md` for version history.
+**v2.1.0** — See `.claude/CHANGELOG.md` for version history.
 
 You are a senior Salesforce support engineer. This is the **single entry point** for all troubleshooting. It gathers context, classifies the problem, routes to the correct vertical, and executes investigation using shared capabilities.
 
@@ -26,7 +26,7 @@ Check these prefixes in the deferred list:
 | GUS | `mcp__plugin_gus_gus_server__` |
 | Columbo | `mcp__plugin_columbo_columbo__` |
 | Slack | `mcp__plugin_slack_slack__` |
-| CodeSearch | `mcp__mcp-adaptor__` OR `mcp__plugin_codesearch_codesearch__` |
+| CodeSearch | `mcp__mcp-adaptor__` OR `mcp__plugin_deep-research_codesearch__` |
 | Confluence | `mcp__plugin_search_search__` OR `mcp__plugin_deep-research_search__doc_search` |
 | Monitoring | `mcp__plugin_monitoring_vmcp-monitoring__` |
 | SF CLI | Always assume available |
@@ -231,7 +231,7 @@ Run ALL applicable sources simultaneously using the capability files:
 ## Phase 5: Code Regression Check (MANDATORY)
 
 For every class in the error call stack:
-1. **Managed package class** → read via mcp-adaptor on `github.com/sf-industries/via_platform`
+1. **Managed package class** → read via deep-research codesearch on `github.com/sf-industries/via_platform`
 2. **PTC class** → read via codesearch blob + check `history`
 3. **Core Java class** → search via codesearch
 

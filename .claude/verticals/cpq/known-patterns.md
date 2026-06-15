@@ -1,4 +1,6 @@
-## Case Volume Statistics (Last 365 Days — OrgCS)
+## Case Volume Statistics (OrgCS, trailing 365 days — snapshot May 2026)
+
+> Snapshot date: **~May 2026**. Re-run the OrgCS volume query to refresh; treat counts as directional, not live.
 
 **Total closed cases for "Revenue-Salesforce CPQ": 9,023 | Avg TTR: 8.06 days**
 

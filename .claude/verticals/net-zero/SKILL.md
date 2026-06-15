@@ -1,3 +1,8 @@
+---
+name: net-zero
+description: Net Zero Cloud troubleshooting — carbon accounting, emissions, ESG, energy/waste management, sustainability. Routed by /swarm-helper.
+---
+
 # Net Zero Cloud Debugger
 
 **Trigger:** Net Zero Cloud, sustainability, carbon footprint, emissions tracking, ESG, carbon accounting, energy management, waste management, vehicle emissions, `NetZero`, `Sustainability`.
