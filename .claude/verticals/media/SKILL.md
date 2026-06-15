@@ -71,15 +71,20 @@ Search `sf-industries/via_platform` for `MediaAdSales.cls`
 
 ## Key Objects
 
-| Object | Description |
+> ⚠️ **The `MediaAdSales*` object names below are NOT yet verified** and are pending the live-org sweep. The PTC layer (`MediaPlanHandlerPtc`, probed 2026-06-15) actually operates on objects named **`AdQuote`, `AdQuoteLine`, `AdOrderItem`, `AdQuoteLineUnitsSplit`, `AdQuoteLinePrintIssue`** — so the real Ad Sales schema likely uses an `Ad*` naming family, not `MediaAdSales*`. Confirm exact object/field API names via `EntityDefinition`/describe in a Media Cloud (Ad Sales) org before relying on them.
+
+| Object (⚠️ verify in org) | Description |
 |---|---|
-| `MediaAdSalesProduct` | Ad products (inventory types) |
-| `MediaAdSalesSlot` | Available ad slots/inventory |
-| `MediaAdSalesCampaign` | Ad campaigns |
-| `MediaAdSalesBooking` | Booked ad placements |
-| `MediaAdSalesTargeting` | Targeting criteria |
-| `MediaAdSalesReservation` | Reserved inventory |
-| `MediaSubscriber` | Subscriber records (media subscriptions) |
+| `AdQuote` / `AdQuoteLine` | Ad quote + lines (confirmed referenced by `MediaAdSalesPtc`/`MediaPlanHandlerPtc`) |
+| `AdOrderItem` | Ad order line items (confirmed referenced by PTC) |
+| `AdQuoteLineUnitsSplit`, `AdQuoteLinePrintIssue` | Quote-line splits / print issues (confirmed referenced by PTC) |
+| `MediaAdSalesProduct` *(verify)* | Ad products (inventory types) |
+| `MediaAdSalesSlot` *(verify)* | Available ad slots/inventory |
+| `MediaAdSalesCampaign` *(verify)* | Ad campaigns |
+| `MediaAdSalesBooking` *(verify)* | Booked ad placements |
+| `MediaAdSalesTargeting` *(verify)* | Targeting criteria |
+| `MediaAdSalesReservation` *(verify)* | Reserved inventory |
+| `MediaSubscriber` *(verify)* | Subscriber records (media subscriptions) |
 | `Product2` | Products (shared) |
 | `Order` / `OrderItem` | Orders |
 | `vlocity_cmt__PriceList__c` | Pricing |

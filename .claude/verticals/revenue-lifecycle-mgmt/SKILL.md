@@ -52,38 +52,52 @@ description: Revenue Lifecycle Management troubleshooting — asset lifecycle, q
 
 ### Core Monorepo Paths
 
+> Core paths + class names below were live-probed against `core-262-public` on 2026-06-15. Modern RLM is **core-based** (these `core/*` modules), NOT the legacy `via_rm` managed package.
+
 ```
 gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
-  core/industries-cpq/                         ← Industries CPQ core (rule engine, constraint engine)
-  core/industries-cpq-impl/                    ← Industries CPQ implementation (configurator, pricing)
-  core/industries-cpq-pricing-common-api/      ← CPQ pricing common API (price lists, adjustments)
+  # Configurator / pricing / rules
+  core/industries-cpq/                         ← Industries CPQ core (NGP pricing service)
+  core/industries-cpq-core/                    ← CPQ core pricing services (PricingService, CartPricingService, PreviewPricingService)
+  core/industries-cpq-impl/                    ← CPQ implementation (CpqPricingService, asset services, configurator model)
+  core/industries-cpq-core-connect-api/        ← CPQ connect API (ConstraintEngineConstants)
+  core/industries-cpq-core-connect-impl/       ← CPQ connect impl (ConstraintEngineOverallOutput, instant pricing)
+  core/industries-cpq-pricing-common-api/      ← CPQ pricing common API
+  core/industries-constraint-studio-connect-impl/ ← CML parser (CmlParseResult) — Constraint Studio
   core/cpq/                                    ← Core CPQ functionality (shared)
   core/cpq-config-rules/                       ← CPQ configuration rules (CML)
-  core/industries-bre-near-core-impl/          ← BRE implementation (Decision Tables, Expression Sets)
+  # Asset lifecycle / amend-renew / cancel
+  core/revenue-amend-renew-api/                ← Amend/Renew/Swap (SwapService, PearCancelService)
+  core/asset-management-impl/                  ← Asset cancel (CalmCancelService, PhoenixCalmCancelService)
+  # Sales transactions
+  core/sales-transaction-api/                  ← Sales transaction API (PlaceSalesTransactionService, PreprocessSalesTransactionService)
+  core/revenue-place-sales-transaction-impl/   ← Place sales transaction impl (ReadSalesTransactionService)
+  core/revenue-clone-sales-transaction-api/    ← Clone sales transaction (RevenueCloneSalesTransactionService)
+  # BRE (Decision Tables / Expression Sets used in pricing)
+  core/industries-bre-near-core-impl/          ← BRE implementation
   core/industries-bre-near-core-api/           ← BRE API layer
   core/industries-bre-engine-runtime/          ← BRE runtime engine
+  # Billing
   core/billing-impl/                           ← Billing implementation (usage billing, revenue schedules)
+  core/billing-services/                       ← Billing schedule amend/renew (BSAmendmentService, BSGRenewalService)
   core/ui-industries-cpq-components/           ← CPQ UI components (LWC)
   core/industries-interaction-ptc/apex/        ← PTC layer (protected Apex)
 ```
 
 ### PTC Layer (Protected Apex)
 
-RLM leverages PTC-layer classes shared with Industries CPQ and Revenue Cloud:
+RLM shares only two PTC-layer classes with Industries CPQ (verified 2026-06-15 — asset/transaction/configurator logic lives in the Java impl modules above, NOT as PTC classes):
 ```
-CPQServicePtc.apex                  ← Quote/Order/Asset lifecycle operations
-CalculationServicePtc.apex          ← Pricing calculation engine
-ConfiguratorServicePtc.apex         ← Product configurator constraint engine
-TransactionServicePtc.apex          ← Sales transaction management
-AssetLifecycleServicePtc.apex       ← Asset add/amend/renew/cancel/swap
+CPQServicePtc.apex                  ← Quote/Order/cart operations
+CalculationServicePtc.apex          ← Pricing calculation entry
 ```
 
 ### GitHub Repos (Industries Managed Packages)
 
 | Repository | Path | Content |
 |---|---|---|
-| `via_rm` | `sf-industries/via_rm` | Revenue Management package (pricing, usage, assets) |
-| `via_cpq` | `sf-industries/via_cpq` | Industries CPQ managed package (configurator) |
+| `via_rm` | `sf-industries/via_rm` | ⚠️ **Legacy Vlocity Revenue Management** (Story/recommendation/scoring engine — `Story`, `VqMachine`, `VqService`, Vlocity Content Attributes). **NOT** modern RLM asset lifecycle — for asset/transaction/pricing use the `core/*` paths above. |
+| `via_cpq` | `sf-industries/via_cpq` | Industries CPQ managed package (configurator) — indexed by deep-research codesearch |
 | `via_core` | `sf-industries/via_core` | Foundation (InvokeService, SecurityChecker, StateTransition) |
 | `via_platform` | `sf-industries/via_platform` | OmniStudio engine (DR/IP/OS used in flows) |
 
@@ -101,6 +115,8 @@ AssetLifecycleServicePtc.apex       ← Asset add/amend/renew/cancel/swap
 ---
 
 ## Key Objects
+
+> ⚠️ **Object/field API names below are pending live-org verification** (RLM org sweep). Standard objects (Quote, Order, Asset, Contract, Product2, Pricebook2) are reliable; the RLM-specific ones (`SalesTransaction`, `SalesTransactionItem`, `PriceAdjustmentSchedule`, `PriceAdjustmentTier`, `UsageGrant`, `ConstraintEngineNodeStatus__c`) should be confirmed via `EntityDefinition`/describe in a Revenue Lifecycle Management–enabled org before relying on exact names. Do not assume a custom field exists.
 
 ### Quote & Order
 
@@ -295,15 +311,21 @@ repo: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
 path_filter: "core/industries-cpq"
 ```
 
-Key paths by domain:
-| Domain | Path | Key Classes |
+Key paths by domain (class names live-probed against `core-262-public` 2026-06-15 — only confirmed classes listed):
+| Domain | Path | Key Classes (verified) |
 |---|---|---|
-| Asset Lifecycle | `core/industries-cpq-impl/` | `AssetLifecycleManager`, `AmendmentService`, `RenewalService`, `CancelService`, `SwapService` |
-| Transaction Mgmt | `core/industries-cpq-impl/` | `SalesTransactionService`, `TransactionRollbackService` |
-| Configurator | `core/industries-cpq-impl/` | `ConstraintEngine`, `CMLRuleEvaluator`, `ProductConfigurationService` |
-| Pricing | `core/industries-cpq-pricing-common-api/` | `PriceCalculationService`, `PriceAdjustmentEngine`, `CPIUpliftCalculator` |
-| Quote/Order | `core/industries-cpq/` | `QuoteLineItemService`, `OrderCaptureService`, `CSVImportService` |
-| CML Rules | `core/cpq-config-rules/` | `ConstraintModelLanguageParser`, `ConstraintNodeEvaluator` |
+| Amend / Renew / Swap | `core/revenue-amend-renew-api/` | `SwapService`, `PearCancelService` |
+| Asset cancel/disconnect | `core/asset-management-impl/` | `CalmCancelService`, `PhoenixCalmCancelService` |
+| Asset pricing/scheduling | `core/industries-cpq-impl/.../service/` | `AssetPriceRetainService`, `AssetPriceMaintenanceService`, `AssetToOrderSchedulerService`, `AssetDisconnectionSchedulerService`, `CpqAssetToBasketService`, `CMEAssetizationService` |
+| Billing amend/renew | `core/billing-services/` | `BSAmendmentService`, `BSGRenewalService` |
+| Sales transactions | `core/sales-transaction-api/`, `core/revenue-place-sales-transaction-impl/` | `PlaceSalesTransactionService`, `PreprocessSalesTransactionService`, `ReadSalesTransactionService` |
+| Transaction clone | `core/revenue-clone-sales-transaction-api/` | `RevenueCloneSalesTransactionService` |
+| Configurator / constraint engine | `core/industries-cpq-impl/`, `core/industries-cpq-core-connect-impl/`, `core/industries-cpq-core-connect-api/` | `ConstraintEngineNodeStatus`, `ConstraintEngineConstants`, `ConstraintEngineOverallOutput` |
+| CML parser (Constraint Studio) | `core/industries-constraint-studio-connect-impl/` | `CmlParseResult` |
+| Pricing | `core/industries-cpq-core/.../pricing/service/`, `core/industries-cpq-impl/`, `core/industries-cpq/` | `PricingService`, `CartPricingService`, `PreviewPricingService`, `CpqPricingService`, `CompilePricingService`, `CpqExternalPricingService`, `NGPPricingService` |
+| Transaction context | `core/industries-cpq-impl/.../service/` | `CpqTransactionContextService` |
+
+> The earlier generic names (`AssetLifecycleManager`, `AmendmentService`, `RenewalService`, `CancelService`, `SalesTransactionService`, `TransactionRollbackService`, `ConstraintEngine`, `CMLRuleEvaluator`, `ProductConfigurationService`, `PriceCalculationService`, `PriceAdjustmentEngine`, `CPIUpliftCalculator`, `QuoteLineItemService`, `OrderCaptureService`, `CSVImportService`, `ConstraintModelLanguageParser`, `ConstraintNodeEvaluator`) did **not** resolve in core-262 and have been replaced with the probe-confirmed names above. If you need a class not listed, search by feature keyword rather than assuming a name.
 
 ### Core Monorepo — BRE (Decision Tables/Expression Sets used in pricing)
 
@@ -421,7 +443,7 @@ Based on the error class/method identified in logs:
 1. **Search for the class in core monorepo:**
    ```
    Tool: mcp__plugin_deep-research_codesearch__search
-   query: "AssetLifecycleManager"  (or whatever class from stack trace)
+   query: "SwapService"  (or whatever class from the actual stack trace)
    repo: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
    ```
 
