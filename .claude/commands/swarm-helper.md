@@ -5,7 +5,7 @@ description: Full Industry Cloud debugger — orchestrates all MCP sources to tr
 
 # Industry Cloud Support Orchestrator
 
-**v2.1.0** — See `CHANGELOG.md` (repo root) for version history.
+**v2.2.0** — See `CHANGELOG.md` (repo root) for version history.
 
 You are a senior Salesforce support engineer. This is the **single entry point** for all troubleshooting. It gathers context, classifies the problem, routes to the correct vertical, and executes investigation using shared capabilities.
 
@@ -13,9 +13,9 @@ All operations are READ-ONLY.
 
 ---
 
-## Phase 0: MCP Tool Availability
+## Phase 0: MCP Tool Registration Check
 
-**Do NOT make probe calls.** Determine availability by checking which tool prefixes appear in the `<system-reminder>` deferred tools list. Deferred = available (schema loads instantly on first use via `ToolSearch`).
+**Do NOT make probe calls. Do NOT echo the SessionStart auth banner.** This phase only confirms the user has the required MCP servers/plugins **registered** — it checks which tool prefixes appear in the `<system-reminder>` deferred tools list. Registered ≠ authenticated: a prefix being present proves the server is wired up, not that its token is valid or that a call will succeed. Live connection + auth status is verifiable only via `/mcp`, which the user must run themselves (it is a UI command, not a tool this command can call).
 
 Check these prefixes in the deferred list:
 
@@ -34,7 +34,7 @@ Check these prefixes in the deferred list:
 ### Output format:
 
 ```
-MCP Tools (N/9 connected)
+MCP Tools (N/9 registered)
 ─────────────────────────
   ✓ OrgCS
   ✓ Splunk
@@ -45,11 +45,15 @@ MCP Tools (N/9 connected)
   ✓ Confluence
   ✓ Monitoring
   ✓ SF CLI
+
+→ Run /mcp and confirm all show "connected" before troubleshooting.
+  (This check confirms the servers are registered, not authenticated.
+   If any call later returns 401, run /salesforce-trust-foundations:mcp-auth.)
 ```
 
-For any tool whose prefix is NOT found in the deferred list, show:
+For any tool whose prefix is NOT found in the deferred list, mark it as not registered:
 ```
-  ⚠️ Columbo — run /mcp to check connection
+  ✗ Columbo — not registered; enable the plugin/MCP server, then run /mcp
 ```
 
 Then proceed directly to Phase 1. If a tool fails mid-investigation (401, timeout), note it inline and continue with others. Never halt.
@@ -207,6 +211,15 @@ Read the routed vertical's pattern files:
 - DocGen: common errors embedded in SKILL.md
 
 If the error matches a documented pattern → provide resolution immediately. Still run Phase 4 for confirmation.
+
+### How to treat pattern content (provenance)
+
+The vertical pattern files mix two kinds of content — treat them differently:
+
+- **Verified facts** — repo paths, core monorepo paths, class/file names, Confluence URLs, Slack channel IDs, and GUS W-numbers were live-validated 2026-06-15. Cite these directly. Anything tagged `⚠️ verify`/`could not be confirmed` is the exception — flag it, don't assert it.
+- **Case-derived experience** — the error patterns, root causes, resolution steps, and tribal knowledge come from real past cases. They are strong *leads*, not ground truth for the case in front of you. Confirm the root cause against this org's actual logs/config/code (Phase 4 + Phase 5) before asserting it as the cause. Object/field API names tagged "verify in target org" must be confirmed in the customer org — do NOT assume a custom field exists.
+
+Never present a case-derived hypothesis as a confirmed diagnosis without Phase 4/5 evidence from the current case.
 
 ---
 

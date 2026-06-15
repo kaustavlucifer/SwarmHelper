@@ -25,14 +25,29 @@ description: Trade Promotion Management / Consumer Goods troubleshooting — tra
 ---
 
 
-### Core Monorepo Paths
+### Off-Core Processing Layer (CG Cloud Processing Services — validated 2026-06-15)
 
-```
-gitcore.soma.salesforce.com/core-2206/core-262-public:
-  core/industries-rcg/                               ← Consumer Goods / TPM (if present)
-```
+TPM has **two tiers**: the Salesforce-side managed package (Apex, on git.soma) **and** an off-core Node.js processing service that runs the heavy calculation/batch work on Hyperforce (Falcon/k8s). Most KPI-calculation, batch, and payment-engine failures live in the off-core tier, **not** in Apex.
 
-> **Note:** TPM is primarily managed package (rcg-retail-tpm on git.soma). No dedicated PTC layer — uses shared OmniStudio PTC classes when IPs/DRs are involved.
+The off-core code is a **monorepo under `packages/`** in `git.soma.salesforce.com/industries-rcg/rcgps-retail-tpm` (branch `release-262`) — NOT a `classes/*.cls` Apex layout. Confirmed packages under `packages/tpm/`:
+
+| Package | Role |
+|---|---|
+| `rcgps-tpm-service` | Service entry point (Express REST), worker dispatch, K8s deployment |
+| `rcgps-accplnprm` | Account-planning & promotions calculation worker |
+| `rcgps-calcengine` | Calculation engine (KPI value calculation) |
+| `rcgps-kpi` | KPI definitions/processing |
+| `rcgps-measureapi` | Measure read/write API |
+| `rcgps-productcache` | Product cache |
+| `rcgps-rtreporting` | RTR reporting |
+| `rcgps-accrual` | Accrual engine |
+| `rcgps-reorg` / `rcgps-customcalendar` / `rcgps-updateactivation` / `rcgps-transferdblog` / `rcgps-datacloud` | Supporting workers |
+
+(`rcgps-hierarchycustomer` lives under `packages/retail/`.)
+
+### Core Monorepo
+
+TPM is **not** in the core monorepo (`core/industries-rcg/` is not a confirmed path). It is the managed package + off-core service above. No dedicated PTC layer — uses shared OmniStudio PTC classes when IPs/DRs are involved.
 
 ---
 
@@ -164,13 +179,24 @@ ORDER BY Name
 
 ## Code Investigation Paths
 
-### TPM Managed Package
+### TPM Managed Package (Apex tier)
 ```
 Tool: mcp__plugin_git-soma_vmcp-git-soma__get_file_contents
 owner: "industries-rcg"
 repo: "rcgps-retail-tpm"
-path: "classes/<ClassName>.cls"
+ref: "refs/heads/release-262"
+path: "<apex package path>"   ← managed package Apex
 ```
+
+### TPM Off-Core Processing Service (Node.js tier — for KPI/batch/calc failures)
+```
+Tool: mcp__plugin_git-soma_vmcp-git-soma__get_file_contents
+owner: "industries-rcg"
+repo: "rcgps-retail-tpm"
+ref: "refs/heads/release-262"
+path: "packages/tpm/<package>/src/..."   ← e.g. packages/tpm/rcgps-calcengine/src
+```
+Pick the package by failure type: calc → `rcgps-calcengine`/`rcgps-accplnprm`, KPI → `rcgps-kpi`/`rcgps-measureapi`, RTR → `rcgps-rtreporting`, accrual → `rcgps-accrual`, service/dispatch → `rcgps-tpm-service`.
 
 ### Consumer Goods Solutions
 ```

@@ -634,9 +634,9 @@ By design, Salesforce's `SObject.clone()` method does not clone relationship fie
 | AMER CPQ Dev escalation | #support-rev-dev-amer (C0275QG40LE) |
 | IST/EMEAPAC CPQ Dev escalation | #support-rev-dev-emeapac (C021MMRBRR6) |
 | Technical / cross-team escalations | #support-rev-technical (G01GF9PFUH3) |
-| Salesforce Billing Apex | #C026Y0ENETH |
-| Revenue Cloud Advanced (RCA/RCB) | #C05TFMXB3RN |
-| License / permission issues | #C020Y1K42F8 |
+| Salesforce Billing Apex | Salesforce Billing channel (ID `C026Y0ENETH` — verify name) |
+| Revenue Cloud Advanced (RCA/RCB) | #support-rev-rlm-global-swarm-help (C05TFMXB3RN) |
+| License / permission issues | CPQ License channel (ID `C020Y1K42F8` — verify name) |
 
 ### Key SMEs
 - **Apoorva Chava / Vinay Kumar K** — CPQ dev support (AMER), Splunk log analysis, null pointer on contracting
@@ -702,7 +702,7 @@ This skill **cannot resolve:**
 - Pure CPQ configuration issues (price rules setup, product rules, quote templates) — route to config channels
 - QCP custom code debugging beyond identifying the failing method — customer is responsible for their custom code
 - Issues in PROS Smart CPQ, AvaTax for CPQ, or 3rd-party CPQ products not at install.steelbrick.com
-- Revenue Cloud Advanced (RCA/RCB) Apex issues — route to #C05TFMXB3RN
-- Salesforce Billing Apex — route to #C026Y0ENETH
+- Revenue Cloud Advanced (RCA/RCB) Apex issues — route to #support-rev-rlm-global-swarm-help (C05TFMXB3RN)
+- Salesforce Billing Apex — route to Salesforce Billing channel (ID `C026Y0ENETH` — verify name)
 - Issues requiring Splunk log access — only Dev Support engineers can access Splunk
 - Full QCP code reviews beyond 200 lines (Premier plan limit)

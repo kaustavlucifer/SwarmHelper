@@ -191,7 +191,8 @@ max_matches: 10
 ## Escalation
 
 - GUS product tag: `Nonprofit Cloud`
-- Slack: `#ask-sfdo-tech-expert`, `#sfdo-architects`
+- Slack: `#sfdo-architects` (C01GXEZABDF, validated)
+- ⚠️ `#ask-sfdo-tech-expert` could not be confirmed via channel search (2026-06-15) — verify before relying on it
 - Related: `#support-swarm-industries`
 
 **Swarm template:**

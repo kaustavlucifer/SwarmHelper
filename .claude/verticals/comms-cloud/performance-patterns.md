@@ -1463,8 +1463,7 @@ Or: Use Salesforce Internal DX Plugin → Authenticate
 **Recent Known Issues (From Case Data):**
 
 1. **W-21811800** - Production: Unable to create quote - Namespace required (P0)
-2. **W-22450490** - Standard Cart API AssetToOrder JSON parsing issue (P1)
-3. **W-21576263** - CpqAppHandler errors post-upgrade (P2)
+2. **W-21576263** - CpqAppHandler errors post-upgrade (P2)
 4. **W-21356376** - Asset duplication issue (P2)
 5. **W-20956955** - postCartsItems pricing not returned with Standard Cart API (P1)
 

@@ -55,7 +55,8 @@ core/industries-interaction-ptc/apex/vlocity_ins_fsc/
 | Resource | URL |
 |---|---|
 | VLCOM Space (Comms Cloud) | https://confluence.internal.salesforce.com/spaces/VLCOM/ |
-| AITB1 - Index of Resources | https://confluence.internal.salesforce.com/spaces/VLCOM/pages/449598012/AITB1+-+Index+of+Resources |
+| AITB1 - Index of Resources | https://confluence.internal.salesforce.com/spaces/CSGPAK/pages/489918917/AITB1+-+Index+of+Resources |
+| Industries CPQ: Project CPQNext | https://confluence.internal.salesforce.com/spaces/VLCOM/pages/449598012/Industries+CPQ+Project+CPQNext |
 
 ---
 

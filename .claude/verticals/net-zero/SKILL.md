@@ -65,7 +65,7 @@ Net Zero Cloud is hybrid (managed app + core Java). No dedicated PTC layer — u
 | Resource | URL |
 |---|---|
 | Net Zero Cloud (CSG) | https://confluence.internal.salesforce.com/spaces/CSGPAK/pages/458640848/Net+Zero+Cloud |
-| Net Zero Cloud Onboarding | https://confluence.internal.salesforce.com/spaces/IN/pages/399485909/Onboarding |
+| Net Zero Cloud Troubleshooting Help | https://confluence.internal.salesforce.com/spaces/IN/pages/842107431/Net+Zero+Cloud+Troubleshooting+Help |
 | Architecture Doc (Quip) | https://salesforce.quip.com/o91VAyhoAgj0 |
 | ERD Diagram | https://lucid.app/lucidchart/282131b9-47f8-49eb-95fc-579a8c79caff/edit |
 
@@ -173,8 +173,8 @@ file_path: "core/industries-sustainability-impl/"
 ## Escalation
 
 - GUS product tag: `Net Zero Cloud`
-- Slack: `#sustcloud-engineering-only`, `#sc-code-reviews`, `#sc-tf-fix`, `#nzc-scrum-full`
-- Operations: `#nzc-ops`
+- Slack: `#nzc-scrum-full` (C01RKG9CDDG, validated), `#nzc-code-reviews` (C02AP7KDM46), `#nzc-tf-fix` (C026KCSE1UM)
+- ⚠️ `#sustcloud-engineering-only` and `#nzc-ops` could not be confirmed via channel search (2026-06-15) — may be private/renamed; verify before relying on them
 
 **Swarm template:**
 ```

@@ -189,8 +189,8 @@ file_path: "core/ui-industries-automotive-components/"
 ## Escalation
 
 - GUS product tag: `Automotive Cloud`
-- Slack: `#automotive-cloud-experts`, `#industries-all-manufacturing`, `#industries-engg-manufacturing`
-- Related: `#support-swarm-industries`
+- Slack: `#industries-engg-manufacturing` (C0264NU8493, validated — Auto shares Mfg eng), `#support-swarm-industries` (C02BEHKLWES)
+- ⚠️ `#automotive-cloud-experts` and `#industries-all-manufacturing` could not be confirmed via channel search (2026-06-15) — verify before relying on them
 
 **Swarm template:**
 ```

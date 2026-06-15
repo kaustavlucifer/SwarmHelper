@@ -59,8 +59,9 @@ gitcore.soma.salesforce.com/core-2206/core-262-public:
   core/industries-cpq-pricing-common-api/      ← CPQ pricing common API (price lists, adjustments)
   core/cpq/                                    ← Core CPQ functionality (shared)
   core/cpq-config-rules/                       ← CPQ configuration rules (CML)
-  core/industries-bre-impl/                    ← BRE implementation (Decision Tables, Expression Sets)
-  core/industries-bre-api/                     ← BRE API layer
+  core/industries-bre-near-core-impl/          ← BRE implementation (Decision Tables, Expression Sets)
+  core/industries-bre-near-core-api/           ← BRE API layer
+  core/industries-bre-engine-runtime/          ← BRE runtime engine
   core/billing-impl/                           ← Billing implementation (usage billing, revenue schedules)
   core/ui-industries-cpq-components/           ← CPQ UI components (LWC)
   core/industries-interaction-ptc/apex/        ← PTC layer (protected Apex)

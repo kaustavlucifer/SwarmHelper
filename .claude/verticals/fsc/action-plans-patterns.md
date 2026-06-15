@@ -127,7 +127,7 @@ Input: stacktrace_ids = [<ids from search results>]
 
 → If the gack matches a known pattern, skip to the resolution. If it's new, escalate with the full stack trace.
 
-**With CodeSearch (verified — repo: gitcore.soma.salesforce.com/core-2206/core-260-public):**
+**With CodeSearch (verified — repo: gitcore.soma.salesforce.com/core-2206/core-262-public):**
 ```
 mcp__plugin_deep-research_codesearch__search
 query: content:"<exact_error_message_from_customer>" repo:"gitcore.soma.salesforce.com"
@@ -200,7 +200,7 @@ Search: "in:#tech-prod-help-financial-services-cloud <error_message_or_keyword>"
 
 ```
 Primary class: ActionPlanDependentTaskServiceImpl.java
-Repo: gitcore.soma.salesforce.com/core-2206/core-260-public
+Repo: gitcore.soma.salesforce.com/core-2206/core-262-public
 Path: core/industries-actionplan-impl/java/src/actionplan/service/ActionPlanDependentTaskServiceImpl.java
 Scrum Team: FSC-Darksaber | Author: b.sugiarto | Since: release 232
 
@@ -988,7 +988,7 @@ These are **by design** — not bugs. Educate the customer:
 | Work ID | TTR | Investigation | Issue Area |
 |---------|-----|---------------|-----------|
 | W-21482069 | 54 days | 26.82 days | Complex successor task failure |
-| W-19402617 | 36 days | 0.41 days | Template dependency corruption |
+| W-19402617 | 36 days | 0.41 days | ISE querying ActionPlanTemplate.status field |
 | W-21185271 | 27 days | 0.98 days | Action Plan configuration |
 | W-19835821 | 24 days | 5.11 days | Deep troubleshooting |
 | W-21228390 | 21 days | 1.37 days | Task behavior |
@@ -1088,7 +1088,7 @@ core/
 
 **Primary class:** `ActionPlanDependentTaskServiceImpl.java`
 ```
-Repository: gitcore.soma.salesforce.com/core-2206/core-260-public
+Repository: gitcore.soma.salesforce.com/core-2206/core-262-public
 Path: core/industries-actionplan-impl/java/src/actionplan/service/ActionPlanDependentTaskServiceImpl.java
 Scrum Team: FSC-Darksaber
 Author: b.sugiarto (since release 232)

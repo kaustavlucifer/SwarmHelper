@@ -63,11 +63,13 @@ thread_url: "https://salesforce.slack.com/archives/C03GSNY2GVC/p1234567890"
 | `#omnistudio-support` | Spring '26 OmniStudio support | C0A693YH82H |
 | `#omnistudio-migration-support` | Migration to Core Runtime | C0AJACQQ6H3 |
 | `#industries-omniscript` | OmniScript-specific | C026ZKUL5EG |
-| `#support-rev-dev-amer` | Revenue Cloud / CPQ (Americas) | — |
-| `#support-health-cloud` | Health Cloud | — |
-| `#support-industries-fsc` | FSC | — |
-| `#support-swarm-service-agentforce-datacloud-ind` | Industry + Data Cloud | — |
-| `#moncloud-support` | Splunk / monitoring | — |
+| `#support-rev-dev-amer` | Revenue Cloud / CPQ (Americas) | C0275QG40LE |
+| `#industries-healthcare` | Health Cloud | C01KUUZ3QCV |
+| `#support-industry-fsc-hc` | FSC + Health Cloud support | C01L982KF7A |
+| `#support-swarm-service-agentforce-datacloud-ind` | Industry + Data Cloud | C08LLB0TRFV |
+| `#moncloud-support` | Splunk / monitoring | C03895H49JQ |
+
+> All channel IDs validated 2026-06-15. `#support-health-cloud` and `#support-industries-fsc` (older names) no longer resolve — use the rows above.
 
 ---
 

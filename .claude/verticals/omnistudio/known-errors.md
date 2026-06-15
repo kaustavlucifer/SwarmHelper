@@ -11,7 +11,7 @@ Check this FIRST before deep investigation. If the error matches a pattern here,
 | "This OmniScript requires re-compilation" | Deployment or LWC state mismatch | Deactivate → Reactivate in OmniScript Designer |
 | `Value too long for field: Source maximum length is: 131072` | LWC bundle exceeds 128KB | Reduce OmniScript complexity; consider Standard Runtime |
 | `Can not get instance of omnistudiocore.IPService` | Element named "SaveForLater" — internal name collision | Rename the SaveForLater element |
-| Blank screen post-upgrade | State corruption after package upgrade | Clone with new Type/SubType (W-11941259, W-12428921) |
+| Blank screen post-upgrade | State corruption after package upgrade | Clone with new Type/SubType (case-derived; W-11941259 — confirm symptoms match) |
 | OmniScript not loading on Experience site | OmniProcess Read access missing | Add OmniProcess Read to community profile/PS |
 | LWC activation fails post-deployment | DB lock during Puppeteer compilation | Use `useBulkOmniScriptLwcCompile` VBT parameter (W-19473960) |
 | Child OmniScript "Cannot read properties of undefined" | Multi-tab designer cache over-clearing | Avoid multiple designer tabs in same session (W-22469676, fixed 264) |

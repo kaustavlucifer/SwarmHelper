@@ -130,7 +130,7 @@ Input: stacktrace_ids = [<ids from search results>]
 
 → If the gack matches a known pattern, skip to the resolution. If it's new, escalate with the full stack trace.
 
-**With CodeSearch (verified — repo: gitcore.soma.salesforce.com/core-2206/core-260-public):**
+**With CodeSearch (verified — repo: gitcore.soma.salesforce.com/core-2206/core-262-public):**
 ```
 mcp__plugin_deep-research_codesearch__search
 query: content:"<exact_error_message_from_customer>" repo:"gitcore.soma.salesforce.com"

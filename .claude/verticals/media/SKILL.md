@@ -39,8 +39,7 @@ gitcore.soma.salesforce.com/core-2206/core-262-public:
     MediaAdSalesPtc.apex
     MediaAdSalesRadioPtc.apex
     MediaAdSalesTargetingPtc.apex
-  core/industries-interaction-ptc/apex/sfi_media_7/  ← Media PTC (sfi_media namespace)
-  core/ui-thunderbird-components/components/setup_thb/mediaManagementSetup/  ← Media setup UI
+  core/industries-interaction-ptc/apex/sfi_media_7/  ← Media PTC (MediaAdSalesPtc, MediaPlanHandlerPtc — validated 2026-06-15)
 ```
 
 ### Managed Package

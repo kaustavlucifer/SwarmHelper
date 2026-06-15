@@ -44,7 +44,8 @@ gitcore.soma.salesforce.com/core-2206/core-262-public:
   core/industries-manufacturing/                    ← Manufacturing Cloud implementation
   core/industries-manufacturing-udd/                ← Manufacturing UDD (objects, config)
   core/ui-industries-manufacturing-components/      ← Manufacturing LWC components
-  core/industries-rebate-impl/                      ← Rebate Management implementation
+  core/industries-mfg-rebates-impl/                 ← Rebate Management implementation
+  core/industries-mfg-rebates/                      ← Rebate Management core
 ```
 
 ### Ownership Teams
@@ -183,7 +184,7 @@ file_path: "core/ui-industries-manufacturing-components/"
 
 - GUS product tag: `Manufacturing Cloud`
 - Slack: `#support-swarm-industries`
-- Related: `#support-consumer-goods` (shared team)
+- Related: `#tmp-help-consumer-goods` (C028DDZ05B6, validated — shared CG team)
 
 **Swarm template:**
 ```

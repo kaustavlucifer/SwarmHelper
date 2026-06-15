@@ -616,7 +616,7 @@ Stale OAuth token in CPQ Custom Settings. The calculation service OAuth token fr
 Customer reports CPQ license issue
 │
 ├── License expired?
-│   └── Track with IR "CPQ License" → route to #C020Y1K42F8
+│   └── Track with IR "CPQ License" → route to CPQ License channel (ID `C020Y1K42F8` — verify name)
 │
 ├── License not in sandbox?
 │   └── Run Match Production Licenses tool in sandbox org
@@ -632,7 +632,7 @@ Customer reports CPQ license issue
 │
 ├── RevenueLifecycleManagement Platform License?
 │   └── Included in certain Industries products (e.g., Digital Insurance Unlimited Edition)
-│       Gives partial RCA access — confirm with RCA team (#C05TFMXB3RN) for scope
+│       Gives partial RCA access — confirm with RCA team (#support-rev-rlm-global-swarm-help, C05TFMXB3RN) for scope
 │
 └── Partner org license provisioning?
     └── Partner support team can provision licenses directly
@@ -698,11 +698,11 @@ Customer reports CPQ license issue
 | AMER CPQ Dev | #support-rev-dev-amer (C0275QG40LE) |
 | IST/EMEAPAC CPQ Config | #support-rev-config-emeapac (C02836Z3SF2) |
 | IST/EMEAPAC CPQ Dev | #support-rev-dev-emeapac (C021MMRBRR6) |
-| Salesforce Billing | #C026Y0ENETH |
-| Revenue Cloud Core (RCA/RCB) | #C05TFMXB3RN |
-| CPQ Document Generation | #C05SQUC3G9K |
-| License expired / install errors | #C020Y1K42F8 |
-| Technical escalations / cross-team | #support-rev-technical (G01GF9PFUH3) |
+| Salesforce Billing | channel ID `C026Y0ENETH` (verify name before posting) |
+| Revenue Cloud Core (RCA/RCB) | #support-rev-rlm-global-swarm-help (C05TFMXB3RN) |
+| CPQ Document Generation | channel ID `C05SQUC3G9K` (verify name before posting) |
+| License expired / install errors | channel ID `C020Y1K42F8` (verify name before posting) |
+| Technical escalations / cross-team | #support-rev-technical (private group `G01GF9PFUH3` — request access) |
 
 ### Key SMEs (from channel observations)
 - **Bart Lis** — CPQ config, pricing rules, QCP, POT behavior, amendment/renewal design
@@ -772,8 +772,8 @@ Customer reports CPQ license issue
 
 This skill **cannot resolve:**
 - Issues in PROS Smart CPQ, AvaTax for CPQ, or other 3rd-party CPQ products not listed at install.steelbrick.com
-- Revenue Cloud Advanced (RCA/RCB) issues — route to #C05TFMXB3RN
-- Salesforce Billing issues — route to #C026Y0ENETH
+- Revenue Cloud Advanced (RCA/RCB) issues — route to #support-rev-rlm-global-swarm-help (C05TFMXB3RN)
+- Salesforce Billing issues — route to Salesforce Billing channel (ID `C026Y0ENETH` — verify name)
 - QCP custom code debugging beyond identifying the class/method — this is dev support scope
 - Conga Quote Generation license renewal/provisioning — route to Conga Partner Community
 - Issues requiring internal Splunk log access — only Dev Support engineers can access Splunk
