@@ -35,7 +35,7 @@ description: Net Zero Cloud troubleshooting — carbon accounting, emissions, ES
 ### Core Monorepo Paths (CONFIRMED via CodeSearch)
 
 ```
-gitcore.soma.salesforce.com/core-2206/core-262-public:
+gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
   core/industries-sustainability/                     ← Net Zero Cloud base (CarbonFootprint, EmissionSource)
   core/industries-sustainability-api/                 ← API layer
   core/industries-sustainability-impl/                ← Implementation
@@ -133,27 +133,27 @@ ORDER BY TargetDate ASC
 
 | Type | Use |
 |---|---|
-| `r1log` | Industries package instrumentation (filter by `instKey`) |
+| `gslog` | **Platform Java exceptions/gacks (primary — core implementation)** |
 | `axerr` | Apex uncaught exceptions |
 | `axlim` | Governor limit consumption |
-| `ipipr` | Integration Procedures (if OmniStudio components used) |
-| `ipdar` | DataRaptors (if OmniStudio components used) |
-| `gslog` | Platform Java exceptions (core implementation) |
+| `r1log` | Industries instrumentation — only if the managed-package / OmniStudio layer is in use; core-native features log via `gslog`, not `r1log` |
+| `ipipr` | Integration Procedures (only if OmniStudio components used) |
+| `ipdar` | DataRaptors (only if OmniStudio components used) |
 
 ## Code Investigation Paths
 
 ### Core Implementation
 ```
 Tool: mcp__plugin_deep-research_codesearch__search
-query: "repo:gitcore.soma.salesforce.com/core-2206/core-262-public content:Sustainability lang:java"
+query: "repo:gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public content:Sustainability lang:java"
 max_matches: 15
 ```
 
 ### Full Module Listing
 ```
 Tool: mcp__plugin_deep-research_codesearch__list_directory
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/industries-sustainability-impl/"
 ```
 
@@ -174,7 +174,7 @@ file_path: "core/industries-sustainability-impl/"
 
 - GUS product tag: `Net Zero Cloud`
 - Slack: `#nzc-scrum-full` (C01RKG9CDDG, validated), `#nzc-code-reviews` (C02AP7KDM46), `#nzc-tf-fix` (C026KCSE1UM)
-- ⚠️ `#sustcloud-engineering-only` and `#nzc-ops` could not be confirmed via channel search (2026-06-15) — may be private/renamed; verify before relying on them
+- Also: `#industries-netzerocloud-all` (C027WNNCTJL, validated 2026-06-15 — Net Zero Cloud community/sync channel)
 
 **Swarm template:**
 ```

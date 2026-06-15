@@ -71,23 +71,23 @@ directory_path: "classes"
 ### Search
 ```
 Tool: mcp__plugin_deep-research_codesearch__search
-query: "repo:gitcore.soma.salesforce.com/core-2206/core-262-public content:<keyword> lang:java"
+query: "repo:gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public content:<keyword> lang:java"
 max_matches: 10
 ```
 
 ### Read a file
 ```
 Tool: mcp__plugin_deep-research_codesearch__read_file
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/industries-interaction-ptc/apex/vlocity_cmt/DataRaptorUtilsPtc.apex"
 ```
 
 ### List directory
 ```
 Tool: mcp__plugin_deep-research_codesearch__list_directory
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/industries-interaction-ptc/apex/vlocity_cmt/"
 ```
 
@@ -96,16 +96,16 @@ file_path: "core/industries-interaction-ptc/apex/vlocity_cmt/"
 Tool: mcp__plugin_deep-research_codesearch__commit_search
 code_host: "gitcore.soma.salesforce.com"
 org: "core-2206"
-repo: "core-262-public"
-ref: "p4/262-patch"
+repo: "core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 path: "core/industries-interaction-ptc/apex/vlocity_cmt/DataRaptorUtilsPtc.apex"
 ```
 
 ### Find references (where a symbol is used)
 ```
 Tool: mcp__plugin_deep-research_codesearch__find_references
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "<file>"
 line: <line_number>
 ```
@@ -113,8 +113,8 @@ line: <line_number>
 ### Go to definition
 ```
 Tool: mcp__plugin_deep-research_codesearch__go_to_definition
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "<file>"
 line: <line_number>
 ```
@@ -122,7 +122,7 @@ line: <line_number>
 ### Get commit diff (view what changed in a specific commit)
 ```
 Tool: mcp__plugin_deep-research_codesearch__get_commit_diff
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
 commit_sha: "<sha>"
 ```
 
@@ -130,15 +130,50 @@ commit_sha: "<sha>"
 
 ---
 
-## Release Versions
+## Release Resolution (do this FIRST — release numbers change every ~4 months)
 
-| Repo | Branch | Release |
-|---|---|---|
-| `core-262-public` / `p4/262-patch` | **Current GA (default)** | Spring '26 |
-| `core-264-public` / `p4/264-patch` | Upcoming (in development) | Summer '26 |
-| `core-260-public` / `p4/260-patch` | Previous | Winter '26 |
+Salesforce ships **three major releases per year** (Winter / Spring / Summer), and the core branch number **increments by 2** each release (`…258 → 260 → 262 → 264 → 266 → 268…`). Branch names like `core-262-public` and refs like `refs/heads/release-262` therefore go stale roughly every 4 months. **Never hardcode a release number into a query.** Instead, resolve `{CURRENT_GA}` at the start of an investigation and substitute it everywhere a skill file shows `{CURRENT_GA}` / `core-{CURRENT_GA}-public` / `release-{CURRENT_GA}`.
 
-Always use `core-262-public` unless specifically checking upcoming changes.
+### Step 1 — resolve from the calendar (no probe needed)
+
+Salesforce GA dates are roughly: **Winter ≈ mid-October**, **Spring ≈ mid-February**, **Summer ≈ mid-June**. Map today's date against this table (verified against official sources 2026-06-15):
+
+| Release | Season | GA (approx) | `{CURRENT_GA}` during this window |
+|---|---|---|---|
+| 258 | Winter '26 | 2025-10-11 | 258 (from ~2025-10-11 to ~2026-02-13) |
+| 260 | Spring '26 | 2026-02-13 | 260 (to ~2026-06-15) |
+| 262 | Summer '26 | 2026-06-15 | **262 (to ~2026-10-16)** |
+| 264 | Winter '27 | ~2026-10-16 | 264 (to ~2027-02) |
+| 266 | Spring '27 | ~2027-02 | 266 (to ~2027-06) |
+| 268 | Summer '27 | ~2027-06 | 268 (to ~2027-10) |
+| 270 | Winter '28 | ~2027-10 | 270 |
+| 272 | Spring '28 | ~2028-02 | 272 |
+| 274 | Summer '28 | ~2028-06 | 274 |
+
+`{CURRENT_GA}` = the release whose GA date is the most recent one **on or before today**. `{IN_DEV}` = `{CURRENT_GA} + 2`. `{PREV}` = `{CURRENT_GA} − 2`.
+
+> Dates past 274 follow the same cadence (+2 every release, 3/year). If today is beyond this table, extrapolate: each calendar year adds 6 to the release number (e.g. Summer '28 = 274, Summer '29 = 280).
+
+### Step 2 — confirm by probe (when precision matters near a boundary)
+
+Within ~2 weeks of a GA date, or any time the calendar answer is ambiguous, confirm which branch is actually cut:
+
+```
+Tool: mcp__plugin_deep-research_codesearch__list_directory
+repository: "gitcore.soma.salesforce.com/core-2206/core-{candidate}-public"
+directory_path: "core"
+```
+The highest-numbered `core-N-public` that lists successfully is `{IN_DEV}`; the one below it that is GA-tagged is `{CURRENT_GA}`. (Probed 2026-06-15: `core-262-public` and `core-264-public` both resolve — 262 = GA, 264 = in-dev.) For git.soma TPM, the analog is `mcp__plugin_git-soma_vmcp-git-soma__list_branches` on `industries-rcg/rcgps-retail-tpm` looking for `release-{N}`.
+
+### Substitution
+
+| Placeholder in skill files | Resolves to (as of 2026-06-15) |
+|---|---|
+| `core-{CURRENT_GA}-public` / `p4/{CURRENT_GA}-patch` | `core-262-public` / `p4/262-patch` — **current GA, default** |
+| `core-{IN_DEV}-public` | `core-264-public` — upcoming / in development |
+| `core-{PREV}-public` | `core-260-public` — previous |
+
+Use `{CURRENT_GA}` unless specifically checking upcoming changes.
 
 ---
 

@@ -54,7 +54,7 @@ From error, identify: OmniScript / IP / DataRaptor / FlexCard / DocGen / VBT / G
 ### Core Monorepo Paths
 
 ```
-gitcore.soma.salesforce.com/core-2206/core-262-public:
+gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
   core/industries-interaction-ptc/apex/vlocity_cmt/    ← PTC layer (CMT namespace)
   core/industries-interaction-ptc/apex/vlocity_ins/    ← PTC layer (INS namespace)
   core/industries-interaction-ptc/apex/omnistudio/     ← PTC layer (Standard Runtime)

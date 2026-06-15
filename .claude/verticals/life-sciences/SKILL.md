@@ -32,7 +32,7 @@ description: Life Sciences Cloud troubleshooting — clinical trials, patient se
 ### Core Monorepo Paths
 
 ```
-gitcore.soma.salesforce.com/core-2206/core-262-public:
+gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
   core/industries-lifesciences-impl/                   ← Life Sciences Java (trial mgmt, research study)
   core/ui-industries-common-components/omnistudio/     ← Shared components
 ```
@@ -135,7 +135,7 @@ ORDER BY EffectiveFrom DESC
 ### Life Sciences Core
 ```
 Tool: mcp__plugin_deep-research_codesearch__search
-query: "repo:gitcore.soma.salesforce.com/core-2206/core-262-public path:core/industries-lifesciences-impl content:<keyword>"
+query: "repo:gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public path:core/industries-lifesciences-impl content:<keyword>"
 max_matches: 10
 ```
 
@@ -160,7 +160,7 @@ query: "lifesciences"
 
 ## Escalation
 
-- GUS product tag: `Life Sciences Cloud`
+- GUS product tag: `Life Sciences Cloud - Product Management` (primary — bare `Life Sciences Cloud` returns 0 bugs); fallback `Health and Life Sciences` (verified 2026-06-15; see known-patterns.md)
 - Slack: `#support-swarm-industries` (C02BEHKLWES)
 
 **Swarm template:**

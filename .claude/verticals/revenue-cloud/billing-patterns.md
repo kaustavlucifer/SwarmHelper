@@ -667,7 +667,7 @@ Customer reports missing features/objects
 ```sql
 SELECT Id, Name, Subject__c, Status__c, Priority__c 
 FROM ADM_Work__c 
-WHERE Product_Tag__r.Name = 'Revenue Cloud (Core)-Billing & Invoicing' 
+WHERE Product_Tag__r.Name LIKE '%Revenue Cloud (Core)-Billing & Invoicing%' 
 AND Type__c = 'Bug' 
 AND Status__c IN ('New', 'Triaged', 'In Progress') 
 AND Priority__c IN ('P0', 'P1', 'P2') 

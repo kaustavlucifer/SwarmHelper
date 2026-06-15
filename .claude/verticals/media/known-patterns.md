@@ -641,7 +641,7 @@ AdSalesPricingService.recalculatePricing(items);
 - [Media Ad Sales Management Admin Guide](https://help.salesforce.com/s/articleView?id=sf.media_adsales_admin.htm)
 
 ### Slack Channels (Internal)
-- #ad_sales_management_tech_group - Primary technical channel (⚠️ verify — not confirmed in channel search 2026-06-15)
+- #ad_sales_management_tech_group - Primary technical channel (C0349HJ7M0A, validated 2026-06-15)
 - #industries-media - General Media Cloud questions (C01JESF340P, validated)
 - #support-omnistudio-collaboration - OmniStudio questions (C03GSNY2GVC, validated)
 

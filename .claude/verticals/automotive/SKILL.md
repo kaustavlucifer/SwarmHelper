@@ -39,7 +39,7 @@ description: Automotive Cloud troubleshooting — vehicle lifecycle, dealer mana
 ### Core Monorepo Paths (CONFIRMED via CodeSearch)
 
 ```
-gitcore.soma.salesforce.com/core-2206/core-262-public:
+gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
   core/industries-automotive/                         ← Automotive Cloud implementation
   core/industries-automotive-udd/                     ← Automotive UDD (objects, config)
   core/industries-automotive-setup-home/              ← Setup/config UI
@@ -149,27 +149,27 @@ ORDER BY CreatedDate DESC
 
 | Type | Use |
 |---|---|
-| `r1log` | Industries package instrumentation (filter by `instKey`) |
+| `gslog` | **Platform Java exceptions/gacks (primary — core implementation)** |
 | `axerr` | Apex uncaught exceptions |
 | `axlim` | Governor limit consumption |
-| `ipipr` | Integration Procedures (if OmniStudio components used) |
-| `ipdar` | DataRaptors (if OmniStudio components used) |
-| `gslog` | Platform Java exceptions (core implementation) |
+| `r1log` | Industries instrumentation — only if the managed-package / OmniStudio layer is in use; core-native features log via `gslog`, not `r1log` |
+| `ipipr` | Integration Procedures (only if OmniStudio components used) |
+| `ipdar` | DataRaptors (only if OmniStudio components used) |
 
 ## Code Investigation Paths
 
 ### Core Implementation
 ```
 Tool: mcp__plugin_deep-research_codesearch__search
-query: "repo:gitcore.soma.salesforce.com/core-2206/core-262-public content:Automotive lang:java"
+query: "repo:gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public content:Automotive lang:java"
 max_matches: 15
 ```
 
 ### LWC Components
 ```
 Tool: mcp__plugin_deep-research_codesearch__list_directory
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/ui-industries-automotive-components/"
 ```
 
@@ -188,9 +188,8 @@ file_path: "core/ui-industries-automotive-components/"
 
 ## Escalation
 
-- GUS product tag: `Automotive Cloud`
+- GUS product tags (area-specific — bare `Automotive Cloud` returns 0 bugs): `Automotive - Captive Finance`, `Automotive Cloud - Vehicle 360`, `Automotive - Connected Cars`, `Automotive - Criteria Based Search`, `Automotive - OEM Service Processes` (verified 2026-06-15; see known-patterns.md)
 - Slack: `#industries-engg-manufacturing` (C0264NU8493, validated — Auto shares Mfg eng), `#support-swarm-industries` (C02BEHKLWES)
-- ⚠️ `#automotive-cloud-experts` and `#industries-all-manufacturing` could not be confirmed via channel search (2026-06-15) — verify before relying on them
 
 **Swarm template:**
 ```

@@ -130,7 +130,7 @@ Input: stacktrace_ids = [<ids from search results>]
 
 → If the gack matches a known pattern, skip to the resolution. If it's new, escalate with the full stack trace.
 
-**With CodeSearch (verified — repo: gitcore.soma.salesforce.com/core-2206/core-262-public):**
+**With CodeSearch (verified — repo: gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public):**
 ```
 mcp__plugin_deep-research_codesearch__search
 query: content:"<exact_error_message_from_customer>" repo:"gitcore.soma.salesforce.com"
@@ -146,7 +146,7 @@ Key classes:
 
 **With GUS:**
 ```bash
-sf data query --query "SELECT Id, Name, Subject__c, Status__c, Priority__c FROM ADM_Work__c WHERE Product_Tag__r.Name = 'FSC Action Plans' AND Type__c = 'Bug' AND Status__c NOT IN ('Closed', 'Duplicate', 'Never Fix') ORDER BY Priority__c, CreatedDate DESC LIMIT 10" --target-org gus --json
+sf data query --query "SELECT Id, Name, Subject__c, Status__c, Priority__c FROM ADM_Work__c WHERE Product_Tag__r.Name LIKE '%FSC Action Plans%' AND Type__c = 'Bug' AND Status__c NOT IN ('Closed', 'Duplicate', 'Never Fix') ORDER BY Priority__c, CreatedDate DESC LIMIT 10" --target-org gus --json
 ```
 → Checks if this is a known open bug.
 
@@ -191,7 +191,7 @@ The patterns below (K–R) cover the **rest of FSC** — Referrals, Rollup Summa
 
 **GUS Query:**
 ```bash
-sf data query --query "SELECT Name, Subject__c, Status__c FROM ADM_Work__c WHERE Product_Tag__r.Name = 'FSC Referrals' AND Type__c = 'Bug' AND Status__c NOT IN ('Closed','Duplicate','Never Fix') LIMIT 10" --target-org gus --json
+sf data query --query "SELECT Name, Subject__c, Status__c FROM ADM_Work__c WHERE Product_Tag__r.Name LIKE '%FSC Referrals%' AND Type__c = 'Bug' AND Status__c NOT IN ('Closed','Duplicate','Never Fix') LIMIT 10" --target-org gus --json
 ```
 
 ---

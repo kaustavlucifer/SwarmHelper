@@ -79,11 +79,40 @@ Common `instKey` values: `makeHttpCall`, `InvokeService`, `DREngine`, `CPQServic
 ### Platform
 | Type | Description |
 |---|---|
-| `gslog` | Platform Java exceptions/gacks with full stack traces |
+| `gslog` | Platform Java exceptions / **suppressed (rate-limited) gack** records with stack traces |
 | `txerr` | Error logs (ERROR, SEVERE) |
 | `txlog` | Transaction logs (INFO, WARN) |
-| `A` | Transaction summary (main request log) |
-| `cosis` | Individual SOQL statements |
+| `cosis` | Individual SOQL statements (carries `sqlId`; internal-only when `loginId`/`sessionId` null) |
+| `ullog` | Universal performance / latency logs |
+
+### Request summary family (single-char legacy codes — end-of-request lines)
+| Type | Description |
+|---|---|
+| `U` | SFDC UI request | 
+| `V` | Visualforce UI request |
+| `A` | SOAP API request | 
+| `a` | Apex SOAP (customer Apex SOAP method) |
+| `aprst` | REST API request · `apars` Apex REST request · `vfrmt` VF Remoting (JS remoting) |
+| `R` / `rrlog` | Report view / async report (incl. dashboard refresh) |
+| `Q` / `I` | SearchQuery / SearchIndex completion |
+
+> For Apex execution (`axapx`), the `quiddity` field disambiguates type (R=sync, F=future, C=scheduled, T=test, V=VF/remoting, batch variants A/S).
+
+### Gack cluster (ready-made hunt)
+Gacks span several codes — search them together:
+```spl
+index=<POD> organizationId=<ORG_15> `logRecordType(G, gslog, gglog, maerr)` earliest=-7d | head 20
+```
+`gslog` = suppressed gacks (solid), `gglog` = gack sibling (still valid in Splunk though dropped from governance), `G` = gack record, `maerr` = metadata error (deploy investigations).
+
+### Async / Message Queue family (trace Queueable / Batch / @future end-to-end)
+`mq*` lines (40+ codes) are how async execution is traced across the platform: `mqenq` enqueue → `mqdeq` dequeue → `mqhdl` handler invoked → `mqfrm` handler finished (perf stats) → `mqend` processed; `mqded` dead message, `mqreq` re-enqueue. Pair with `axque`/`axftr`/`axbth` (ApexAsyncBatch, 252+) on the Apex side.
+
+### Metadata / deploy family (package install, change set, MDAPI deploy failures)
+`maopr` operation start · `madop` deploy options · `madep` deploy stats (filter `operation="meta_deploy"`) · `mades` per-component-type stats · `maret`/`mazip` retrieve/zip · `pkgop` package install/update · `csopr`/`csevt` change set op/event.
+
+### Extra Apex codes (the `ax*` family is large — these are the support-relevant ones)
+`axhlt` heap-limit tracker · `axlul` limits-usage log · `axqfe` queueable finalizer · `axats`/`axtlt` test summary/limit · `axbth` async batch (252+) · `axpdc` post-deploy compiler · `axcpe` compile errors (256+) · `t` ApexTrigger · `qxjob` queued execution.
 
 ## Query Patterns
 
@@ -174,11 +203,20 @@ index=distapps functional_domain=core1 k8s_namespace=revenue-cloud earliest=-7d
 
 ---
 
-## Log Governance
+## Log Governance (source-of-truth for logRecordType)
 
-Schema validation for any logRecordType:
-- URL: `https://log-governance.eng.sfdc.net:8080/schema/main?logRecordType=<TYPE>`
+The canonical, machine-readable catalog is the **Log Governance Service schema** (~4,500 codes; every per-team Confluence list is a derived snapshot of it). Look up any code's fields here:
+- **`https://log-governance-service.sfproxy.monitoring.aws-esvc1-useast2.aws.sfdc.cl/schema/main?logRecordType=<TYPE>`** (current proxy; version-pinned views exist, e.g. `/schema/246.9.7`)
+- Older UI: `https://log-governance.eng.sfdc.net:8080/schema/main?logRecordType=<TYPE>`
+- Underlying registry in core: `monitoringlib/submodules/logging/config/app-logging-format.xml`
 - OmniAnalytics Dashboard: `https://org62.lightning.force.com/analytics/dashboard/0FK0M000000TPcMWAW`
+
+Curated human references (verified 2026-06-15):
+- **Industries Splunk cheat-sheet** (copy-paste query templates): https://confluence.internal.salesforce.com/spaces/IN/pages/1240990289 (IN — Splunk Queries Quick Reference)
+- Apex family: https://confluence.internal.salesforce.com/spaces/APEX/pages/449478700 (Apex Log Lines)
+- Request/deploy/bulk families: https://confluence.internal.salesforce.com/spaces/CCE/pages/667336957 (Request Log Lines)
+
+> Naming convention: 2-letter family prefix + 3-letter subtype (`ax`=Apex, `mq`=Message Queue, `ma`/`md`=Metadata/deploy, `tx`/`co`=Context Service/cache, `gs`/`gg`/`G`=gacks), plus a few legacy single-char codes (`U`/`V`/`A`/`Q`/`I`/`G`/`t`/`a`). If a code isn't in this doc, look it up in the governance service — don't guess.
 
 ---
 

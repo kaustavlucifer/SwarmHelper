@@ -2,6 +2,22 @@
 
 These skills are developed and maintained by Kaustav Chowdhury.
 
+## v2.3.0 — 2026-06-15
+
+**Durability + enrichment pass.** Release numbers made dynamic, GUS bug-staleness handling added, TPM off-core enriched from source, 8 thin verticals given diagnostic-map pattern files, Splunk reference expanded from authoritative sources. All facts live-probed (auth-gated MCP).
+
+### Added
+- **Dynamic release resolution** (codesearch.md → *Release Resolution*): all `core-{N}-public` / `p4/{N}-patch` / `release-{N}` refs replaced with `{CURRENT_GA}` / `{IN_DEV}` / `{PREV}` placeholders across ~60 sites in 24 files. Resolver maps today's date to a Slack-verified tri-annual release table (Winter/Spring/Summer, +2 each) through ~2028, with an optional gitcore probe near GA boundaries. Orchestrator resolves once per session. **Fixes a latent error:** the old table mislabeled 262 as Spring '26 — it is Summer '26 (GA 2026-06-15).
+- **GUS bug-staleness rule** (gus.md + orchestrator Phase 4/6): related-bug queries now pull `Found_in_Build__r.Name` / `Scheduled_Build__r.Name`; bugs fixed in ≤ GA−2 are flagged "likely already resolved in this org — verify build" instead of presented as the cause.
+- **`known-patterns.md` for 8 thin verticals** (Manufacturing, Automotive, Public Sector, Loyalty, Education, Nonprofit, Net Zero, Life Sciences) — symptom → verified subsystem/class → how-to-confirm → GUS search. Diagnostic maps, **not** static bug inventories (no release-pegged W-number lists to maintain). Every core subsystem path list-dir-verified on the current GA branch.
+- **TPM off-core enrichment** from `rcgps-tpm-service` source: real REST endpoints, the `SYSTEM_PROCESS_ID` worker/web split, `calculationType` dispatch values, the `x-is-tpm` licensing gate, and log-code families (`SVC*`, `TPMWRK*`, `TPMCALCWRK*`, `CALCPLAN*`, `GETFEATURE*`).
+- **Splunk reference expanded** (splunk.md) from authoritative sources: Log Governance Service source-of-truth URL (~4,500 codes), gack cluster `logRecordType(G,gslog,gglog,maerr)`, `mq*` async family (trace Queueable/Batch/@future), `ma*` metadata-deploy family, request-summary single-char codes, extra `ax*` codes, and the IN Industries Splunk cheat-sheet link.
+
+### Fixed
+- **GUS product tags** — 6 SKILL escalation tags returned **0 bugs** (silent-fail): `Manufacturing Cloud`, `Automotive Cloud`, `Public Sector Solutions`, `Education Cloud`, `Nonprofit Cloud`, `Life Sciences Cloud` → corrected to the real (often area-specific) tags. **All product-tag queries repo-wide switched from `=` to `LIKE '%...%'`** so they survive tag renames.
+- **Splunk per-vertical tables** — 7 core-only verticals led with `r1log` (managed-package-only instrumentation that doesn't fire on core-native features) → reordered to lead with `gslog`, `r1log` qualified as conditional. Public Sector kept `r1log` primary (real `vlocity_ps` package).
+- **Slack** — re-probed the 6 `⚠️ verify` channels: only `#ad_sales_management_tech_group` (C0349HJ7M0A) is real (promoted); the other 5 don't exist (removed). Added `#industries-netzerocloud-all` (C027WNNCTJL).
+
 ## v2.2.0 — 2026-06-15
 
 **Full verification sweep + TPM off-core enrichment.** Every factual reference across all 20 verticals was live-probed against MCP sources; only confirmed facts ship. ~335 references checked.

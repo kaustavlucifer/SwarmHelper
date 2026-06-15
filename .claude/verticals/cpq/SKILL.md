@@ -33,7 +33,7 @@ description: Salesforce CPQ (SBQQ) troubleshooting — QCP, quote line editor, a
 ### Core Monorepo Paths (validated 2026-06-15)
 
 ```
-gitcore.soma.salesforce.com/core-2206/core-262-public:
+gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
   core/qtc/                              ← Quote-to-Cash (Salesforce CPQ / SBQQ core-side)
   core/industries-cpq/                   ← Industries CPQ core (rule engine)
   core/industries-cpq-impl/              ← Industries CPQ implementation
@@ -209,7 +209,7 @@ path: "src/<path>"
 ### CPQ Core
 ```
 Tool: mcp__plugin_deep-research_codesearch__search
-query: "repo:gitcore.soma.salesforce.com/core-2206/core-262-public path:core/cpq content:<keyword>"
+query: "repo:gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public path:core/cpq content:<keyword>"
 max_matches: 10
 ```
 

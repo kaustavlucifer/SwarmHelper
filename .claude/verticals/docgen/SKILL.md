@@ -49,7 +49,7 @@ Some orgs have both (customer migrated from Vlocity to Standard DataModel).
 ### Core Monorepo Paths
 
 ```
-gitcore.soma.salesforce.com/core-2206/core-262-public:
+gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
   core/industries-interaction-ptc/apex/vlocity_cmt/    ← DocGen PTC classes (CMT namespace)
   core/industries-interaction-ptc/apex/vlocity_ins/    ← DocGen PTC classes (INS namespace)
 ```
@@ -163,7 +163,7 @@ query: "repo:github.com/sf-industries/via_platform content:DocGen"
 ### PTC Layer (DocGen classes)
 ```
 Tool: mcp__plugin_deep-research_codesearch__search
-query: "repo:gitcore.soma.salesforce.com/core-2206/core-262-public content:DocumentGeneration path:industries-interaction-ptc"
+query: "repo:gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public content:DocumentGeneration path:industries-interaction-ptc"
 max_matches: 10
 ```
 

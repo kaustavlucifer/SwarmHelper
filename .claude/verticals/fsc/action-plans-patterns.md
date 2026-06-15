@@ -127,7 +127,7 @@ Input: stacktrace_ids = [<ids from search results>]
 
 → If the gack matches a known pattern, skip to the resolution. If it's new, escalate with the full stack trace.
 
-**With CodeSearch (verified — repo: gitcore.soma.salesforce.com/core-2206/core-262-public):**
+**With CodeSearch (verified — repo: gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public):**
 ```
 mcp__plugin_deep-research_codesearch__search
 query: content:"<exact_error_message_from_customer>" repo:"gitcore.soma.salesforce.com"
@@ -145,12 +145,12 @@ Key classes:
 
 **Step 1: Search for known bugs matching the symptom:**
 ```bash
-sf data query --query "SELECT Id, Name, Subject__c, Status__c, Priority__c FROM ADM_Work__c WHERE Product_Tag__r.Name = 'FSC Action Plans' AND Type__c = 'Bug' AND Status__c NOT IN ('Closed', 'Duplicate', 'Never Fix') ORDER BY Priority__c, CreatedDate DESC LIMIT 10" --target-org gus --json
+sf data query --query "SELECT Id, Name, Subject__c, Status__c, Priority__c FROM ADM_Work__c WHERE Product_Tag__r.Name LIKE '%FSC Action Plans%' AND Type__c = 'Bug' AND Status__c NOT IN ('Closed', 'Duplicate', 'Never Fix') ORDER BY Priority__c, CreatedDate DESC LIMIT 10" --target-org gus --json
 ```
 
 **Step 2: Search by symptom keywords (extract from customer description):**
 ```bash
-sf data query --query "SELECT Name, Subject__c, Status__c, Resolution__c, Root_Cause_Brief__c FROM ADM_Work__c WHERE Product_Tag__r.Name = 'FSC Action Plans' AND (Subject__c LIKE '%waiting%' OR Subject__c LIKE '%stuck%' OR Subject__c LIKE '%transition%' OR Subject__c LIKE '%inactive%') AND Type__c IN ('Bug', 'Investigation') ORDER BY CreatedDate DESC LIMIT 10" --target-org gus --json
+sf data query --query "SELECT Name, Subject__c, Status__c, Resolution__c, Root_Cause_Brief__c FROM ADM_Work__c WHERE Product_Tag__r.Name LIKE '%FSC Action Plans%' AND (Subject__c LIKE '%waiting%' OR Subject__c LIKE '%stuck%' OR Subject__c LIKE '%transition%' OR Subject__c LIKE '%inactive%') AND Type__c IN ('Bug', 'Investigation') ORDER BY CreatedDate DESC LIMIT 10" --target-org gus --json
 ```
 
 **Step 3: If you know a specific Work ID, pull full details:**
@@ -200,7 +200,7 @@ Search: "in:#tech-prod-help-financial-services-cloud <error_message_or_keyword>"
 
 ```
 Primary class: ActionPlanDependentTaskServiceImpl.java
-Repo: gitcore.soma.salesforce.com/core-2206/core-262-public
+Repo: gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public
 Path: core/industries-actionplan-impl/java/src/actionplan/service/ActionPlanDependentTaskServiceImpl.java
 Scrum Team: FSC-Darksaber | Author: b.sugiarto | Since: release 232
 
@@ -1031,7 +1031,7 @@ in:#help-sell-financial-services-cloud action plan
 **If GUS is connected, run this query to get current open bugs:**
 
 ```bash
-sf data query --query "SELECT Name, Subject__c, Priority__c, Status__c, CreatedDate FROM ADM_Work__c WHERE Product_Tag__r.Name = 'FSC Action Plans' AND Type__c = 'Bug' AND Status__c NOT IN ('Closed', 'Duplicate', 'Never Fix', 'Not a Bug') ORDER BY Priority__c, CreatedDate DESC LIMIT 15" --target-org gus --json
+sf data query --query "SELECT Name, Subject__c, Priority__c, Status__c, CreatedDate FROM ADM_Work__c WHERE Product_Tag__r.Name LIKE '%FSC Action Plans%' AND Type__c = 'Bug' AND Status__c NOT IN ('Closed', 'Duplicate', 'Never Fix', 'Not a Bug') ORDER BY Priority__c, CreatedDate DESC LIMIT 15" --target-org gus --json
 ```
 
 If GUS is not connected, direct user to check:
@@ -1088,7 +1088,7 @@ core/
 
 **Primary class:** `ActionPlanDependentTaskServiceImpl.java`
 ```
-Repository: gitcore.soma.salesforce.com/core-2206/core-262-public
+Repository: gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public
 Path: core/industries-actionplan-impl/java/src/actionplan/service/ActionPlanDependentTaskServiceImpl.java
 Scrum Team: FSC-Darksaber
 Author: b.sugiarto (since release 232)

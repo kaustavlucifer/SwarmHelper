@@ -24,7 +24,7 @@ description: Financial Services Cloud troubleshooting — financial accounts, ac
 ### Core Monorepo Paths
 
 ```
-gitcore.soma.salesforce.com/core-2206/core-262-public:
+gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
   core/ui-fsc-components/omnistudio/               ← FSC OmniStudio components
   core/ui-fsc-components/java/                     ← FSC Java
   core/ui-fsc-components/modules/                  ← FSC LWC (analytics, KYC, wealth)
@@ -158,23 +158,23 @@ ORDER BY CreatedDate DESC LIMIT 10
 ### FSC Core Source (core monorepo)
 ```
 Tool: mcp__plugin_deep-research_codesearch__search
-query: "repo:gitcore.soma.salesforce.com/core-2206/core-262-public content:<keyword> file:core/ui-fsc-"
+query: "repo:gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public content:<keyword> file:core/ui-fsc-"
 max_matches: 10
 ```
 
 ### FSC Core Components
 ```
 Tool: mcp__plugin_deep-research_codesearch__list_directory
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/ui-fsc-components/"
 ```
 
 ### FSC PTC Layer
 ```
 Tool: mcp__plugin_deep-research_codesearch__read_file
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/industries-interaction-ptc/apex/vlocity_ins_fsc/<ClassName>.apex"
 ```
 

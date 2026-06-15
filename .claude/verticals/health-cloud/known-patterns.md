@@ -164,8 +164,8 @@ Health Cloud assessments use OmniStudio (OmniScripts/IPs) with PTC layer. Common
 3. Check PTC changes:
 ```
 Tool: mcp__plugin_deep-research_codesearch__read_file
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/industries-interaction-ptc/apex/vlocity_ins/AssessmentResponsesPtc.apex"
 ```
 4. Verify DataRaptor save step maps to correct fields
@@ -392,8 +392,8 @@ Enrollment uses Insurance-layer services (shared payer/carrier infrastructure). 
 1. Check PTC layer:
 ```
 Tool: mcp__plugin_deep-research_codesearch__read_file
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/industries-interaction-ptc/apex/vlocity_ins/InsEnrollmentServicePtc.apex"
 ```
 2. Verify census data format matches expected schema

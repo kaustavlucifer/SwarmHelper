@@ -32,7 +32,7 @@ description: Media Cloud / Ad Sales troubleshooting — ad inventory, campaign m
 ### Core Monorepo Paths
 
 ```
-gitcore.soma.salesforce.com/core-2206/core-262-public:
+gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
   core/industries-media-revenue/              ← Media revenue management
   core/industries-media-revenue-impl/         ← Media revenue implementation
   core/industries-interaction-ptc/apex/vlocity_cmt/
@@ -134,16 +134,16 @@ path: "classes/<ClassName>.cls"
 ### Media PTC Layer
 ```
 Tool: mcp__plugin_deep-research_codesearch__read_file
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/industries-interaction-ptc/apex/vlocity_cmt/MediaAdSalesPtc.apex"
 ```
 
 ### Media Revenue Core
 ```
 Tool: mcp__plugin_deep-research_codesearch__list_directory
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/industries-media-revenue-impl/"
 ```
 

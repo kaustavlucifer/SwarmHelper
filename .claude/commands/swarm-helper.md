@@ -5,7 +5,7 @@ description: Full Industry Cloud debugger — orchestrates all MCP sources to tr
 
 # Industry Cloud Support Orchestrator
 
-**v2.2.0** — See `CHANGELOG.md` (repo root) for version history.
+**v2.3.0** — See `CHANGELOG.md` (repo root) for version history.
 
 You are a senior Salesforce support engineer. This is the **single entry point** for all troubleshooting. It gathers context, classifies the problem, routes to the correct vertical, and executes investigation using shared capabilities.
 
@@ -61,6 +61,10 @@ Then proceed directly to Phase 1. If a tool fails mid-investigation (401, timeou
 ---
 
 ## Phase 1: Gather Context
+
+### Resolve the current release FIRST (cheap, no-probe)
+
+Before any code investigation, resolve `{CURRENT_GA}` once for the session per `.claude/capabilities/codesearch.md` → **Release Resolution** (map today's date to the release table; `{IN_DEV}` = GA+2, `{PREV}` = GA−2). Every skill file uses the placeholders `core-{CURRENT_GA}-public`, `p4/{CURRENT_GA}-patch`, and `refs/heads/release-{CURRENT_GA}` — substitute the resolved numbers when you issue codesearch/git-soma calls. As of 2026-06-15, `{CURRENT_GA}`=262 (Summer '26), `{IN_DEV}`=264, `{PREV}`=260. Do NOT hardcode — recompute from the date each session. Only probe to confirm if today is within ~2 weeks of a GA boundary.
 
 ### If case number provided:
 Run full case resolution from `.claude/capabilities/orgcs.md` — Steps 1-5 in parallel. Extract:
@@ -206,8 +210,7 @@ Read the routed vertical's pattern files:
 - CPQ also: `developer-patterns.md`
 - Insurance: known error patterns embedded in SKILL.md (Section: Known Error Patterns)
 - Revenue Lifecycle Mgmt: key behavioral notes embedded in SKILL.md
-- Manufacturing, Automotive, Public Sector, Loyalty, Education, Nonprofit, Net Zero: no separate pattern files — common issues in SKILL.md
-- Life Sciences: no pattern files yet — rely on Phase 4 investigation
+- Manufacturing, Automotive, Public Sector, Loyalty, Education, Nonprofit, Net Zero, Life Sciences: `known-patterns.md` (diagnostic maps — symptom → subsystem → confirm → GUS search; verified subsystem paths, no static bug lists)
 - DocGen: common errors embedded in SKILL.md
 
 If the error matches a documented pattern → provide resolution immediately. Still run Phase 4 for confirmation.
@@ -232,7 +235,7 @@ Run ALL applicable sources simultaneously using the capability files:
 | Monitoring | `.claude/capabilities/monitoring.md` | Always (incident check + pod health) |
 | Splunk | `.claude/capabilities/splunk.md` | Always (if pod + org ID known) |
 | Confluence / KB | `.claude/capabilities/confluence.md` | Always |
-| GUS bugs | `.claude/capabilities/gus.md` | Always |
+| GUS bugs | `.claude/capabilities/gus.md` | Always — pull build fields and apply the **staleness rule** (flag bugs fixed in ≤ GA−2 as likely-already-resolved) |
 | CodeSearch | `.claude/capabilities/codesearch.md` | Always (for classes in call stack) |
 | Gacks | `.claude/capabilities/columbo.md` | If Java stack trace or gack ID |
 | Slack | `.claude/capabilities/slack.md` | Always |
@@ -255,7 +258,7 @@ See `.claude/capabilities/codesearch.md` — Regression Analysis section.
 ## Phase 6: Post-Investigation
 
 1. **Extract Slack URLs** from CaseFeed + Swarm → fetch threads
-2. **Extract W-numbers** from comments → look up in GUS
+2. **Extract W-numbers** from comments → look up in GUS (pull `Found_in_Build__r.Name` / `Scheduled_Build__r.Name`; if fixed in ≤ GA−2, note it's likely already resolved in this org)
 3. **Identify escalation contacts** from code blame + Slack SMEs
 
 ---

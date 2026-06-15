@@ -25,25 +25,36 @@ description: Trade Promotion Management / Consumer Goods troubleshooting — tra
 ---
 
 
-### Off-Core Processing Layer (CG Cloud Processing Services — validated 2026-06-15)
+### Off-Core Processing Layer (CG Cloud Processing Services — source-validated 2026-06-15)
 
 TPM has **two tiers**: the Salesforce-side managed package (Apex, on git.soma) **and** an off-core Node.js processing service that runs the heavy calculation/batch work on Hyperforce (Falcon/k8s). Most KPI-calculation, batch, and payment-engine failures live in the off-core tier, **not** in Apex.
 
-The off-core code is a **monorepo under `packages/`** in `git.soma.salesforce.com/industries-rcg/rcgps-retail-tpm` (branch `release-262`) — NOT a `classes/*.cls` Apex layout. Confirmed packages under `packages/tpm/`:
+The off-core code is a **monorepo under `packages/`** in `git.soma.salesforce.com/industries-rcg/rcgps-retail-tpm` — NOT a `classes/*.cls` Apex layout. Use the current release branch `refs/heads/release-{CURRENT_GA}` (see `.claude/capabilities/codesearch.md` → Release Resolution; the default branch is `master`). Confirmed packages under `packages/tpm/`:
 
 | Package | Role |
 |---|---|
-| `rcgps-tpm-service` | Service entry point (Express REST), worker dispatch, K8s deployment |
+| `rcgps-tpm-service` | Service entry point (Express REST + queue worker), worker dispatch, K8s deployment |
 | `rcgps-accplnprm` | Account-planning & promotions calculation worker |
 | `rcgps-calcengine` | Calculation engine (KPI value calculation) |
 | `rcgps-kpi` | KPI definitions/processing |
 | `rcgps-measureapi` | Measure read/write API |
 | `rcgps-productcache` | Product cache |
-| `rcgps-rtreporting` | RTR reporting |
+| `rcgps-rtreporting` | RTR (real-time reporting) + measures export |
 | `rcgps-accrual` | Accrual engine |
 | `rcgps-reorg` / `rcgps-customcalendar` / `rcgps-updateactivation` / `rcgps-transferdblog` / `rcgps-datacloud` | Supporting workers |
 
 (`rcgps-hierarchycustomer` lives under `packages/retail/`.)
+
+### Service runtime model (read from `rcgps-tpm-service` source)
+
+The container's role is chosen by the `SYSTEM_PROCESS_ID` env var (`entrypoint.js`):
+- `TPMSERVICE` → clustered Express **REST web service** (`lib/rest/cluster.js`)
+- `TPMCALCULATIONWORKER` (or other) → **queue worker** (`lib/worker/worker-start.js` → `worker-entry.js`) that consumes the SQS queue `TPMCALC` and runs `CalculationWorkerJob`.
+
+**Calculation types** the worker dispatches on (SQS message attr `calculationType`, from `lib/common/constants.js`):
+`PromotionCalculation`, `PromotionDistribution`, `AccountPlanScenarioPromotionCalculation`, `AccountPlanCategoryCalculation`, `AccountPlanScenarioCategoryCalculation`, `AccountPlanCalculation`, `AccountPlanScenarioCalculation`, `PNLAnalyzeCalculation`, plus `Test`/`TestCalculationPlan`. Required message attributes (else job skipped): `organizationId`, `txId`, `sessionToken`, `logLevel`, `calculationType`, `calculationTxInternalId`, `calculationPlanId`, `apiId`, `apiMajorVersion`, `apiMinorVersion`.
+
+**Licensing gate:** non-health requests require header `x-is-tpm: true` (else HTTP 403 *"Missing license to use TPM features"*); `updateactivations` / application-limit routes accept `x-is-retail: true` (`lib/rest/app.js` `checkIsTpmHeader`).
 
 ### Core Monorepo
 
@@ -88,6 +99,36 @@ TPM is **not** in the core monorepo (`core/industries-rcg/` is not a confirmed p
 | Licensing/permission errors | TPM permission sets, feature licenses |
 | Funding Grid not loading | LWC component access, data visibility |
 | CONFIGURATION_ERROR | TPM settings, missing required config |
+
+---
+
+## Off-Core REST Endpoints & Log Codes (from `rcgps-tpm-service` source)
+
+All versioned routes sit behind a `/v<N>/` prefix. Health/ops routes have no prefix.
+
+| Method | Path | Purpose |
+|---|---|---|
+| POST | `/v<N>/calculationplans/schedule` | Schedule a calculation plan (body limit ~2.5 MB) |
+| GET | `/v<N>/calculationplans/:id/status` | Calculation plan status |
+| GET | `/v<N>/features/:featurename` | Feature flag lookup |
+| GET | `/v<N>/rtr/reportdata` · `/rtr/reportmeta` · `/rtr/performancemetrics` · `/rtr/scenariocomparison` | Real-time reporting (rcgps-rtreporting) |
+| POST/GET | `/v<N>/measures/export/schedule` · `/measures/export/csv` · `/measures/export/:csvGuid/status` · `/measures/export/:csvGuid/commit` · `/measures/exports` | Measures CSV export |
+| POST | `/v<N>/datacloud-export/enqueue` | Data Cloud export (rcgps-datacloud) |
+| GET/POST | `/v<N>/updateactivations` · application-limit routes | Update activation / limits (accept `x-is-retail`) |
+| GET | `/manage/health`, `/manage/health/live`, `/manage/health/ready`, `/metrics` | k8s liveness/readiness + Prometheus metrics |
+
+**Log-code families** (prefix → area, from `lib/common/log-messages.js`) — use these to grep Splunk/k8s logs:
+
+| Prefix | Area | Notable codes |
+|---|---|---|
+| `SVC####` | REST server / cluster lifecycle | `SVC0014` soft-limit validation failed (service won't start) |
+| `HEALTH####` | readiness/liveness, CPU/mem thresholds | — |
+| `TPMWRK####` | worker cluster lifecycle | `TPMWRK0004` not enough resources, `TPMWRK0008` cluster worker died |
+| `TPMCALCWRK####` | calculation worker | `0001` unknown process id, `0004` error processing queue msg, `0007` tenant-context mismatch, `030/031` duplicate/already-processed job skipped |
+| `CALCPLAN####` | schedule/get calc plan | `CALCPLAN0005` no plan for id, `0009`–`0012` step/promotion count limits exceeded |
+| `GETFEATURE####` | feature lookup | `0002` invalid featurename, `0004` feature not found |
+
+> Limits live in `lib/common/constants.js` (e.g. `MAX_PROMOTION_PERCALCULATIONPLAN: 2000`, `MAX_ACCOUNTPLANCATEGORY_STEP: 10`). Worker log-code tables for other packages (kpi, accplnprm, rtreporting, etc.) live in their own `packages/tpm/<pkg>` dirs.
 
 ---
 
@@ -184,7 +225,7 @@ ORDER BY Name
 Tool: mcp__plugin_git-soma_vmcp-git-soma__get_file_contents
 owner: "industries-rcg"
 repo: "rcgps-retail-tpm"
-ref: "refs/heads/release-262"
+ref: "refs/heads/release-{CURRENT_GA}"   # resolve per codesearch.md; default branch is master
 path: "<apex package path>"   ← managed package Apex
 ```
 
@@ -193,7 +234,7 @@ path: "<apex package path>"   ← managed package Apex
 Tool: mcp__plugin_git-soma_vmcp-git-soma__get_file_contents
 owner: "industries-rcg"
 repo: "rcgps-retail-tpm"
-ref: "refs/heads/release-262"
+ref: "refs/heads/release-{CURRENT_GA}"   # resolve per codesearch.md; default branch is master
 path: "packages/tpm/<package>/src/..."   ← e.g. packages/tpm/rcgps-calcengine/src
 ```
 Pick the package by failure type: calc → `rcgps-calcengine`/`rcgps-accplnprm`, KPI → `rcgps-kpi`/`rcgps-measureapi`, RTR → `rcgps-rtreporting`, accrual → `rcgps-accrual`, service/dispatch → `rcgps-tpm-service`.

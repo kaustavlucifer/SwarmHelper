@@ -33,7 +33,7 @@ description: Loyalty Management troubleshooting — programs, points, tiers, rew
 ### Core Monorepo Paths (CONFIRMED via CodeSearch)
 
 ```
-gitcore.soma.salesforce.com/core-2206/core-262-public:
+gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
   core/industries-loyalty/                          ← Loyalty Management base
   core/industries-loyalty-api/                      ← API layer (public interfaces)
   core/industries-loyalty-impl/                     ← Implementation (Java services)
@@ -140,27 +140,27 @@ ORDER BY ExpirationDate ASC
 
 | Type | Use |
 |---|---|
-| `r1log` | Industries package instrumentation (filter by `instKey`) |
+| `gslog` | **Platform Java exceptions/gacks (primary — core implementation)** |
 | `axerr` | Apex uncaught exceptions |
 | `axlim` | Governor limit consumption |
-| `ipipr` | Integration Procedures (if OmniStudio components used) |
-| `ipdar` | DataRaptors (if OmniStudio components used) |
-| `gslog` | Platform Java exceptions (core implementation) |
+| `r1log` | Industries instrumentation — only if the managed-package / OmniStudio layer is in use; core-native features log via `gslog`, not `r1log` |
+| `ipipr` | Integration Procedures (only if OmniStudio components used) |
+| `ipdar` | DataRaptors (only if OmniStudio components used) |
 
 ## Code Investigation Paths
 
 ### Core Implementation
 ```
 Tool: mcp__plugin_deep-research_codesearch__search
-query: "repo:gitcore.soma.salesforce.com/core-2206/core-262-public content:Loyalty lang:java"
+query: "repo:gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public content:Loyalty lang:java"
 max_matches: 15
 ```
 
 ### LWC Components
 ```
 Tool: mcp__plugin_deep-research_codesearch__list_directory
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/ui-industries-loyalty-components/"
 ```
 

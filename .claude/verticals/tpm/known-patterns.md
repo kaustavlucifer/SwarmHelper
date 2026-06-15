@@ -630,7 +630,7 @@ LIMIT 10
 
 ## I. Code Reference Map
 
-**Repo:** `git.soma.salesforce.com/Localization/rcg-retail-tpm` (branch: `release-262.0.0`)
+**Repo:** `git.soma.salesforce.com/Localization/rcg-retail-tpm` (use branch `release-{CURRENT_GA}.0.0`; resolve per `.claude/capabilities/codesearch.md`)
 
 | Class | Purpose | Relevant To |
 |-------|---------|------------|

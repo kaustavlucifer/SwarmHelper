@@ -37,7 +37,7 @@ description: Health Cloud troubleshooting — care plans, assessments, utilizati
 ### Core Monorepo Paths
 
 ```
-gitcore.soma.salesforce.com/core-2206/core-262-public:
+gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
   core/industries-healthcare-impl/                     ← HC Java implementation (FHIR, Care Plans, UM)
   core/ui-industries-common-components/omnistudio/     ← Shared components
   core/industries-interaction-ptc/apex/vlocity_ins/    ← PTC layer (shared with Insurance)
@@ -158,15 +158,15 @@ WHERE Account.Id = '<PATIENT_ACCOUNT_ID>'
 ### HC Core Java Implementation
 ```
 Tool: mcp__plugin_deep-research_codesearch__search
-query: "repo:gitcore.soma.salesforce.com/core-2206/core-262-public path:core/industries-healthcare-impl content:<keyword>"
+query: "repo:gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public path:core/industries-healthcare-impl content:<keyword>"
 max_matches: 10
 ```
 
 ### HC PTC Layer (Insurance-shared)
 ```
 Tool: mcp__plugin_deep-research_codesearch__read_file
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/industries-interaction-ptc/apex/vlocity_ins/AssessmentResponsesPtc.apex"
 ```
 

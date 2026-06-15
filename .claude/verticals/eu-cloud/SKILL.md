@@ -22,7 +22,7 @@ description: Energy & Utilities Cloud troubleshooting — CAM, multisite orders,
 ### Core Monorepo Paths
 
 ```
-gitcore.soma.salesforce.com/core-2206/core-262-public:
+gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
   core/industries-energy-utilities-udd/                 ← E&U Cloud UDD + configuration
   core/ui-industries-energy-utilities-components/       ← E&U UI (agent console, billing, self-serve)
   core/ui-industries-energy-utilities-sales-components/ ← E&U sales components
@@ -167,16 +167,16 @@ path: "classes/<ClassName>.cls"
 ### E&U Core Components
 ```
 Tool: mcp__plugin_deep-research_codesearch__list_directory
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/industries-energy-utilities-udd/"
 ```
 
 ### E&U UI Components
 ```
 Tool: mcp__plugin_deep-research_codesearch__list_directory
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/ui-industries-energy-utilities-components/"
 ```
 

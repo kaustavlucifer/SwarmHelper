@@ -77,7 +77,7 @@ Check the org's harmonization state by looking for `InsurancePolicy` records or 
 ### Core Monorepo Paths
 
 ```
-gitcore.soma.salesforce.com/core-2206/core-262-public:
+gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
   core/industries-insurance/                        ← Insurance UDD (filters, profiles)
   core/industries-insurance-impl/                   ← Insurance core implementation
   core/industries-insurance-claim-impl/             ← Claims implementation

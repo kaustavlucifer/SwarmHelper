@@ -44,7 +44,7 @@ description: Education Cloud / EDA troubleshooting — student success, admissio
 ### Core Monorepo Paths (CONFIRMED via CodeSearch — 9 modules)
 
 ```
-gitcore.soma.salesforce.com/core-2206/core-262-public:
+gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
   core/industries-education/                         ← Education Cloud base
   core/industries-education-api/                     ← Public interfaces
   core/industries-education-impl/                    ← Service implementations
@@ -157,19 +157,19 @@ WHERE Id = '<PROGRAM_PLAN_ID>'
 
 | Type | Use |
 |---|---|
-| `r1log` | Industries package instrumentation (filter by `instKey`) |
+| `gslog` | **Platform Java exceptions/gacks (primary — core implementation)** |
 | `axerr` | Apex uncaught exceptions |
 | `axlim` | Governor limit consumption |
-| `ipipr` | Integration Procedures (if OmniStudio components used) |
-| `ipdar` | DataRaptors (if OmniStudio components used) |
-| `gslog` | Platform Java exceptions (core implementation) |
+| `r1log` | Industries instrumentation — only if the managed-package / OmniStudio layer is in use; core-native features log via `gslog`, not `r1log` |
+| `ipipr` | Integration Procedures (only if OmniStudio components used) |
+| `ipdar` | DataRaptors (only if OmniStudio components used) |
 
 ## Code Investigation Paths
 
 ### Core Implementation
 ```
 Tool: mcp__plugin_deep-research_codesearch__search
-query: "repo:gitcore.soma.salesforce.com/core-2206/core-262-public content:Education lang:java"
+query: "repo:gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public content:Education lang:java"
 max_matches: 15
 ```
 
@@ -195,9 +195,8 @@ max_matches: 10
 
 ## Escalation
 
-- GUS product tag: `Education Cloud`
+- GUS product tag: `Education Data Architecture` (EDA managed pkg — primary, high bug volume), `Education - OmniStudio` (OmniScript/FlexCard on EDU). Bare `Education Cloud` returns 0 bugs (verified 2026-06-15; see known-patterns.md)
 - Slack: `#sfdo-architects` (C01GXEZABDF, validated)
-- ⚠️ `#ask-sfdo-tech-expert` could not be confirmed via channel search (2026-06-15) — verify before relying on it
 - Related: `#support-swarm-industries`
 
 **Swarm template:**

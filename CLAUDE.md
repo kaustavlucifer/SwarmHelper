@@ -205,7 +205,7 @@ Run `/swarm-helper` — it will use whatever MCP tools are available. If a tool 
 The `dist/` folder contains a distributable zip with a versioned wrapper folder containing `.claude/`, `CHANGELOG.md`, **and an empty `data/` folder** (the drop-zone for case files). It excludes `settings.local.json` (user-specific permissions).
 
 ```bash
-VERSION="v2.2.0"
+VERSION="v2.3.0"
 rm -rf /tmp/swarm-helper-${VERSION} dist/swarm-helper-${VERSION}.zip
 mkdir -p /tmp/swarm-helper-${VERSION}
 cp -r .claude /tmp/swarm-helper-${VERSION}/
@@ -218,7 +218,7 @@ touch /tmp/swarm-helper-${VERSION}/data/.gitkeep
 rm -rf /tmp/swarm-helper-${VERSION}
 ```
 
-When unzipped, recipients get: `swarm-helper-v2.2.0/.claude/` + `CHANGELOG.md` + `data/` — they copy `.claude/` and `data/` into their project root.
+When unzipped, recipients get: `swarm-helper-v2.3.0/.claude/` + `CHANGELOG.md` + `data/` — they copy `.claude/` and `data/` into their project root.
 
 `dist/` is gitignored — rebuild locally before sharing.
 

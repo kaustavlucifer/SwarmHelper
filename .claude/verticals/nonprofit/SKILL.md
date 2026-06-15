@@ -47,7 +47,7 @@ description: Nonprofit Cloud / NPSP troubleshooting — fundraising, donations, 
 ### Core Monorepo Paths (CONFIRMED via CodeSearch)
 
 ```
-gitcore.soma.salesforce.com/core-2206/core-262-public:
+gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
   core/industries-nonprofit-udd/                     ← Nonprofit UDD
   core/industries-nonprofit-api/                     ← Nonprofit API
   core/industries-nonprofit-impl/                    ← Nonprofit implementation
@@ -151,19 +151,19 @@ WHERE npsp__Opportunity__c = '<OPPORTUNITY_ID>'
 
 | Type | Use |
 |---|---|
-| `r1log` | Industries package instrumentation (filter by `instKey`) |
+| `gslog` | **Platform Java exceptions/gacks (primary — core implementation)** |
 | `axerr` | Apex uncaught exceptions |
 | `axlim` | Governor limit consumption |
-| `ipipr` | Integration Procedures (if OmniStudio components used) |
-| `ipdar` | DataRaptors (if OmniStudio components used) |
-| `gslog` | Platform Java exceptions (core implementation) |
+| `r1log` | Industries instrumentation — only if the managed-package / OmniStudio layer is in use; core-native features log via `gslog`, not `r1log` |
+| `ipipr` | Integration Procedures (only if OmniStudio components used) |
+| `ipdar` | DataRaptors (only if OmniStudio components used) |
 
 ## Code Investigation Paths
 
 ### Core Implementation
 ```
 Tool: mcp__plugin_deep-research_codesearch__search
-query: "repo:gitcore.soma.salesforce.com/core-2206/core-262-public content:Nonprofit lang:java"
+query: "repo:gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public content:Nonprofit lang:java"
 max_matches: 15
 ```
 
@@ -190,9 +190,8 @@ max_matches: 10
 
 ## Escalation
 
-- GUS product tag: `Nonprofit Cloud`
+- GUS product tags: `Nonprofit Success Pack (NPSP)` (primary — bare `Nonprofit Cloud` returns 0 bugs), `Nonprofit Cloud - Addresses` (verified 2026-06-15; see known-patterns.md)
 - Slack: `#sfdo-architects` (C01GXEZABDF, validated)
-- ⚠️ `#ask-sfdo-tech-expert` could not be confirmed via channel search (2026-06-15) — verify before relying on it
 - Related: `#support-swarm-industries`
 
 **Swarm template:**

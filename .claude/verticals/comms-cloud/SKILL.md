@@ -26,7 +26,7 @@ Key managed package classes: `CPQService.cls`, `CalculationService.cls`, `DroSer
 ### Core Monorepo Paths
 
 ```
-gitcore.soma.salesforce.com/core-2206/core-262-public:
+gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
   core/industries-communications-msm-impl/omnistudio/  ← MSM IPs + OmniScripts
   core/industries-communications-msm-impl/             ← Billing inquiry, quick quote, agentforce
   core/ui-industries-communications-msm-components/    ← MSM LWC
@@ -173,24 +173,24 @@ ORDER BY Name
 ### CPQ Service (PTC)
 ```
 Tool: mcp__plugin_deep-research_codesearch__read_file
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/industries-interaction-ptc/apex/vlocity_cmt/CPQServicePtc.apex"
 ```
 
 ### Order Decomposition (PTC — note: in vlocity_ins_fsc!)
 ```
 Tool: mcp__plugin_deep-research_codesearch__read_file
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/industries-interaction-ptc/apex/vlocity_ins_fsc/OrderDecompService.apex"
 ```
 
 ### MSM Components
 ```
 Tool: mcp__plugin_deep-research_codesearch__list_directory
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/industries-communications-msm-impl/omnistudio/"
 ```
 

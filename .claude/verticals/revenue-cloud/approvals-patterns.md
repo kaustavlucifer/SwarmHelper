@@ -887,7 +887,7 @@ Advanced Approvals is available in:
 
 ```bash
 sf data query \
-  --query "SELECT Name, Subject__c, Status__c, Priority__c FROM ADM_Work__c WHERE Product_Tag__r.Name = 'RLM - Advanced Approvals' AND Type__c = 'Bug' AND Status__c IN ('New','Triaged','In Progress') AND Priority__c IN ('P0','P1','P2') ORDER BY Priority__c, CreatedDate DESC LIMIT 20" \
+  --query "SELECT Name, Subject__c, Status__c, Priority__c FROM ADM_Work__c WHERE Product_Tag__r.Name LIKE '%RLM - Advanced Approvals%' AND Type__c = 'Bug' AND Status__c IN ('New','Triaged','In Progress') AND Priority__c IN ('P0','P1','P2') ORDER BY Priority__c, CreatedDate DESC LIMIT 20" \
   --target-org gus --json
 ```
 

@@ -40,7 +40,7 @@ description: Manufacturing Cloud troubleshooting — sales agreements, account f
 ### Core Monorepo Paths (CONFIRMED via CodeSearch)
 
 ```
-gitcore.soma.salesforce.com/core-2206/core-262-public:
+gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
   core/industries-manufacturing/                    ← Manufacturing Cloud implementation
   core/industries-manufacturing-udd/                ← Manufacturing UDD (objects, config)
   core/ui-industries-manufacturing-components/      ← Manufacturing LWC components
@@ -143,27 +143,27 @@ ORDER BY CreatedDate DESC LIMIT 20
 
 | Type | Use |
 |---|---|
-| `r1log` | Industries package instrumentation (filter by `instKey`) |
+| `gslog` | **Platform Java exceptions/gacks (primary — core implementation)** |
 | `axerr` | Apex uncaught exceptions |
 | `axlim` | Governor limit consumption |
-| `ipipr` | Integration Procedures (if OmniStudio components used) |
-| `ipdar` | DataRaptors (if OmniStudio components used) |
-| `gslog` | Platform Java exceptions (core implementation) |
+| `r1log` | Industries instrumentation — only if the managed-package / OmniStudio layer is in use; core-native features log via `gslog`, not `r1log` |
+| `ipipr` | Integration Procedures (only if OmniStudio components used) |
+| `ipdar` | DataRaptors (only if OmniStudio components used) |
 
 ## Code Investigation Paths
 
 ### Core Implementation
 ```
 Tool: mcp__plugin_deep-research_codesearch__search
-query: "repo:gitcore.soma.salesforce.com/core-2206/core-262-public content:Manufacturing lang:java"
+query: "repo:gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public content:Manufacturing lang:java"
 max_matches: 15
 ```
 
 ### LWC Components
 ```
 Tool: mcp__plugin_deep-research_codesearch__list_directory
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/ui-industries-manufacturing-components/"
 ```
 
@@ -182,7 +182,7 @@ file_path: "core/ui-industries-manufacturing-components/"
 
 ## Escalation
 
-- GUS product tag: `Manufacturing Cloud`
+- GUS product tags (area-specific — bare `Manufacturing Cloud` returns 0 bugs): `Manufacturing Cloud - Sales Agreement, Account Forecasting, AAF, Rebates, PBB`, `Manufacturing Service - Warranty Management`, `Manufacturing Program Based Business`, `Manufacturing Rebates Calculation - New`, `Manufacturing Rebates Setup`, `Manufacturing - Inventory visibility and actions` (verified 2026-06-15; see known-patterns.md)
 - Slack: `#support-swarm-industries`
 - Related: `#tmp-help-consumer-goods` (C028DDZ05B6, validated — shared CG team)
 

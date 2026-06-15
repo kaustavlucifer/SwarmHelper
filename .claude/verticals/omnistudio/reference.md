@@ -246,8 +246,8 @@ OmniStudio UI components live in the core monorepo:
 ```
 code_host: gitcore.soma.salesforce.com
 org: core-2206
-repo: core-262-public
-ref: p4/262-patch
+repo: core-{CURRENT_GA}-public
+ref: p4/{CURRENT_GA}-patch
 path: core/ui-omnistudio-components/
 ```
 

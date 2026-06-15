@@ -36,7 +36,7 @@ description: Revenue Cloud (Core) troubleshooting — billing, BRE, configurator
 ### Core Monorepo Paths
 
 ```
-gitcore.soma.salesforce.com/core-2206/core-262-public:
+gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
   core/billing-impl/                              ← Billing implementation (invoice, tax)
   core/billing-hpp-connect-impl/                  ← Billing HPP Connect
   core/ui-revenue-common-components/              ← Revenue common UI components
@@ -227,15 +227,15 @@ path: "classes/<ClassName>.cls"
 ### Billing Core Implementation
 ```
 Tool: mcp__plugin_deep-research_codesearch__search
-query: "repo:gitcore.soma.salesforce.com/core-2206/core-262-public path:core/billing-impl content:<keyword>"
+query: "repo:gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public path:core/billing-impl content:<keyword>"
 max_matches: 10
 ```
 
 ### CPQ PTC Layer
 ```
 Tool: mcp__plugin_deep-research_codesearch__read_file
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/industries-interaction-ptc/apex/vlocity_cmt/CPQServicePtc.apex"
 ```
 

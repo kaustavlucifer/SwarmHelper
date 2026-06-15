@@ -40,7 +40,7 @@ description: Public Sector Solutions troubleshooting — permits, licensing, ins
 ### Core Monorepo Paths
 
 ```
-gitcore.soma.salesforce.com/core-2206/core-262-public:
+gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
   core/ui-industries-public-sector-components/omnistudio/  ← PSS OmniStudio components
   core/industries-interaction-ptc/apex/vlocity_ps/         ← PTC layer (PS namespace)
 ```
@@ -138,20 +138,20 @@ ORDER BY CreatedDate DESC LIMIT 10
 
 | Type | Use |
 |---|---|
-| `r1log` | Industries package instrumentation (filter by `instKey`) |
+| `r1log` | Industries instrumentation (filter by `instKey`) — applies to the `vlocity_ps` managed-package / OmniStudio layer (LPI, assessments, benefits use OmniScript heavily) |
+| `gslog` | Platform Java exceptions/gacks — core LPI/Benefits implementation |
 | `axerr` | Apex uncaught exceptions |
 | `axlim` | Governor limit consumption |
-| `ipipr` | Integration Procedures (if OmniStudio components used) |
-| `ipdar` | DataRaptors (if OmniStudio components used) |
-| `gslog` | Platform Java exceptions (core implementation) |
+| `ipipr` | Integration Procedures (OmniStudio — assessments, application flows) |
+| `ipdar` | DataRaptors (OmniStudio data ops) |
 
 ## Code Investigation Paths
 
 ### PTC Layer (PS namespace)
 ```
 Tool: mcp__plugin_deep-research_codesearch__list_directory
-repository: "gitcore.soma.salesforce.com/core-2206/core-262-public"
-ref: "p4/262-patch"
+repository: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
+ref: "p4/{CURRENT_GA}-patch"
 file_path: "core/industries-interaction-ptc/apex/vlocity_ps/"
 ```
 
@@ -164,7 +164,7 @@ query: "repo:github.com/sf-industries/via_platform content:PublicSector"
 ### Core Implementation
 ```
 Tool: mcp__plugin_deep-research_codesearch__search
-query: "repo:gitcore.soma.salesforce.com/core-2206/core-262-public content:PublicSector lang:java"
+query: "repo:gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public content:PublicSector lang:java"
 max_matches: 15
 ```
 
@@ -183,9 +183,8 @@ max_matches: 15
 
 ## Escalation
 
-- GUS product tag: `Public Sector Solutions`
+- GUS product tag: `Vlocity Public Sector` (verified 2026-06-15 — the string `Public Sector Solutions` returns 0 bugs; if a search is empty, widen with `Product_Tag__r.Name LIKE '%Public Sector%'`)
 - Slack: `#sfdo-architects` (C01GXEZABDF, validated)
-- ⚠️ `#ask-sfdo-tech-expert` could not be confirmed via channel search (2026-06-15) — verify before relying on it
 - Related: `#support-swarm-industries`
 
 **Swarm template:**

@@ -53,7 +53,7 @@ description: Revenue Lifecycle Management troubleshooting — asset lifecycle, q
 ### Core Monorepo Paths
 
 ```
-gitcore.soma.salesforce.com/core-2206/core-262-public:
+gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public:
   core/industries-cpq/                         ← Industries CPQ core (rule engine, constraint engine)
   core/industries-cpq-impl/                    ← Industries CPQ implementation (configurator, pricing)
   core/industries-cpq-pricing-common-api/      ← CPQ pricing common API (price lists, adjustments)
@@ -291,7 +291,7 @@ AND Status = 'Active'
 ```
 Tool: mcp__plugin_deep-research_codesearch__search
 query: "<class or method name>"
-repo: "gitcore.soma.salesforce.com/core-2206/core-262-public"
+repo: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
 path_filter: "core/industries-cpq"
 ```
 
@@ -310,7 +310,7 @@ Key paths by domain:
 ```
 Tool: mcp__plugin_deep-research_codesearch__search
 query: "<BRE class or method>"
-repo: "gitcore.soma.salesforce.com/core-2206/core-262-public"
+repo: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
 path_filter: "core/industries-bre"
 ```
 
@@ -319,7 +319,7 @@ path_filter: "core/industries-bre"
 ```
 Tool: mcp__plugin_deep-research_codesearch__search
 query: "<PTC class name>"
-repo: "gitcore.soma.salesforce.com/core-2206/core-262-public"
+repo: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
 path_filter: "core/industries-interaction-ptc"
 ```
 
@@ -422,13 +422,13 @@ Based on the error class/method identified in logs:
    ```
    Tool: mcp__plugin_deep-research_codesearch__search
    query: "AssetLifecycleManager"  (or whatever class from stack trace)
-   repo: "gitcore.soma.salesforce.com/core-2206/core-262-public"
+   repo: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
    ```
 
 2. **Read the specific file:**
    ```
    Tool: mcp__plugin_deep-research_codesearch__read_file
-   repo: "gitcore.soma.salesforce.com/core-2206/core-262-public"
+   repo: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
    path: "<path from search results>"
    ```
 
@@ -436,7 +436,7 @@ Based on the error class/method identified in logs:
    ```
    Tool: mcp__plugin_deep-research_codesearch__search
    query: "<service name>Ptc"
-   repo: "gitcore.soma.salesforce.com/core-2206/core-262-public"
+   repo: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
    path_filter: "core/industries-interaction-ptc"
    ```
 
@@ -453,7 +453,7 @@ Based on the error class/method identified in logs:
 ```
 Tool: mcp__plugin_deep-research_codesearch__commit_search
 query: "<class name or feature keyword>"
-repo: "gitcore.soma.salesforce.com/core-2206/core-262-public"
+repo: "gitcore.soma.salesforce.com/core-2206/core-{CURRENT_GA}-public"
 ```
 
 Look for recent commits that may have introduced regressions.
