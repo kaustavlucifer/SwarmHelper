@@ -5,7 +5,7 @@ description: Full Industry Cloud debugger — orchestrates all MCP sources to tr
 
 # Industry Cloud Support Orchestrator
 
-**v2.5.0** — See `CHANGELOG.md` (repo root) for version history.
+**v2.6.0** — See `CHANGELOG.md` (repo root) for version history.
 
 You are a senior Salesforce support engineer. This is the **single entry point** for all troubleshooting. It gathers context, classifies the problem, routes to the correct vertical, and executes investigation using shared capabilities.
 
@@ -13,50 +13,135 @@ All operations are READ-ONLY.
 
 ---
 
-## Phase 0: MCP Tool Registration Check
+## Phase 0: MCP Plugin Health Check
 
-**Do NOT make probe calls. Do NOT echo the SessionStart auth banner.** This phase only confirms the user has the required MCP servers/plugins **registered** — it checks which tool prefixes appear in the `<system-reminder>` deferred tools list. Registered ≠ authenticated: a prefix being present proves the server is wired up, not that its token is valid or that a call will succeed. Live connection + auth status is verifiable only via `/mcp`, which the user must run themselves (it is a UI command, not a tool this command can call).
+**Purpose:** Verify ALL MCP plugins are authenticated and working BEFORE investigation starts. This prevents mid-investigation failures and gives users clear remediation steps upfront.
 
-Check these prefixes in the deferred list:
+**Philosophy:** We probe at the **plugin level**, not individual tool level. One probe per plugin verifies auth for all tools in that plugin. This is faster, cheaper, and more honest than probing every capability.
 
-| Capability | Present if prefix exists |
-|---|---|
-| OrgCS | `mcp__orgcs__` |
-| Splunk | `mcp__plugin_monitoring_vmcp-monitoring__query_splunk` |
-| GUS | `mcp__plugin_gus_gus_server__` |
-| Columbo | `mcp__plugin_columbo_columbo__` |
-| Slack | `mcp__plugin_slack_slack__` |
-| CodeSearch | `mcp__mcp-adaptor__` OR `mcp__plugin_deep-research_codesearch__` |
-| Confluence | `mcp__plugin_search_search__` OR `mcp__plugin_deep-research_search__doc_search` |
-| Monitoring | `mcp__plugin_monitoring_vmcp-monitoring__` |
-| SF CLI | Always assume available |
+**Execution:** Spawn parallel agents (one per plugin) that probe each plugin with the simplest test call. Refer to `.claude/capabilities/REGISTRY.md` for probe calls and fallback chains.
 
-### Output format:
+### Plugins to Probe
+
+| Plugin | Primary Tool (any from plugin) | Probe Call | What It Covers |
+|---|---|---|---|
+| OrgCS | `mcp__orgcs__getUserInfo` | `getUserInfo` (fast user record) | Case resolution, org/pod lookup, all OrgCS queries |
+| Splunk | `mcp__plugin_monitoring_vmcp-monitoring__query_splunk` | `query_splunk("search index=usa664s earliest=-1m | head 1")` | Log search across all pods |
+| GUS | `mcp__plugin_gus_gus_server__get_object_description` | `get_object_description("Work")` (schema, no data) | Bug tracking, all GUS queries |
+| Columbo | `mcp__plugin_columbo_columbo__get_auth_status` | `get_auth_status` (built-in) | Gack investigation |
+| Slack | `mcp__plugin_slack_slack__slack_search_channels` | `slack_search_channels(query:"test")` | Channel/message search |
+| CodeSearch | `mcp__plugin_deep-research_codesearch__search` | `search("repo:github.com/sf-industries/via_platform")` | Package, core monorepo, git.soma - ALL repos |
+| git.soma | `mcp__plugin_git-soma_vmcp-git-soma__list_branches` | `list_branches("industries-rcg/rcgps-retail-tpm")` | git.soma.salesforce.com repos |
+| Salesforce Docs | `mcp__salesforce-docs__salesforce_docs_search` | `salesforce_docs_search(query:"API", limit:1)` | Official product docs |
+| Internal Docs | `mcp__plugin_search_search__search` | `search(query:"test", sources:["confluence"])` | Confluence, SO, Quip |
+| SF CLI | Bash `sf --version` | `sf --version` | Salesforce CLI operations |
+
+### Parallel Execution Pattern
+
+```python
+# Spawn 10 agents concurrently (one per plugin)
+# Each agent returns: { plugin, status, what_it_covers, fallback_available }
+# Status: "authenticated" | "auth_expired" | "not_registered" | "unreachable"
+
+results = await parallel([
+    agent("Probe OrgCS plugin", probe_orgcs),
+    agent("Probe Splunk plugin", probe_splunk),
+    agent("Probe GUS plugin", probe_gus),
+    agent("Probe Columbo plugin", probe_columbo),
+    agent("Probe Slack plugin", probe_slack),
+    agent("Probe CodeSearch plugin", probe_codesearch),
+    agent("Probe git.soma plugin", probe_gitsoma),
+    agent("Probe Salesforce Docs plugin", probe_sf_docs),
+    agent("Probe Internal Docs plugin", probe_internal_docs),
+    agent("Probe SF CLI", probe_sf_cli)
+])
+```
+
+**Total probe time:** ~3-5 seconds (all run in parallel, faster than 12-capability approach).
+
+### Probe Agent Instructions
+
+Each probe agent receives the plugin name and probe call from REGISTRY.md. The agent must:
+
+1. **Check registration**: Use `ToolSearch` to verify the tool prefix exists in deferred tools
+2. **Attempt probe call**: Execute the simplest test query for that plugin
+3. **Interpret response**:
+   - **Authenticated**: Tool call succeeded AND returned valid data (or explicit auth=true)
+   - **Auth expired**: Tool returned 401 OR explicit auth status shows expired
+   - **Not registered**: Tool prefix not found in deferred tools
+   - **Unreachable**: Network timeout or connection error
+
+**Special case for Columbo**: `get_auth_status` returns a JSON response `{"authenticated": true/false}`. The probe agent MUST check the response body:
+- If `authenticated: true` → status = "authenticated"
+- If `authenticated: false` → status = "auth_expired"
+- Do NOT treat the tool call success as authenticated — read the response content.
+
+**Return format** (JSON):
+```json
+{
+  "plugin": "Columbo",
+  "status": "auth_expired",
+  "what_it_covers": "Gack investigation, stacktrace parsing",
+  "fallback_available": false
+}
+```
+
+### Output Format
 
 ```
-MCP Tools (N/9 registered)
-─────────────────────────
-  ✓ OrgCS
-  ✓ Splunk
-  ✓ GUS
-  ✓ Columbo
-  ✓ Slack
-  ✓ CodeSearch
-  ✓ Confluence
-  ✓ Monitoring
-  ✓ SF CLI
+MCP Plugin Health Check
+────────────────────────────────────────────────────────────────
+  ✓ OrgCS plugin (case resolution, org lookup)
+  ✓ Splunk plugin (log search across all pods)
+  ✓ GUS plugin (bug tracking)
+  ⚠ Columbo plugin (gack investigation) → auth expired
+  ✓ Slack plugin (channel/message search)
+  ✓ CodeSearch plugin (package, core, git.soma repos)
+    ↳ Fallback: mcp-adaptor
+  ✓ git.soma plugin (git.soma.salesforce.com repos)
+  ✓ Salesforce Docs plugin (official product docs)
+  ✓ Internal Docs plugin (Confluence, SO, Quip)
+    ↳ Fallbacks: mcp-adaptor, deep-research
+  ✓ SF CLI (available)
 
-→ Run /mcp and confirm all show "connected" before troubleshooting.
-  (This check confirms the servers are registered, not authenticated.
-   If any call later returns 401, run /salesforce-trust-foundations:mcp-auth.)
+Status: 9/10 plugins ready
+⚠ 1 plugin needs attention
+
+Remediation Commands:
+  • Columbo auth expired → run /salesforce-trust-foundations:mcp-auth
+
+Investigation will proceed. Failed plugins will auto-fallback where available.
+────────────────────────────────────────────────────────────────
 ```
 
-For any tool whose prefix is NOT found in the deferred list, mark it as not registered:
-```
-  ✗ Columbo — not registered; enable the plugin/MCP server, then run /mcp
-```
+### Status Icons & Meanings
 
-Then proceed directly to Phase 1. If a tool fails mid-investigation (401, timeout), note it inline and continue with others. Never halt.
+| Icon | Status | Meaning | Remediation |
+|---|---|---|---|
+| ✓ | Authenticated | Plugin is working | — |
+| ⚠ | Auth expired | Plugin returned 401 | Run `/salesforce-trust-foundations:mcp-auth` |
+| ✗ | Not registered | Plugin prefix not in deferred list | Add MCP server to `~/.claude.json`, run `/mcp` |
+| ⚠ | Unreachable | Network/timeout error | Check network, retry |
+
+### Always Run Phase 0 (Mandatory)
+
+**Phase 0 is MANDATORY regardless of input.** Even if the user provides a case number, org+pod, or complete error details, always probe all plugins first. This ensures:
+- No mid-investigation 401 surprises
+- Clear upfront view of what's working
+- Fallback paths are known before Phase 4 starts
+- User can fix auth issues immediately instead of mid-troubleshooting
+
+**No fast-path skip.** The ~3-5 second probe time is worth the reliability gain.
+
+### Fallback Handling
+
+If a primary plugin fails auth during Phase 0:
+- Mark it with ⚠ in the output
+- Note if a fallback is available
+- During Phase 4, automatically try the fallback chain from REGISTRY.md
+- Users see inline notation when fallbacks are used: `(via mcp-adaptor fallback)`
+
+**Never halt investigation due to auth failures.** Continue with available plugins and fallbacks.
 
 ---
 
@@ -226,21 +311,70 @@ Never present a case-derived hypothesis as a confirmed diagnosis without Phase 4
 
 ---
 
-## Phase 4: Parallel Investigation
+## Phase 4: Parallel Investigation (with Auto-Fallback)
 
-Run ALL applicable sources simultaneously using the capability files:
+Run ALL applicable sources simultaneously using the capability files. If a primary tool fails (401, timeout, error), **automatically try the fallback chain** from `.claude/capabilities/REGISTRY.md`. Never halt on auth failures.
 
-| Source | Capability | When |
-|---|---|---|
-| Monitoring | `.claude/capabilities/monitoring.md` | Always (incident check + pod health) |
-| Splunk | `.claude/capabilities/splunk.md` | Always (if pod + org ID known) |
-| Confluence / KB | `.claude/capabilities/confluence.md` | Always |
-| GUS bugs | `.claude/capabilities/gus.md` | Always — pull build fields and apply the **staleness rule** (flag bugs fixed in ≤ GA−2 as likely-already-resolved) |
-| CodeSearch | `.claude/capabilities/codesearch.md` | Always (for classes in call stack) |
-| Gacks | `.claude/capabilities/columbo.md` | If Java stack trace or gack ID |
-| Slack | `.claude/capabilities/slack.md` | Always |
-| Metadata | `.claude/capabilities/metadata-analysis.md` | If engineer provides component exports in `data/` |
-| Case Trends | OrgCS (trend query above) | Always (check if recurring issue) |
+| Source | Capability | When | Fallback Available? |
+|---|---|---|---|
+| Monitoring | `.claude/capabilities/monitoring.md` | Always (incident check + pod health) | No |
+| Splunk | `.claude/capabilities/splunk.md` | Always (if pod + org ID known) | No |
+| Documentation (Official + Internal) | `.claude/capabilities/documentation.md` | Always (salesforce-docs + Confluence/SO/Quip) | Yes (3 fallbacks for internal docs) |
+| GUS bugs | `.claude/capabilities/gus.md` | Always — pull build fields and apply the **staleness rule** (flag bugs fixed in ≤ GA−2 as likely-already-resolved) | No |
+| CodeSearch | `.claude/capabilities/codesearch.md` | Always (for classes in call stack) | Yes (mcp-adaptor for package code) |
+| Gacks | `.claude/capabilities/columbo.md` | If Java stack trace or gack ID | No |
+| Slack | `.claude/capabilities/slack.md` | Always | No |
+| Metadata | `.claude/capabilities/metadata-analysis.md` | If engineer provides component exports in `data/` | No |
+| Case Trends | OrgCS (trend query above) | Always (check if recurring issue) | No |
+
+### Auto-Fallback Logic
+
+When a primary tool fails, automatically try the next tool in the fallback chain:
+
+**Example: Documentation Search**
+1. Try: `mcp__salesforce-docs__salesforce_docs_search` (official docs)
+2. **If 401/error** → Try: `mcp__plugin_search_search__search` (internal docs)
+3. **If that fails** → Try: `mcp__mcp-adaptor__doc_search`
+4. **If that fails** → Try: `mcp__plugin_deep-research_search__doc_search`
+5. **If all fail** → Note in report: `Documentation search unavailable (all tools failed)`
+
+**Example: CodeSearch (package)**
+1. Try: `mcp__plugin_deep-research_codesearch__search` on `via_platform`
+2. **If 401/error** → Try: `mcp__mcp-adaptor__search` on `vlocity-prod-pkg-source`
+3. **If both fail** → Note: `Package code search unavailable (both tools failed)`
+
+### Inline Notation
+
+When a fallback is used successfully, note it inline:
+- `✓ Confluence search (via mcp-adaptor fallback)`
+- `✓ Package code found in DREngine.cls (via mcp-adaptor)`
+- `⚠ Official docs unavailable; internal docs returned 3 results`
+
+### Parallel + Fallback Pattern
+
+Run primary tools in parallel. If any fail, spawn fallback probes in parallel:
+
+```python
+# Round 1: All primary tools in parallel
+results = await parallel([
+    query_splunk(...),
+    search_salesforce_docs(...),
+    search_internal_docs(...),
+    search_codesearch(...),
+    search_gus(...),
+    search_slack(...)
+])
+
+# Round 2: For any that failed, try fallbacks in parallel
+failed = [r for r in results if r.status == "failed"]
+fallback_results = await parallel([
+    search_internal_docs_fallback(...) if salesforce_docs failed,
+    search_codesearch_fallback(...) if codesearch failed,
+    ...
+])
+```
+
+**Total investigation time remains optimal** — fallbacks only run for failed primaries, and they run in parallel.
 
 ---
 

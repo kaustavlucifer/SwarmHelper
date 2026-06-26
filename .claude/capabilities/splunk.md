@@ -116,14 +116,26 @@ index=<POD> organizationId=<ORG_15> `logRecordType(G, gslog, gglog, maerr)` earl
 
 ## Query Patterns
 
-### 1. Find errors for an org
+### Time Window Strategy
+
+**User-provided timestamp:**
+- If user gives exact time (e.g., "error at 2026-06-26 14:23:40"), use ±5 minutes: `earliest="06/26/2026:14:18:40" latest="06/26/2026:14:28:40"`
+
+**No timestamp (component-based search):**
+- For known error signature (exception class, component name), use **7-day window** initially: `earliest=-7d`
+- If 7-day returns too many results (>500), narrow to 24h or ask user for time range
+- For recurring errors, use `timechart` to see frequency over time
+
+**Default investigation window:** `-7d` (covers most issues; 15-day max due to Splunk retention)
+
+### 1. Find errors for an org (component-based, no timestamp)
 ```spl
-index=<POD> organizationId=<ORG_15> level=error earliest=-24h
+index=<POD> organizationId=<ORG_15> level=error earliest=-7d
 | stats count by logRecordType
 | sort -count
 ```
 
-### 2. Search specific error message
+### 2. Search specific error message (7-day window)
 ```spl
 index=<POD> organizationId=<ORG_15> "System.CalloutException" earliest=-7d
 | head 50

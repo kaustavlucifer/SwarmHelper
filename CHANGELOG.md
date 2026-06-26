@@ -2,6 +2,26 @@
 
 These skills are developed and maintained by Kaustav Chowdhury.
 
+## v2.6.0 — 2026-06-26
+
+**MCP health checks + auto-fallback + official docs integration.** Phase 0 now spawns parallel probe agents to verify ALL MCP tools are authenticated before investigation starts. Users see detailed status (✓ authenticated, ⚠ auth expired, ✗ not registered) with remediation commands upfront. Auto-fallback chains added for Documentation and CodeSearch — when primary fails, secondary/tertiary tools are tried automatically. Salesforce official docs MCP integrated as primary source for API references, error codes, and feature docs, with internal Confluence/SO as fallback for tribal knowledge.
+
+### Added
+- **MCP Plugin Health Check (Phase 0)** — spawns 10 parallel agents to probe each plugin (OrgCS, Splunk, GUS, Columbo, Slack, CodeSearch, git.soma, Salesforce Docs, Internal Docs, SF CLI). Each agent runs a lightweight query to verify auth status. **Performance:** Reduced from 12 capability probes to 10 plugin probes (~3-5 seconds, faster and more token-efficient). Users see which plugins are ready, which need auth refresh, and which aren't registered — all BEFORE investigation starts. No more mid-investigation 401 surprises.
+- **Capability Registry (REGISTRY.md)** — defines primary→secondary→tertiary fallback chains for each capability. Includes probe calls, auth status interpretation, and remediation commands. Single source of truth for tool routing.
+- **Auto-Fallback Logic (Phase 4)** — when a primary tool fails (401, timeout, error), the orchestrator automatically tries the next tool in the fallback chain from REGISTRY.md. Runs fallbacks in parallel for optimal speed. Users see inline notation when fallbacks succeed: `✓ Confluence search (via mcp-adaptor fallback)`.
+- **Salesforce Docs MCP Integration** — `mcp__salesforce-docs__salesforce_docs_search` now primary for official product docs (API names, error codes, feature docs, release notes, wire adapters). Supports semantic (default) and hybrid (literal tokens) search modes. Collection filtering: `developer/lwc`, `admin/ai`, etc. Parallel search pattern: run official docs + internal docs simultaneously, merge results.
+- **Documentation capability restructured** — renamed from `confluence.md` to `documentation.md`. Now covers: (1) Official Salesforce docs (salesforce-docs MCP), (2) Internal tribal knowledge (Confluence/SO via search plugin), (3) Fallback chain: mcp-adaptor → deep-research. Search strategy: official docs first for API/error-code lookups, internal docs for troubleshooting/workarounds, or both in parallel for hybrid questions.
+
+### Changed
+- **Phase 0 redesigned** — replaced prefix-check-only with live probe agents. Old Phase 0 only confirmed tools were registered, not authenticated. New Phase 0 verifies working auth, shows fallback availability, and provides actionable remediation commands.
+- **Phase 4 updated** — added fallback column to capability table. Parallel + fallback pattern documented: run all primaries in parallel, then spawn fallback probes in parallel for any that failed. Never halt on auth failures.
+- **Tool priority order** — Documentation capability now has explicit priority: (1) salesforce-docs for official docs, (2) search plugin for internal docs, (3-4) mcp-adaptor/deep-research as fallbacks. CodeSearch: deep-research primary, mcp-adaptor secondary for package code.
+
+### Fixed
+- **UX improvement** — users no longer have to run `/mcp` manually to discover auth issues. Phase 0 does it upfront with clear remediation.
+- **Resilience** — investigations no longer fail mid-stream due to one tool being down. Auto-fallback keeps investigation flowing.
+
 ## v2.5.0 — 2026-06-15
 
 **Live-org object verification sweep.** With demo-org credentials supplied per vertical, every `Key Objects` table was probed via live org connection (SOAP `describe` for SOAP-enabled orgs; `sf` CLI web-auth + `EntityDefinition`/`FieldDefinition`/Tooling API for SOAP-disabled orgs). Fabricated sObject/field names — caught only as "⚠️ pending org sweep" before — are now replaced with real, verified API names. **Ten verticals corrected against live orgs; two more (E&U, Manufacturing) corrected/tagged from cross-vertical findings.**

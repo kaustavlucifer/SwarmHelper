@@ -10,12 +10,13 @@ Single-command troubleshooting framework for Industry Cloud support cases. Engin
 /swarm-helper (single command — intelligent orchestrator)
     │
     ├── capabilities/        ← Reusable MCP integration patterns
+    │   ├── REGISTRY.md      ← Tool fallback chains & auth probe definitions
     │   ├── orgcs.md         ← Case resolution, org/pod lookup (validated)
     │   ├── splunk.md        ← Log search patterns
     │   ├── codesearch.md    ← Source code investigation
     │   ├── gus.md           ← Bug tracking queries
     │   ├── slack.md         ← Internal knowledge search
-    │   ├── confluence.md    ← Documentation search
+    │   ├── documentation.md ← Official Salesforce docs + internal (Confluence/KB/SO)
     │   ├── columbo.md       ← Gack/exception investigation
     │   ├── monitoring.md    ← Incident & pod health check
     │   ├── metadata-analysis.md   ← Apex/Flow/OmniScript export analysis
@@ -55,7 +56,7 @@ Just type `/swarm-helper` and describe the problem:
 - Give an org ID + pod name
 - Drop a debug log file in `data/`
 
-The command determines which vertical applies, which MCP sources to query, and produces a structured investigation report.
+The command runs a fast plugin health check first (~3-5s), then determines which vertical applies, which MCP sources to query, and produces a structured investigation report.
 
 ---
 
@@ -90,12 +91,13 @@ SwarmHelper/
     ├── commands/
     │   └── swarm-helper.md              ← THE command (orchestrator + router)
     ├── capabilities/                    ← Shared MCP integration patterns
+    │   ├── REGISTRY.md                  ← Tool fallback chains & auth probe definitions
     │   ├── orgcs.md                     ← OrgCS queries (validated against live data)
     │   ├── splunk.md                    ← Splunk log search
     │   ├── codesearch.md               ← Code search (managed pkg + core monorepo)
     │   ├── gus.md                       ← GUS bug search
     │   ├── slack.md                     ← Slack channel search
-    │   ├── confluence.md               ← Confluence/KB/Quip/SO search
+    │   ├── documentation.md            ← Official Salesforce docs + internal (Confluence/KB/SO)
     │   ├── columbo.md                  ← Gack investigation
     │   ├── monitoring.md               ← Incident (PagerDuty) & pod health check
     │   ├── metadata-analysis.md        ← Apex/Flow/OmniScript export analysis
